@@ -1,0 +1,93 @@
+# Offers and Matrix Engine
+
+## OFFER
+
+An OFFER is encrypted, ephemeral, and never appended to `bond.chain`.
+
+```text
+body = {
+  kind_or_class,
+  cell,
+  time_window,
+  issued_at,
+  expires_at,
+  nonce
+}
+```
+
+The schema intentionally has no reward field. A reward cannot be negotiated because it cannot be represented.
+
+Silence, rejection, and timeout remain externally indistinguishable.
+
+## ACCEPT
+
+An ACCEPT is a co-signed chain record bound to the OFFER hash:
+
+```text
+sig_b(H(OFFER)) -> sig_a
+```
+
+The ACCEPT location cell is a jointly signed claim and may increment the global aggregate map.
+
+## Flex Authorization
+
+A person may pre-sign a bounded decision region rather than one exact outcome:
+
+```text
+flex = {
+  ideal,
+  tolerance_window,
+  allowed_classes,
+  allowed_cells,
+  max_rounds
+}
+```
+
+- inside flex: automatic ACCEPT is allowed;
+- on the boundary: show one confirmation screen;
+- outside flex: expire silently.
+
+Automatic acceptance inside flex is execution of prior human authorization, not autonomous engine consent. Negotiation is limited to two rounds.
+
+## Engine Negotiation
+
+Engines negotiate encrypted windows under `sk_ack`. The result is presented simultaneously to both people as one unattributed proposal. Neither participant sees who conceded.
+
+Concession distance may influence future flex balancing, but it MUST NOT be shown as a judgment about the other person.
+
+## Decision Rules
+
+### Well-being Gate
+
+```text
+reject if load(person) > threshold
+```
+
+Well-being is a hard constraint, not an optimization target. The engine does not maximize happiness; it prevents overload.
+
+### Veto
+
+The engine may silently suppress a proposal. It may not initiate a commitment. Veto reasons are never exposed to either participant or the other engine.
+
+### Ranking
+
+```text
+rank(offer) = P(bond growth | similar events in this Bond)
+```
+
+Ranking uses only this Bond's signed and local observed history. Only signed history changes `level`. Observed history remains local, expires, may be disabled, and never earns rewards.
+
+### Exploration
+
+Approximately one-third of surfaced options belong to a fixed exploration class with no expected immediate growth. This prevents positive-feedback loops from monopolizing recommendations.
+
+A monthly drift test MUST verify that free scenarios such as walking, calling, staying home, or meeting in a park do not lose share while the catalog remains unchanged.
+
+## Ethical Constraints
+
+- no hidden conclusions about infidelity or relationship quality;
+- no nudges derived from secret interpretations;
+- users may see their own signals without engine interpretation;
+- no transaction-percentage business model;
+- rewards remain retrospective and unpredictable;
+- silent interventions should remain rare, approximately weekly.
