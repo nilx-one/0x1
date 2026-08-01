@@ -12,7 +12,7 @@ The documentation is organized by system boundary rather than by implementation 
 - [Bond Lifecycle](bond-lifecycle.md) — bond formation, consent, signatures, and chain transitions.
 - [Proximity, Relay, and Broadcast](proximity-relay-and-broadcast.md) — constant-rate discovery, relay behavior, map aggregation, and broadcast access.
 - [Map and Business Presence](map-and-business-presence.md) — purchased visibility, earned depth, claim projection, and client privacy.
-- [Claim Auction](claim-auction.md) — cell tenure, funded challenges, settlement branches, and cooldown.
+- [Claim Auction](claim-auction.md) — funded bids, optional owner defense, premium allocation, automatic transfer, and cooldown.
 - [Offers and Matrix Engine](offers-and-matrix-engine.md) — OFFER, flex, negotiation, ranking, veto, and exploration.
 - [Devices and Recovery](devices-and-recovery.md) — device states, revocation, rekeying, REC-REQ, and CONTINUE.
 - [Economics and Payments](economics-and-payments.md) — `level`, `bnd`, `exp`, bond sale semantics, and HTLC payments.
