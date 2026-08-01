@@ -43,7 +43,7 @@ Paying removes the colocation requirement for being seen. It does not fabricate 
 
 `ATTEST` is a business-specific, co-signed Bond action. It is valid only after the existing proximity flow matches inside the claimed cell. Its semantic payload remains encrypted in `bond.chain`, and it may increase `level` under the same rules as any other eligible co-signed action.
 
-There is no `sk_ack`, relay, operator, emitted, or simulated path that can create `ATTEST`.
+There is no `sk_ack`, relay, emitted, or simulated path that can create `ATTEST`.
 
 ### Public aggregate depth
 
@@ -59,7 +59,7 @@ The projection retains no event rows, Bond identifiers, exact coordinates, or ex
 
 Cell exclusivity cannot live in `bond.chain`: a Bond is pairwise and has no global consensus surface. Claims instead live in an externally ordered `claim.registry` described in [Claim Auction](claim-auction.md).
 
-The registry is global market state, not global relationship state. It contains only what clients need to validate claim ownership, settlement, and cooldown. The operator does not sign claims or decide who receives a cell.
+The registry is global market state, not global relationship state. It contains only what clients need to validate claim ownership, settlement, and cooldown. Deterministic auction rules authorize transitions and allocate premiums; no discretionary market actor decides who receives a cell.
 
 ## Visibility Contract
 
@@ -83,7 +83,7 @@ Claim status is downstream of `matr.ix` placement. The engine ranks suggestions 
 ## Deliberate Omissions
 
 - No fake-claim oracle. A purchased marker with no aggregate depth is visibly unproven.
-- No operator allowlist, veto, partner tier, or price override.
+- No discretionary allowlist, veto, partner tier, or price override.
 - No conversion from claim spend to `level`, `bnd`, or `exp`.
 - No emitted or simulated attestation.
 - No off-map commercial discovery surface.
