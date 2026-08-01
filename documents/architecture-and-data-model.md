@@ -34,7 +34,11 @@ Required properties:
 
 Real device loss therefore causes real journal loss. This is an intentional anti-abuse condition for CONTINUE rewards.
 
-## Global Map
+## Public Map State
+
+The public map has two state classes with different authority.
+
+### Anonymous aggregate depth
 
 The server stores aggregate counters, never event rows.
 
@@ -42,15 +46,26 @@ The server stores aggregate counters, never event rows.
 (H3 cell at resolution 8, day of week, time window) -> count
 ```
 
-Counters increment only from signed ACCEPT records, at most once per pair per day. They decay over approximately 90 days and MUST NOT expose cells below `k >= 20`.
+Counters increment only from eligible co-signed presence actions, including business `ATTEST`, at most once per pair per day. They decay over approximately 90 days and MUST NOT expose cells below `k >= 20`.
 
 The server MUST NOT retain `bond_id`, exact timestamps, coordinates, or per-event history.
 
+### Public claim registry
+
+Purchased business presence requires globally exclusive cell state. That state MUST NOT be placed in `bond.chain`, because a pairwise chain cannot establish global exclusivity.
+
+`claim.registry` is an externally ordered market projection containing cell ownership, base, active challenge, settlement deadline, and cooldown. It delegates ordering and escrow to the external settlement network. The operator does not sign claim transitions or decide allocation.
+
+The registry is global market state, not global social state. It cannot create a Bond action, increase `level`, or enter `matr.ix` ranking.
+
+See [Map and Business Presence](map-and-business-presence.md) and [Claim Auction](claim-auction.md).
+
 ## Ownership Boundaries
 
-- Shared durable state belongs in `bond.chain`.
+- Shared durable relationship state belongs in `bond.chain`.
 - Private adaptive state belongs in `bond.journal`.
-- Public aggregate state belongs in anonymous counters.
+- Public aggregate depth belongs in anonymous counters.
+- Public exclusive placement state belongs in the externally ordered `claim.registry`.
 - Ephemeral negotiation state belongs in encrypted transport and expires without durable traces.
 
 Moving data across these boundaries is an architectural change, not a storage optimization.
