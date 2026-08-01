@@ -38,10 +38,20 @@ The payer commits to `H(x)`. The receiver reveals preimage `x` before the deadli
 
 The protocol delegates total transaction ordering to an external exchange or settlement network. 0x1 does not create a global payment ledger.
 
+## Purchased Map Presence
+
+`bnd` may purchase a challengeable claim on one H3 cell. The claim buys public map presence only. It cannot purchase `level`, `exp`, `ATTEST`, placement in `matr.ix`, or a higher aggregate-depth score.
+
+The claim auction reuses the external settlement network for escrow, ordering, deadlines, and atomic transfer. Its global market state remains outside `bond.chain`.
+
+The complete mechanism, including the transfer split and hold-delta split, is defined in [Claim Auction](claim-auction.md).
+
 ## Economic Constraints
 
 - no percentage fee on relationship transactions;
+- claim-auction fees apply only to purchased map presence;
 - no reward field inside OFFER;
 - rewards remain retrospective and unpredictable;
 - recovery rewards never increase Bond depth;
-- observed events never mint `level`, `bnd`, or `exp`.
+- observed events never mint `level`, `bnd`, or `exp`;
+- claim spend never changes suggestion ranking.
