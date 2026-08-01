@@ -132,6 +132,8 @@ At the minimum bid `b = p * 1.05`, the owner receives `100%` of the previous cur
 
 A larger bid does not change the rule. The previous owner receives `p` plus four-fifths of the full excess `b - p`; the 0x1 auction receives the remaining one-fifth.
 
+Example: if `p = 100` and `b = 120`, then `q = 20`. The previous owner receives `100 + 16 = 116`; the 0x1 auction receives `4`.
+
 ### Defense
 
 Defending is optional. The owner does not match or escrow the full challenger bid.
