@@ -32,6 +32,8 @@ These are product-level protocol decisions unless a separate standard is explici
 |---|---|
 | Minimum challenger step | `5%` of current price |
 | Minimum owner defense | `5%` of challenger bid |
+| Previous-owner transfer payout | `100%` of current price |
+| Split of excess above current price | `4:1` auction / 0x1 |
 | Auction share of every premium | `80%` |
 | 0x1 share of every premium | `20%` |
 | Concurrent challenges per cell | `1` |
