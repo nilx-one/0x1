@@ -38,6 +38,14 @@ Implement `level`, `bnd`, `exp`, sublinear issuance, random-blob Bond sale, HTLC
 
 **Exit gate:** choose broadcast routing—cell-wide or graph-bounded—before production broadcast aggregation is enabled. The graph-bounded model is the default recommendation.
 
+## Phase 6 — Business Presence and Claim Market
+
+Implement business `ATTEST`, anonymous aggregate-depth projection, signed regional claim snapshots, cell-scoped claim keys, the externally ordered claim registry, funded challenges, standing transfer covenants, optional defense payments, atomic transfer and defense settlement, `CLAIM-MARK`, and per-cell cooldown.
+
+**Entry gate:** optional defense window, cooldown, initial floor curve, visibility curve, and claim-key lifecycle are protocol decisions rather than implementation defaults.
+
+**Exit gate:** model-based tests prove one owner per cell, exact value conservation, the `80:20` previous-owner/0x1 split of every challenger premium, full settlement of defense payments to the 0x1 auction, defense without full-bid payment, no owner-response dependency for transfer, and no path from claim spend to `level` or ranking.
+
 ## Validation Principles
 
 - Test contracts before optimizing throughput.

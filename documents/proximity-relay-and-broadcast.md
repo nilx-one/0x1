@@ -22,11 +22,16 @@ The relay is content-agnostic, RAM-only, and non-persistent. It provides transie
 - resolve identity;
 - attest consent;
 - participate in recovery;
+- order claim-auction transitions;
 - retain semantic payloads.
 
 ## Aggregate Map
 
-Only signed ACCEPT actions may increment public map counters. The map uses H3 resolution 8, a roughly 90-day decay window, one increment per pair per day, and `k >= 20` disclosure protection.
+Only eligible co-signed presence actions may increment public map counters. Generic interactions use signed `ACCEPT`; business depth uses signed `ATTEST` after a successful cell match.
+
+The map uses H3 resolution 8, a roughly 90-day decay window, one increment per pair per day, and `k >= 20` disclosure protection.
+
+Purchased business markers are a separate projection. A `CLAIM` cannot increment aggregate depth, fabricate proximity, or alter ranking. See [Map and Business Presence](map-and-business-presence.md).
 
 ## Broadcast Layer
 

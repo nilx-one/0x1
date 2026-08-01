@@ -36,12 +36,15 @@ Commitment-bearing transitions require `sk_bond` or execution of an explicitly p
 
 - `INIT` and `CONSENT`;
 - `ACCEPT`;
+- business-presence `ATTEST`, valid only after a successful proximity match;
 - `REKEY` and `REVOKE`;
 - `DEVICE-REVOKE`;
 - `CONTINUE`;
 - `PAY-REQ` and `PAY-SETTLE`.
 
 Automatic engine records may acknowledge or annotate state, but cannot substitute for bilateral human authority.
+
+Claim-auction records are unilateral market actions and do not belong in `bond.chain`. Their authority and ordering are defined in [Claim Auction](claim-auction.md).
 
 ## Synchronization
 
