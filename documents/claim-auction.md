@@ -5,9 +5,11 @@
 
 ## Purpose
 
-The claim auction assigns scarce map presence without operator pricing or discretionary placement.
+The claim auction assigns scarce map presence through deterministic bidding rules.
 
-An owner holds a cell under challengeable tenure. A challenger may post an unbounded bid above the protocol floor. The owner either raises their basis and keeps the cell or lets the claim transfer.
+An owner holds a cell under challengeable tenure. A challenger may fund a bid above the current price. The owner may defend by paying only a premium over the challenger bid; no owner response is required. If no valid defense settles before the deadline, the claim transfers automatically.
+
+The auction is the mechanism, not a discretionary actor. Its allocation is enforced by settlement rules and cannot price a specific buyer, select a winner, or override an eligible bid.
 
 The mechanism prices presence only. It does not price a business, a Bond, an attestation, or suggestion rank.
 
@@ -15,16 +17,19 @@ The mechanism prices presence only. It does not price a business, a Bond, an att
 
 | Symbol | Meaning |
 |---|---|
-| `p` | Current base: the last settled value of the cell |
+| `p` | Current settled price of the cell |
 | `b` | Challenger bid |
-| `d` | Hold delta, `b - p` |
-| `s` | Minimum bid step, initially `5%` |
-| `f` | Transfer fee, initially `4%` of `b` |
-| `r` | Challenger share on hold, initially `20%` of `d` |
-| `W` | Owner response window |
+| `q` | Challenger premium, `b - p` |
+| `h` | Owner defense payment |
+| `s` | Minimum step, initially `5%` |
+| `a` | Auction share of a premium, initially `80%` |
+| `x` | 0x1 share of a premium, initially `20%` |
+| `W` | Optional defense window |
 | `C` | Per-cell cooldown after settlement |
 
-`p`, `b`, and `d` are denominated in `bnd` and MUST use one canonical integer precision. Floating-point arithmetic is invalid for settlement.
+`p`, `b`, `q`, and `h` are denominated in `bnd` and MUST use one canonical integer precision. Floating-point arithmetic is invalid for settlement.
+
+At the minimum challenger step, `q = p * 0.05`. The auction receives `p * 0.04`, and 0x1 receives `p * 0.01`. Every amount above that minimum uses the same `80:20` split; there is no separate treatment for an overbid.
 
 ## Registry State
 
@@ -33,7 +38,7 @@ Each H3 cell has one externally ordered claim state:
 ```text
 cell_id
 owner_claim_pk
-base
+price
 status = unclaimed | owned | challenged | cooldown
 active_challenge = { challenger_claim_pk, bid, opened_at, deadline, escrow_ref }?
 cooldown_until?
@@ -45,9 +50,9 @@ A claim uses a cell-scoped public key. The corresponding signing authority is hu
 
 ## Standing Transfer Covenant
 
-Acquiring a claim includes an explicit, signed covenant: if an eligible bid clears escrow and no valid hold settles before the deadline, the claim transfers automatically.
+Acquiring a claim includes an explicit, signed covenant: if an eligible bid clears escrow and no valid defense settles before the deadline, the claim transfers automatically.
 
-This covenant resolves the offline-owner case. `CLAIM-SETTLE` does not require a fresh owner signature after the response window; it is authorized by the owner's acquisition record, the challenger's signed bid, the elapsed exchange time, and settlement proof.
+`CLAIM-SETTLE` does not require a fresh owner signature or any owner response. It is authorized by the owner's acquisition record, the challenger's signed bid, the elapsed exchange time, and settlement proof.
 
 This is narrow pre-authorization, not autonomous human intent. It applies only to the named cell and the auction transition defined here.
 
@@ -55,66 +60,91 @@ This is narrow pre-authorization, not autonomous human intent. It applies only t
 
 | Record | Authorization | Preconditions | Effect |
 |---|---|---|---|
-| `CLAIM` | Buyer claim key | Cell unclaimed; floor payment settled | Assigns first owner and sets `base = floor(cell)` |
-| `CLAIM-BID` | Challenger claim key | Cell owned; no active challenge or cooldown; `b >= p * (1 + s)`; full escrow locked | Opens one response window |
-| `CLAIM-HOLD` | Owner claim key | Active challenge; before deadline; `d` settled | Owner retains cell; `base = b` |
-| `CLAIM-SETTLE` | Prior covenant + challenger bid + settlement proof | Active challenge; deadline elapsed; no valid hold | Transfers cell; `base = b` |
-| `CLAIM-MARK` | Owner claim key | No active challenge; new base is positive and lower than `p` | Lowers the challenge base without transferring the cell |
+| `CLAIM` | Buyer claim key | Cell unclaimed; floor payment settled | Assigns first owner and sets `price = floor(cell)` |
+| `CLAIM-BID` | Challenger claim key | Cell owned; no active challenge or cooldown; `b >= p * (1 + s)`; full bid escrowed | Opens one optional defense window |
+| `CLAIM-DEFEND` | Owner claim key | Active challenge; before deadline; `h >= b * s` settled | Owner retains cell; sets `price = b + h` |
+| `CLAIM-SETTLE` | Prior covenant + challenger bid + settlement proof | Active challenge; deadline elapsed; no valid defense | Transfers cell; sets `price = b` |
+| `CLAIM-MARK` | Owner claim key | No active challenge; new price is positive and lower than `p` | Lowers the challenge price without transferring the cell |
 
 Only one challenge may be active for a cell. Additional bids are rejected until the active challenge settles and the cooldown expires.
 
 ## Initial Acquisition
 
-The floor for an unclaimed cell is a deterministic, versioned function of historical unique H3 cell-match volume. The operator cannot nominate or override a floor for an individual cell.
+The floor for an unclaimed cell is a deterministic, versioned function of historical unique H3 cell-match volume. No party may nominate or override a floor for an individual cell.
 
-The buyer settles the full floor amount to the protocol, accepts the standing transfer covenant, and supplies the cell-scoped successor key in one atomic acquisition.
+The buyer settles the full floor amount into the auction under the versioned acquisition rule, accepts the standing transfer covenant, and supplies the cell-scoped successor key in one atomic acquisition.
 
-## Challenge
+## Challenger Bid
 
 A challenger posts:
 
 ```text
 b >= p * 1.05
+q = b - p
 ```
 
-Five percent is the minimum step, not a fixed increment or ceiling. A challenger may bid `5x` or `50x` the current base in one move.
+Five percent is the minimum step, not a fixed increment or ceiling. A challenger may bid `5x` or `50x` the current price in one move.
 
-The full bid is escrowed at submission. A bid is a funded commitment to acquire the cell if the owner does not hold.
+The full bid is escrowed at submission. A bid is a funded commitment to acquire the cell if the owner does not defend.
+
+The entire challenger premium `q`, including every amount above the minimum `5%`, uses one split:
+
+```text
+auction allocation = q * 0.80
+0x1 allocation      = q * 0.20
+```
 
 ## Settlement Branches
 
 ### Transfer
 
-If no valid hold settles before the deadline:
+If no valid defense settles before the deadline:
 
 ```text
-challenger pays    b
-owner receives     b * (1 - f)
-protocol receives  b * f
+challenger pays     b
+owner receives      p
+auction receives    (b - p) * a
+0x1 receives        (b - p) * x
 cell transfers
-new base           b
+new price           b
 ```
 
-With `f = 4%`, the owner receives `96%` of the bid and the protocol receives `4%`.
-
-### Hold
-
-If the owner settles the delta before the deadline:
+With `a = 80%` and `x = 20%`:
 
 ```text
-owner pays          d = b - p
-challenger receives d * r
-protocol receives   d * (1 - r)
+p + ((b - p) * 0.80) + ((b - p) * 0.20) = b
+```
+
+At the minimum bid `b = p * 1.05`, the owner receives the previous price `p`, the auction receives `4%` of `p`, and 0x1 receives `1%` of `p`.
+
+A larger bid does not change the rule. The full premium `b - p` is still divided `80:20` between the auction and 0x1.
+
+### Defense
+
+Defending is optional. The owner does not match or escrow the full challenger bid.
+
+If the owner chooses to defend, the minimum payment is:
+
+```text
+h >= b * 0.05
+```
+
+Settlement is:
+
+```text
+owner pays          h
+auction receives    h * a
+0x1 receives        h * x
 bid escrow returns  to challenger
 owner retains cell
-new base            b
+new price           b + h
 ```
 
-With `r = 20%` and the minimum `5%` step, the challenger receives exactly `1%` of the previous base and the protocol receives exactly `4%` of the previous base. Defending against a larger bid scales both amounts with the larger delta.
+The owner may choose `h > b * 0.05` in one action. The full defense payment uses the same `80:20` split.
 
-The two branches intentionally use different fee bases. Transfer splits the purchase price `b`; hold splits the basis increase `d`. This leaves no unallocated value and makes the contract executable for bids above the minimum step.
+At the minimum defense, the auction receives `4%` of `b`, 0x1 receives `1%` of `b`, and the next challenge price begins from `b * 1.05`.
 
-## Lowering the Base
+## Lowering the Price
 
 An owner may use `CLAIM-MARK` to lower `p` to any positive representable value when no challenge is active. The operation is free and does not transfer the cell.
 
@@ -127,8 +157,8 @@ There is no automatic decay and no recurring holding tax. Liquidity comes from t
 The auction reuses the external settlement network and the existing HTLC-style payment contract. It does not add ordering to the relay.
 
 - `CLAIM-BID` locks the full bid before the challenge becomes active.
-- `CLAIM-HOLD` atomically settles the owner's delta, the challenger reward, the protocol share, the bid refund, and the new base.
-- `CLAIM-SETTLE` atomically settles the purchase split, installs the challenger's successor key, and transfers the claim.
+- `CLAIM-DEFEND` atomically settles the defense split, returns the challenger bid, and installs `price = b + h`.
+- `CLAIM-SETTLE` atomically pays `p` to the previous owner, divides `b - p` between the auction and 0x1, installs the challenger's successor key, and transfers the claim.
 - Exchange order resolves races. Relay arrival order and device clocks are never authoritative.
 - `opened_at`, `deadline`, and `cooldown_until` are derived from exchange time.
 
@@ -136,29 +166,30 @@ An implementation MUST NOT expose an intermediate state in which one party contr
 
 ## Cooldown
 
-Every transfer or hold closes the cell to new bids for `C`.
+Every transfer or defense closes the cell to new bids for `C`.
 
 Cooldown attaches to the cell, not the challenger. This prevents coordinated accounts from rotating challenges against the same owner. A successful defense counts as a settlement and receives the same protection as a transfer.
 
-`CLAIM-MARK` may lower the base during cooldown, but no new challenge becomes valid until `cooldown_until`.
+`CLAIM-MARK` may lower the price during cooldown, but no new challenge becomes valid until `cooldown_until`.
 
 ## Deliberate Omissions
 
 - No fake-claim detector. A claim with no earned map depth remains visibly unproven.
-- No operator price-setting, veto, allowlist, or partner allocation.
-- No time decay of `base`.
+- No discretionary price-setting, veto, allowlist, or partner allocation.
+- No time decay of `price`.
 - No bid without full escrow.
+- No required owner response.
 - No off-chain side agreement that can override registry state.
 
 ## Required Product Language
 
-At acquisition:
+When a challenge opens:
 
-> You are buying challengeable map tenure, not permanent ownership. Any eligible funded bid can open a response window. Keeping the cell requires settling the difference.
+> Taking no action is valid. If no defense payment settles before the deadline, the claim transfers automatically. Keeping the cell requires only a defense premium of at least 5% of the latest bid, not payment of the full bid.
 
 At `CLAIM-MARK`:
 
-> This does not list the cell for sale. It lowers the base at which another buyer can challenge and take it.
+> This does not list the cell for sale. It lowers the price at which another buyer can challenge and take it.
 
 Both disclosures MUST appear before signature.
 
@@ -166,10 +197,10 @@ Both disclosures MUST appear before signature.
 
 | Parameter | Draft value | Status |
 |---|---|---|
-| Minimum step `s` | `5%` | Proposed v1 constant |
-| Transfer fee `f` | `4%` of `b` | Proposed v1 constant |
-| Hold split `r` | `20%` challenger / `80%` protocol of `d` | Proposed v1 constant |
-| Response window `W` | TBD | Implementation-blocking |
+| Minimum challenger step `s` | `5%` of current price | Proposed v1 constant |
+| Minimum defense payment | `5%` of challenger bid | Proposed v1 constant |
+| Premium split | `80%` auction / `20%` 0x1 | Proposed v1 constant |
+| Defense window `W` | TBD | Implementation-blocking |
 | Cooldown `C` | One week or one month | Requires market calibration |
 | Initial floor curve | TBD | Requires historical-volume model |
 | Visibility-band curve | TBD | Requires client-density model |
