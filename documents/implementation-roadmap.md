@@ -44,7 +44,7 @@ Implement business `ATTEST`, anonymous aggregate-depth projection, signed region
 
 **Entry gate:** optional defense window, cooldown, initial floor curve, visibility curve, and claim-key lifecycle are protocol decisions rather than implementation defaults.
 
-**Exit gate:** model-based tests prove one owner per cell, exact value conservation, the `80:20` previous-owner/0x1 split of every challenger premium, full settlement of defense payments to the 0x1 auction, defense without full-bid payment, no owner-response dependency for transfer, and no path from claim spend to `level` or ranking.
+**Exit gate:** model-based tests prove one owner per cell, exact value conservation, the `80:20` 0x1/previous-owner split of every challenger premium, full settlement of defense payments to the 0x1 auction, defense without full-bid payment, no owner-response dependency for transfer, and no path from claim spend to `level` or ranking.
 
 ## Validation Principles
 
