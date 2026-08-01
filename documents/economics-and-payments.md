@@ -44,7 +44,7 @@ The protocol delegates total transaction ordering to an external exchange or set
 
 The claim auction reuses the external settlement network for escrow, ordering, deadlines, and atomic transfer. Its global market state remains outside `bond.chain`.
 
-On transfer, the previous owner receives the prior price and the full challenger premium is divided `80%` to the auction and `20%` to 0x1. An optional defense requires only a payment of at least `5%` of the challenger bid; that defense payment uses the same `80:20` allocation. The complete mechanism is defined in [Claim Auction](claim-auction.md).
+On transfer, the previous owner receives exactly `100%` of the current price. Only the challenger's excess above that price is divided `4:1` between the auction and 0x1. An optional defense requires only a payment of at least `5%` of the challenger bid; that defense payment uses the same `4:1` allocation. The complete mechanism is defined in [Claim Auction](claim-auction.md).
 
 ## Economic Constraints
 
