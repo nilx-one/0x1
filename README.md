@@ -14,8 +14,8 @@ Every social platform built so far stores your relationships on someone else's s
 
 There is no social graph on the server. There is no server-side concept of a user. A relationship — a **bond** — is a co-signed, hash-chained record held by exactly the two people who created it.
 
-No third party keeps the memory.
-No operator can rewrite the past.
+No third party keeps the memory.  
+No operator can rewrite the past.  
 No machine can promise on a person's behalf.
 
 The operating principle:
@@ -42,7 +42,7 @@ The `H(head)` binding is the critical part. The key is a function of chain state
 
 A fork is therefore self-punishing.
 
-There is no global consensus layer because there is no global object to agree on. A bond belongs to two people, and truth advances only when both extend the same head.
+There is no global consensus layer for relationship truth because there is no global relationship object to agree on. A bond belongs to two people, and truth advances only when both extend the same head. The optional map-presence market is separate global market state and delegates ordering to an external settlement network.
 
 ### Key split
 
@@ -68,8 +68,8 @@ Two invariants define its limits:
 
 Decision generation and language generation are separate layers by design. The core emits a structured decision object; a downstream layer turns it into words. Models may change. The contract does not.
 
-The core may guess.
-It may veto.
+The core may guess.  
+It may veto.  
 It may never promise.
 
 ### Relay
@@ -104,6 +104,8 @@ Reward signals are retrospective and deliberately weighted so bond depth dominat
 
 Settlement uses HTLC-style escrow through `PAY-REQ` and `PAY-SETTLE`, with preimage `x`, against an external exchange. 0x1 borrows total ordering where needed instead of building global consensus where it does not belong.
 
+The map-presence market is the only protocol surface that sells visibility. A cell claim cannot buy `level`, attestation, or suggestion rank.
+
 ---
 
 ## What we claim — and what we do not
@@ -116,8 +118,8 @@ We say **trust-minimized**. We do not say unbreakable.
 - Broadcast aggregation remains an explicit open design question.
 - A permanently unreachable person can make a bond permanently unrecoverable. This is a product boundary, not a hidden failure mode.
 
-Do not trust the operator.
-Do not trust the story.
+Do not trust the operator.  
+Do not trust the story.  
 Verify the signatures.
 
 The chain is the receipt. The other person is the witness.
@@ -136,6 +138,8 @@ documents/
 ├── cryptography-and-wire-protocol.md
 ├── bond-lifecycle.md
 ├── proximity-relay-and-broadcast.md
+├── map-and-business-presence.md
+├── claim-auction.md
 ├── offers-and-matrix-engine.md
 ├── devices-and-recovery.md
 ├── economics-and-payments.md
@@ -144,13 +148,13 @@ documents/
 └── implementation-roadmap.md
 ```
 
-Start with [`documents/protocol-overview.md`](documents/protocol-overview.md), then follow the ownership boundaries outward: chain, keys, proximity, decisions, recovery, and economics.
+Start with [`documents/protocol-overview.md`](documents/protocol-overview.md), then follow the ownership boundaries outward: chain, keys, proximity, decisions, recovery, economics, and the optional map-presence market.
 
 ---
 
 ## Status
 
-The v1 architecture is specified for the bond layer, key hierarchy, proximity protocol, offer mechanics, device lifecycle, recovery, and economic boundaries. Implementation remains early.
+The v1 architecture is specified for the bond layer, key hierarchy, proximity protocol, offer mechanics, device lifecycle, recovery, and economic boundaries. The map-presence market remains a draft until its timing, calibration, and claim-key lifecycle parameters are resolved. Implementation remains early.
 
 Open questions are documented instead of being softened into implied certainty. When a decision is unresolved, the specification says so plainly.
 
