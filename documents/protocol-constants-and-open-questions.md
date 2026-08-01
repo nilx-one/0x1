@@ -30,10 +30,10 @@ These are product-level protocol decisions unless a separate standard is explici
 
 | Constant | Draft value |
 |---|---|
-| Minimum bid step | `5%` of current base |
-| Transfer fee | `4%` of winning bid |
-| Hold challenger share | `20%` of hold delta |
-| Hold protocol share | `80%` of hold delta |
+| Minimum challenger step | `5%` of current price |
+| Minimum owner defense | `5%` of challenger bid |
+| Auction share of every premium | `80%` |
+| 0x1 share of every premium | `20%` |
 | Concurrent challenges per cell | `1` |
 
 These values are internally consistent but remain draft until timing and floor calibration are defined. See [Claim Auction](claim-auction.md).
@@ -60,9 +60,9 @@ The protocol fixes the visibility rule—buckets and concession direction may be
 
 Observed events are local, optional, ephemeral, non-rewarding, and never export coordinates. Their exact fields, retention window, and granularity remain undefined.
 
-### Claim Response Window
+### Claim Defense Window
 
-How long does an owner have to settle `CLAIM-HOLD` after a funded challenge opens? The value must be long enough for human action and short enough to keep escrow bounded.
+How long may an owner optionally settle `CLAIM-DEFEND` after a funded challenge opens? No response is required; the value must still be long enough for human action and short enough to keep challenger escrow bounded.
 
 ### Claim Cooldown
 
