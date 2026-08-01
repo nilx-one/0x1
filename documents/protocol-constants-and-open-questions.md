@@ -1,6 +1,6 @@
 # Protocol Constants and Open Questions
 
-## Fixed v1 Constants
+## Fixed v1 Bond Constants
 
 | Constant | Value |
 |---|---|
@@ -26,6 +26,18 @@
 
 These are product-level protocol decisions unless a separate standard is explicitly named. Implementations MUST NOT silently tune them per user or market.
 
+## Draft Claim-Auction Constants
+
+| Constant | Draft value |
+|---|---|
+| Minimum bid step | `5%` of current base |
+| Transfer fee | `4%` of winning bid |
+| Hold challenger share | `20%` of hold delta |
+| Hold protocol share | `80%` of hold delta |
+| Concurrent challenges per cell | `1` |
+
+These values are internally consistent but remain draft until timing and floor calibration are defined. See [Claim Auction](claim-auction.md).
+
 ## Open Questions
 
 ### Veto Visibility
@@ -48,6 +60,24 @@ The protocol fixes the visibility rule—buckets and concession direction may be
 
 Observed events are local, optional, ephemeral, non-rewarding, and never export coordinates. Their exact fields, retention window, and granularity remain undefined.
 
+### Claim Response Window
+
+How long does an owner have to settle `CLAIM-HOLD` after a funded challenge opens? The value must be long enough for human action and short enough to keep escrow bounded.
+
+### Claim Cooldown
+
+Should every settled cell use one cooldown, or should cooldown be a deterministic function of base? The value must resist rotating challengers without freezing price discovery.
+
+### Initial Floor and Visibility Curves
+
+The protocol requires deterministic, versioned functions of historical unique cell-match volume. The exact bands and resistance to sparse-data manipulation remain undefined.
+
+### Claim-Key Lifecycle
+
+The registry requires a cell-scoped, human-gated claim key that does not reuse a pairwise `sk_bond` identity. Rotation, device migration, and unrecoverable loss require an explicit contract before implementation.
+
 ## Change Control
 
-The four decisions above are the only intentionally unresolved v1 architecture points. Every other change to authority, ownership, persistence, recovery, signature requirements, or plaintext boundaries requires a new protocol version.
+The Bond-layer architecture is final except for the first four questions above. The map-presence market remains draft until its timing, calibration, and claim-key lifecycle questions are resolved.
+
+Any change to authority, ownership, persistence, recovery, signature requirements, plaintext boundaries, or claim settlement requires an explicit protocol-version change.
