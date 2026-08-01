@@ -40,11 +40,11 @@ Implement `level`, `bnd`, `exp`, sublinear issuance, random-blob Bond sale, HTLC
 
 ## Phase 6 — Business Presence and Claim Market
 
-Implement business `ATTEST`, anonymous aggregate-depth projection, signed regional claim snapshots, cell-scoped claim keys, the externally ordered claim registry, funded challenges, standing transfer covenants, atomic transfer and hold settlement, `CLAIM-MARK`, and per-cell cooldown.
+Implement business `ATTEST`, anonymous aggregate-depth projection, signed regional claim snapshots, cell-scoped claim keys, the externally ordered claim registry, funded challenges, standing transfer covenants, optional defense payments, atomic transfer and defense settlement, `CLAIM-MARK`, and per-cell cooldown.
 
-**Entry gate:** response window, cooldown, initial floor curve, visibility curve, and claim-key lifecycle are protocol decisions rather than implementation defaults.
+**Entry gate:** optional defense window, cooldown, initial floor curve, visibility curve, and claim-key lifecycle are protocol decisions rather than implementation defaults.
 
-**Exit gate:** model-based tests prove that every ordered transition preserves one owner per cell, exact value conservation, no fresh-signature dependency for an offline-owner transfer, and no path from claim spend to `level` or ranking.
+**Exit gate:** model-based tests prove one owner per cell, exact value conservation, `80:20` allocation of every challenger and defense premium, defense without full-bid payment, no owner-response dependency for transfer, and no path from claim spend to `level` or ranking.
 
 ## Validation Principles
 
