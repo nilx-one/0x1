@@ -9,7 +9,7 @@ The claim auction assigns scarce map presence through deterministic bidding rule
 
 An owner holds a cell under challengeable tenure. A challenger may fund a bid above the current price. The owner may defend by paying only a premium over the challenger bid; no owner response is required. If no valid defense settles before the deadline, the claim transfers automatically.
 
-The auction is the mechanism, not a discretionary actor. Its allocation is enforced by settlement rules and cannot price a specific buyer, select a winner, or override an eligible bid.
+0x1 is the auction. The term **auction** names the mechanism, not a separate entity or revenue recipient. Its allocation is enforced by settlement rules and cannot price a specific buyer, select a winner, or override an eligible bid.
 
 The mechanism prices presence only. It does not price a business, a Bond, an attestation, or suggestion rank.
 
@@ -22,8 +22,8 @@ The mechanism prices presence only. It does not price a business, a Bond, an att
 | `q` | Challenger premium, `b - p` |
 | `h` | Owner defense payment |
 | `s` | Minimum step, initially `5%` |
-| `a` | Auction share of a premium, initially `80%` |
-| `x` | 0x1 share of a premium, initially `20%` |
+| `r` | Previous-owner share of a challenger premium, initially `80%` |
+| `x` | 0x1 auction share of a challenger premium, initially `20%` |
 | `W` | Optional defense window |
 | `C` | Per-cell cooldown after settlement |
 
@@ -32,14 +32,14 @@ The mechanism prices presence only. It does not price a business, a Bond, an att
 The executable rules use integer functions:
 
 ```text
-step(v)       = ceil_div(v, 20)
-share_0x1(v)  = floor_div(v, 5)
-share_auction(v) = v - share_0x1(v)
+step(v)        = ceil_div(v, 20)
+share_0x1(v)   = floor_div(v, 5)
+share_owner(v) = v - share_0x1(v)
 ```
 
-A valid challenger bid satisfies `b >= p + step(p)`. A valid defense satisfies `h >= step(b)`. Assigning the integer remainder to the auction preserves every unit and makes the split deterministic.
+A valid challenger bid satisfies `b >= p + step(p)`. A valid defense satisfies `h >= step(b)`. Assigning any indivisible challenger-premium remainder to the previous owner preserves every unit and makes the transfer split deterministic.
 
-In exact percentage notation, the minimum challenger premium is `5%` of `p`: `4%` goes to the auction and `1%` goes to 0x1. The previous owner receives exactly `p`—`100%` of the current settled price. Only the excess `b - p` is split, always `4:1` between the auction and 0x1; there is no separate treatment for an overbid.
+In exact percentage notation, the minimum challenger premium is `5%` of `p`: `4%` goes to the previous owner and `1%` goes to the 0x1 auction. The previous owner also receives exactly `p`—`100%` of the current settled price. Only the excess `b - p` is split, always `4:1` between the previous owner and the 0x1 auction; there is no separate treatment for an overbid.
 
 ## Registry State
 
@@ -82,7 +82,7 @@ Only one challenge may be active for a cell. Additional bids are rejected until 
 
 The floor for an unclaimed cell is a deterministic, versioned function of historical unique H3 cell-match volume. No party may nominate or override a floor for an individual cell.
 
-The buyer settles the full floor amount into the auction under the versioned acquisition rule, accepts the standing transfer covenant, and supplies the cell-scoped successor key in one atomic acquisition.
+The buyer settles the full floor amount into the 0x1 auction under the versioned acquisition rule, accepts the standing transfer covenant, and supplies the cell-scoped successor key in one atomic acquisition.
 
 ## Challenger Bid
 
@@ -99,11 +99,11 @@ Five percent is the minimum step, not a fixed increment or ceiling. A challenger
 
 The full bid is escrowed at submission. A bid is a funded commitment to acquire the cell if the owner does not defend.
 
-The owner payout and premium allocation are independent: `p` is paid in full to the previous owner, while the entire challenger premium `q`, including every amount above the minimum `5%`, uses one `4:1` split:
+The previous owner receives `p` in full plus four-fifths of the challenger premium `q`. The 0x1 auction receives the remaining one-fifth. Every amount above the minimum `5%` uses the same `4:1` split:
 
 ```text
-0x1 allocation      = share_0x1(q)
-auction allocation  = q - share_0x1(q)
+owner payout        = p + share_owner(q)
+0x1 auction revenue = share_0x1(q)
 ```
 
 ## Settlement Branches
@@ -114,24 +114,23 @@ If no valid defense settles before the deadline:
 
 ```text
 challenger pays     b
-owner receives      p
-0x1 receives        share_0x1(b - p)
-auction receives    (b - p) - share_0x1(b - p)
+owner receives      p + share_owner(b - p)
+0x1 auction receives share_0x1(b - p)
 cell transfers
 new price           b
 ```
 
-With `a = 80%` and `x = 20%`, exact arithmetic is:
+With `r = 80%` and `x = 20%`, exact arithmetic is:
 
 ```text
 p + ((b - p) * 0.80) + ((b - p) * 0.20) = b
 ```
 
-The integer functions preserve the same identity by assigning any indivisible remainder to the auction.
+The integer functions preserve the same identity by assigning any indivisible remainder to the previous owner.
 
-At the minimum bid `b = p * 1.05`, the owner receives `100%` of the previous current price `p`, the auction receives `4%` of `p`, and 0x1 receives `1%` of `p`.
+At the minimum bid `b = p * 1.05`, the owner receives `100%` of the previous current price `p` plus `4%` of `p`. The 0x1 auction receives `1%` of `p`.
 
-A larger bid does not change the rule. The owner still receives exactly `p`; only the full excess `b - p` is divided `4:1` between the auction and 0x1.
+A larger bid does not change the rule. The previous owner receives `p` plus four-fifths of the full excess `b - p`; the 0x1 auction receives the remaining one-fifth.
 
 ### Defense
 
@@ -149,16 +148,15 @@ Settlement is:
 
 ```text
 owner pays          h
-0x1 receives        share_0x1(h)
-auction receives    h - share_0x1(h)
+0x1 auction receives h
 bid escrow returns  to challenger
 owner retains cell
 new price           b + h
 ```
 
-The owner may choose `h > b * 0.05` in one action. The full defense payment uses the same `80:20` split.
+The owner may choose `h > b * 0.05` in one action. Because no transfer occurs, there is no previous-owner premium to split: the full defense payment settles to the 0x1 auction.
 
-At the minimum defense, the auction receives `4%` of `b`, 0x1 receives `1%` of `b`, and the next challenge price begins from `b * 1.05`.
+At the minimum defense, the 0x1 auction receives `5%` of `b`, and the next challenge price begins from `b * 1.05`.
 
 ## Lowering the Price
 
@@ -173,8 +171,8 @@ There is no automatic decay and no recurring holding tax. Liquidity comes from t
 The auction reuses the external settlement network and the existing HTLC-style payment contract. It does not add ordering to the relay.
 
 - `CLAIM-BID` locks the full bid before the challenge becomes active.
-- `CLAIM-DEFEND` atomically settles the defense split, returns the challenger bid, and installs `price = b + h`.
-- `CLAIM-SETTLE` atomically pays `p` to the previous owner, divides `b - p` between the auction and 0x1, installs the challenger's successor key, and transfers the claim.
+- `CLAIM-DEFEND` atomically settles `h` to the 0x1 auction, returns the challenger bid, and installs `price = b + h`.
+- `CLAIM-SETTLE` atomically pays `p + share_owner(b - p)` to the previous owner, pays `share_0x1(b - p)` to the 0x1 auction, installs the challenger's successor key, and transfers the claim.
 - Exchange order resolves races. Relay arrival order and device clocks are never authoritative.
 - `opened_at`, `deadline`, and `cooldown_until` are derived from exchange time.
 
@@ -215,7 +213,8 @@ Both disclosures MUST appear before signature.
 |---|---|---|
 | Minimum challenger step `s` | `5%` of current price | Proposed v1 constant |
 | Minimum defense payment | `5%` of challenger bid | Proposed v1 constant |
-| Premium split | `80%` auction / `20%` 0x1 | Proposed v1 constant |
+| Challenger-premium split | `80%` previous owner / `20%` 0x1 auction | Proposed v1 constant |
+| Defense-payment recipient | `100%` 0x1 auction | Proposed v1 constant |
 | Defense window `W` | TBD | Implementation-blocking |
 | Cooldown `C` | One week or one month | Requires market calibration |
 | Initial floor curve | TBD | Requires historical-volume model |
