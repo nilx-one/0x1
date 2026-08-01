@@ -54,7 +54,7 @@ The server MUST NOT retain `bond_id`, exact timestamps, coordinates, or per-even
 
 Purchased business presence requires globally exclusive cell state. That state MUST NOT be placed in `bond.chain`, because a pairwise chain cannot establish global exclusivity.
 
-`claim.registry` is an externally ordered market projection containing cell ownership, base, active challenge, settlement deadline, and cooldown. It delegates ordering and escrow to the external settlement network. The operator does not sign claim transitions or decide allocation.
+`claim.registry` is an externally ordered market projection containing cell ownership, current price, active challenge, settlement deadline, and cooldown. It delegates ordering and escrow to the external settlement network. Claim transitions and allocations follow deterministic auction rules; no discretionary market actor selects winners or overrides eligible bids.
 
 The registry is global market state, not global social state. It cannot create a Bond action, increase `level`, or enter `matr.ix` ranking.
 
