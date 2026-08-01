@@ -22,8 +22,8 @@ The mechanism prices presence only. It does not price a business, a Bond, an att
 | `q` | Challenger premium, `b - p` |
 | `h` | Owner defense payment |
 | `s` | Minimum step, initially `5%` |
-| `r` | Previous-owner share of a challenger premium, initially `80%` |
-| `x` | 0x1 auction share of a challenger premium, initially `20%` |
+| `r` | Previous-owner share of a challenger premium, initially `20%` |
+| `x` | 0x1 auction share of a challenger premium, initially `80%` |
 | `W` | Optional defense window |
 | `C` | Per-cell cooldown after settlement |
 
@@ -33,13 +33,13 @@ The executable rules use integer functions:
 
 ```text
 step(v)        = ceil_div(v, 20)
-share_0x1(v)   = floor_div(v, 5)
-share_owner(v) = v - share_0x1(v)
+share_owner(v) = floor_div(v, 5)
+share_0x1(v)   = v - share_owner(v)
 ```
 
-A valid challenger bid satisfies `b >= p + step(p)`. A valid defense satisfies `h >= step(b)`. Assigning any indivisible challenger-premium remainder to the previous owner preserves every unit and makes the transfer split deterministic.
+A valid challenger bid satisfies `b >= p + step(p)`. A valid defense satisfies `h >= step(b)`. Assigning any indivisible challenger-premium remainder to the 0x1 auction preserves every unit and makes the transfer split deterministic.
 
-In exact percentage notation, the minimum challenger premium is `5%` of `p`: `4%` goes to the previous owner and `1%` goes to the 0x1 auction. The previous owner also receives exactly `p`—`100%` of the current settled price. Only the excess `b - p` is split, always `4:1` between the previous owner and the 0x1 auction; there is no separate treatment for an overbid.
+In exact percentage notation, the minimum challenger premium is `5%` of `p`: `4%` goes to the 0x1 auction and `1%` goes to the previous owner. The previous owner also receives exactly `p`—`100%` of the current settled price. Only the excess `b - p` is split, always `4:1` between the 0x1 auction and the previous owner; there is no separate treatment for an overbid.
 
 ## Registry State
 
@@ -99,7 +99,7 @@ Five percent is the minimum step, not a fixed increment or ceiling. A challenger
 
 The full bid is escrowed at submission. A bid is a funded commitment to acquire the cell if the owner does not defend.
 
-The previous owner receives `p` in full plus four-fifths of the challenger premium `q`. The 0x1 auction receives the remaining one-fifth. Every amount above the minimum `5%` uses the same `4:1` split:
+The previous owner receives `p` in full plus one-fifth of the challenger premium `q`. The 0x1 auction receives the remaining four-fifths. Every amount above the minimum `5%` uses the same `4:1` 0x1-to-owner split:
 
 ```text
 owner payout        = p + share_owner(q)
@@ -120,19 +120,19 @@ cell transfers
 new price           b
 ```
 
-With `r = 80%` and `x = 20%`, exact arithmetic is:
+With `r = 20%` and `x = 80%`, exact arithmetic is:
 
 ```text
-p + ((b - p) * 0.80) + ((b - p) * 0.20) = b
+p + ((b - p) * 0.20) + ((b - p) * 0.80) = b
 ```
 
-The integer functions preserve the same identity by assigning any indivisible remainder to the previous owner.
+The integer functions preserve the same identity by assigning any indivisible remainder to the 0x1 auction.
 
-At the minimum bid `b = p * 1.05`, the owner receives `100%` of the previous current price `p` plus `4%` of `p`. The 0x1 auction receives `1%` of `p`.
+At the minimum bid `b = p * 1.05`, the owner receives `100%` of the previous current price `p` plus `1%` of `p`. The 0x1 auction receives `4%` of `p`.
 
-A larger bid does not change the rule. The previous owner receives `p` plus four-fifths of the full excess `b - p`; the 0x1 auction receives the remaining one-fifth.
+A larger bid does not change the rule. The previous owner receives `p` plus one-fifth of the full excess `b - p`; the 0x1 auction receives the remaining four-fifths.
 
-Example: if `p = 100` and `b = 120`, then `q = 20`. The previous owner receives `100 + 16 = 116`; the 0x1 auction receives `4`.
+Example: if `p = 100` and `b = 120`, then `q = 20`. The previous owner receives `100 + 4 = 104`; the 0x1 auction receives `16`.
 
 ### Defense
 
@@ -215,7 +215,7 @@ Both disclosures MUST appear before signature.
 |---|---|---|
 | Minimum challenger step `s` | `5%` of current price | Proposed v1 constant |
 | Minimum defense payment | `5%` of challenger bid | Proposed v1 constant |
-| Challenger-premium split | `80%` previous owner / `20%` 0x1 auction | Proposed v1 constant |
+| Challenger-premium split | `80%` 0x1 auction / `20%` previous owner | Proposed v1 constant |
 | Defense-payment recipient | `100%` 0x1 auction | Proposed v1 constant |
 | Defense window `W` | TBD | Implementation-blocking |
 | Cooldown `C` | One week or one month | Requires market calibration |
