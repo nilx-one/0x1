@@ -29,7 +29,17 @@ The mechanism prices presence only. It does not price a business, a Bond, an att
 
 `p`, `b`, `q`, and `h` are denominated in `bnd` and MUST use one canonical integer precision. Floating-point arithmetic is invalid for settlement.
 
-At the minimum challenger step, `q = p * 0.05`. The auction receives `p * 0.04`, and 0x1 receives `p * 0.01`. Every amount above that minimum uses the same `80:20` split; there is no separate treatment for an overbid.
+The executable rules use integer functions:
+
+```text
+step(v)       = ceil_div(v, 20)
+share_0x1(v)  = floor_div(v, 5)
+share_auction(v) = v - share_0x1(v)
+```
+
+A valid challenger bid satisfies `b >= p + step(p)`. A valid defense satisfies `h >= step(b)`. Assigning the integer remainder to the auction preserves every unit and makes the split deterministic.
+
+In exact percentage notation, the minimum challenger premium is `5%` of `p`: `4%` goes to the auction and `1%` goes to 0x1. Every amount above that minimum uses the same `80:20` split; there is no separate treatment for an overbid.
 
 ## Registry State
 
@@ -79,9 +89,11 @@ The buyer settles the full floor amount into the auction under the versioned acq
 A challenger posts:
 
 ```text
-b >= p * 1.05
+b >= p + step(p)
 q = b - p
 ```
+
+In percentage notation, `b >= p * 1.05`.
 
 Five percent is the minimum step, not a fixed increment or ceiling. A challenger may bid `5x` or `50x` the current price in one move.
 
@@ -90,8 +102,8 @@ The full bid is escrowed at submission. A bid is a funded commitment to acquire 
 The entire challenger premium `q`, including every amount above the minimum `5%`, uses one split:
 
 ```text
-auction allocation = q * 0.80
-0x1 allocation      = q * 0.20
+0x1 allocation      = share_0x1(q)
+auction allocation  = q - share_0x1(q)
 ```
 
 ## Settlement Branches
@@ -103,17 +115,19 @@ If no valid defense settles before the deadline:
 ```text
 challenger pays     b
 owner receives      p
-auction receives    (b - p) * a
-0x1 receives        (b - p) * x
+0x1 receives        share_0x1(b - p)
+auction receives    (b - p) - share_0x1(b - p)
 cell transfers
 new price           b
 ```
 
-With `a = 80%` and `x = 20%`:
+With `a = 80%` and `x = 20%`, exact arithmetic is:
 
 ```text
 p + ((b - p) * 0.80) + ((b - p) * 0.20) = b
 ```
+
+The integer functions preserve the same identity by assigning any indivisible remainder to the auction.
 
 At the minimum bid `b = p * 1.05`, the owner receives the previous price `p`, the auction receives `4%` of `p`, and 0x1 receives `1%` of `p`.
 
@@ -126,15 +140,17 @@ Defending is optional. The owner does not match or escrow the full challenger bi
 If the owner chooses to defend, the minimum payment is:
 
 ```text
-h >= b * 0.05
+h >= step(b)
 ```
+
+In percentage notation, `h >= b * 0.05`.
 
 Settlement is:
 
 ```text
 owner pays          h
-auction receives    h * a
-0x1 receives        h * x
+0x1 receives        share_0x1(h)
+auction receives    h - share_0x1(h)
 bid escrow returns  to challenger
 owner retains cell
 new price           b + h
