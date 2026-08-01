@@ -44,12 +44,12 @@ The protocol delegates total transaction ordering to an external exchange or set
 
 The claim auction reuses the external settlement network for escrow, ordering, deadlines, and atomic transfer. Its global market state remains outside `bond.chain`.
 
-The complete mechanism, including the transfer split and hold-delta split, is defined in [Claim Auction](claim-auction.md).
+On transfer, the previous owner receives the prior price and the full challenger premium is divided `80%` to the auction and `20%` to 0x1. An optional defense requires only a payment of at least `5%` of the challenger bid; that defense payment uses the same `80:20` allocation. The complete mechanism is defined in [Claim Auction](claim-auction.md).
 
 ## Economic Constraints
 
 - no percentage fee on relationship transactions;
-- claim-auction fees apply only to purchased map presence;
+- claim-auction allocations apply only to purchased map presence;
 - no reward field inside OFFER;
 - rewards remain retrospective and unpredictable;
 - recovery rewards never increase Bond depth;
