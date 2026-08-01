@@ -39,7 +39,7 @@ share_auction(v) = v - share_0x1(v)
 
 A valid challenger bid satisfies `b >= p + step(p)`. A valid defense satisfies `h >= step(b)`. Assigning the integer remainder to the auction preserves every unit and makes the split deterministic.
 
-In exact percentage notation, the minimum challenger premium is `5%` of `p`: `4%` goes to the auction and `1%` goes to 0x1. Every amount above that minimum uses the same `80:20` split; there is no separate treatment for an overbid.
+In exact percentage notation, the minimum challenger premium is `5%` of `p`: `4%` goes to the auction and `1%` goes to 0x1. The previous owner receives exactly `p`—`100%` of the current settled price. Only the excess `b - p` is split, always `4:1` between the auction and 0x1; there is no separate treatment for an overbid.
 
 ## Registry State
 
@@ -99,7 +99,7 @@ Five percent is the minimum step, not a fixed increment or ceiling. A challenger
 
 The full bid is escrowed at submission. A bid is a funded commitment to acquire the cell if the owner does not defend.
 
-The entire challenger premium `q`, including every amount above the minimum `5%`, uses one split:
+The owner payout and premium allocation are independent: `p` is paid in full to the previous owner, while the entire challenger premium `q`, including every amount above the minimum `5%`, uses one `4:1` split:
 
 ```text
 0x1 allocation      = share_0x1(q)
@@ -129,9 +129,9 @@ p + ((b - p) * 0.80) + ((b - p) * 0.20) = b
 
 The integer functions preserve the same identity by assigning any indivisible remainder to the auction.
 
-At the minimum bid `b = p * 1.05`, the owner receives the previous price `p`, the auction receives `4%` of `p`, and 0x1 receives `1%` of `p`.
+At the minimum bid `b = p * 1.05`, the owner receives `100%` of the previous current price `p`, the auction receives `4%` of `p`, and 0x1 receives `1%` of `p`.
 
-A larger bid does not change the rule. The full premium `b - p` is still divided `80:20` between the auction and 0x1.
+A larger bid does not change the rule. The owner still receives exactly `p`; only the full excess `b - p` is divided `4:1` between the auction and 0x1.
 
 ### Defense
 
