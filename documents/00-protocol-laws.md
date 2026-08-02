@@ -9,10 +9,10 @@ Every protocol requirement, authority boundary, invariant, and subordinate speci
 ## Normative Hierarchy
 
 1. This document owns the protocol-wide laws.
-2. The [Documentation Protocol](documentation-protocol.md) governs how those laws and their subordinate contracts are expressed, divided, changed, and enforced.
-3. The [Glossary](glossary.md) owns the canonical meaning of protocol terms.
+2. The [Documentation Protocol](01-documentation-protocol.md) governs how those laws and their subordinate contracts are expressed, divided, changed, and enforced.
+3. The [Glossary](02-glossary.md) owns the canonical meaning of protocol terms.
 4. Topic documents own scoped behavior only where this document permits it.
-5. [Protocol Constants and Open Questions](protocol-constants-and-open-questions.md) owns fixed values, draft parameters, and unresolved decisions; an unresolved decision is not a normative guarantee.
+5. [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md) owns fixed values, draft parameters, and unresolved decisions; an unresolved decision is not a normative guarantee.
 
 If a subordinate document conflicts with these laws, these laws govern and the conflict is a specification defect. Silence in this document does not authorize a lower layer to violate an established law.
 
@@ -124,8 +124,8 @@ A change to these laws is a protocol revision, not an editorial clarification.
 
 ## Related Documents
 
-- [Documentation Protocol](documentation-protocol.md)
-- [Glossary](glossary.md)
-- [Protocol Overview](protocol-overview.md)
-- [Architecture and Data Model](architecture-and-data-model.md)
-- [Protocol Constants and Open Questions](protocol-constants-and-open-questions.md)
+- [Documentation Protocol](01-documentation-protocol.md)
+- [Glossary](02-glossary.md)
+- [Protocol Overview](03-protocol-overview.md)
+- [Architecture and Data Model](05-architecture-and-data-model.md)
+- [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)

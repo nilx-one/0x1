@@ -2,7 +2,7 @@
 
 **Status:** v1 draft  
 **Scope:** atomic settlement across independent `bond.chain`s  
-**Depends on:** [`PAY-REQ` and `PAY-SETTLE`](economics-and-payments.md), [`sk_bond` and `sk_ack`](cryptography-and-wire-protocol.md)
+**Depends on:** [`PAY-REQ` and `PAY-SETTLE`](10-economics-and-payments.md), [`sk_bond` and `sk_ack`](06-cryptography-and-wire-protocol.md)
 
 ## Purpose
 
@@ -253,9 +253,9 @@ Any acyclic composition is valid when it has one settlement origin, one `x`, pai
 
 ## Related Documents
 
-- [Documentation Protocol](documentation-protocol.md)
-- [Glossary](glossary.md)
-- [Architecture and Data Model](architecture-and-data-model.md)
-- [Cryptography and Wire Protocol](cryptography-and-wire-protocol.md)
-- [Economics and Payments](economics-and-payments.md)
-- [Security and Platform Notes](security-and-platform-notes.md)
+- [Documentation Protocol](01-documentation-protocol.md)
+- [Glossary](02-glossary.md)
+- [Architecture and Data Model](05-architecture-and-data-model.md)
+- [Cryptography and Wire Protocol](06-cryptography-and-wire-protocol.md)
+- [Economics and Payments](10-economics-and-payments.md)
+- [Security and Platform Notes](16-security-and-platform-notes.md)

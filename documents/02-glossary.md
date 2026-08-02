@@ -149,9 +149,9 @@ Reconstructable public projection combining anonymous activity, registry observa
 ## Related Documents
 
 - [Protocol Laws](00-protocol-laws.md)
-- [Documentation Protocol](documentation-protocol.md)
-- [Identity](identity.md)
-- [Protocol Overview](protocol-overview.md)
-- [Architecture and Data Model](architecture-and-data-model.md)
-- [Cryptography and Wire Protocol](cryptography-and-wire-protocol.md)
-- [Economics and Payments](economics-and-payments.md)
+- [Documentation Protocol](01-documentation-protocol.md)
+- [Identity](04-identity.md)
+- [Protocol Overview](03-protocol-overview.md)
+- [Architecture and Data Model](05-architecture-and-data-model.md)
+- [Cryptography and Wire Protocol](06-cryptography-and-wire-protocol.md)
+- [Economics and Payments](10-economics-and-payments.md)

@@ -172,8 +172,8 @@ The bot attests one temporary Stage 1 fact: a human-created `pub_dress ↔ tg_id
 
 ## Related Documents
 
-- [Glossary](glossary.md)
-- [Protocol Overview](protocol-overview.md)
-- [Bond Lifecycle](bond-lifecycle.md)
-- [Cryptography and Wire Protocol](cryptography-and-wire-protocol.md)
-- [Devices and Recovery](devices-and-recovery.md)
+- [Glossary](02-glossary.md)
+- [Protocol Overview](03-protocol-overview.md)
+- [Bond Lifecycle](07-bond-lifecycle.md)
+- [Cryptography and Wire Protocol](06-cryptography-and-wire-protocol.md)
+- [Devices and Recovery](15-devices-and-recovery.md)

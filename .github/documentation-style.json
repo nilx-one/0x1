@@ -1,11 +1,32 @@
 {
   "roots": ["README.md", "documents"],
-  "excluded_paths": ["documents/protocol-constants-and-open-questions.md"],
+  "excluded_paths": ["documents/17-protocol-constants-and-open-questions.md"],
   "foundation_document": "documents/00-protocol-laws.md",
   "foundation_consumers": [
     "documents/README.md",
-    "documents/documentation-protocol.md",
-    "documents/glossary.md"
+    "documents/01-documentation-protocol.md",
+    "documents/02-glossary.md"
+  ],
+  "ordered_documents": [
+    "documents/00-protocol-laws.md",
+    "documents/01-documentation-protocol.md",
+    "documents/02-glossary.md",
+    "documents/03-protocol-overview.md",
+    "documents/04-identity.md",
+    "documents/05-architecture-and-data-model.md",
+    "documents/06-cryptography-and-wire-protocol.md",
+    "documents/07-bond-lifecycle.md",
+    "documents/08-offers-and-matrix-engine.md",
+    "documents/09-atomic-multi-bond-settlement.md",
+    "documents/10-economics-and-payments.md",
+    "documents/11-proximity-relay-and-broadcast.md",
+    "documents/12-map-architecture.md",
+    "documents/13-business-bonds-and-presence.md",
+    "documents/14-claim-auction.md",
+    "documents/15-devices-and-recovery.md",
+    "documents/16-security-and-platform-notes.md",
+    "documents/17-protocol-constants-and-open-questions.md",
+    "documents/18-implementation-roadmap.md"
   ],
   "deprecated_terms": [
     {
@@ -35,7 +56,7 @@
   ],
   "required_foundation_links": [
     "00-protocol-laws.md",
-    "documentation-protocol.md",
-    "glossary.md"
+    "01-documentation-protocol.md",
+    "02-glossary.md"
   ]
 }

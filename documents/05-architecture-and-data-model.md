@@ -120,4 +120,4 @@ Every projected record remains traceable to its authority source.
 
 Moving data across these boundaries is an architectural change, not a storage optimization.
 
-See [Map Architecture](map-architecture.md), [Business Bonds and Presence](business-bonds-and-presence.md), and [Digital Presence Auction](claim-auction.md).
+See [Map Architecture](12-map-architecture.md), [Business Bonds and Presence](13-business-bonds-and-presence.md), and [Digital Presence Auction](14-claim-auction.md).

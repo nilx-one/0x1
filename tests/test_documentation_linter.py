@@ -87,12 +87,56 @@ class DocumentationLinterTests(unittest.TestCase):
             documents = root / "documents"
             documents.mkdir()
             (documents / "README.md").write_text(
-                "# Index\n\n1. [Glossary](glossary.md)\n2. [Protocol Laws](00-protocol-laws.md)\n",
+                "# Index\n\n1. [Glossary](02-glossary.md)\n2. [Protocol Laws](00-protocol-laws.md)\n",
                 encoding="utf-8",
             )
-            policy = {"required_foundation_links": ["00-protocol-laws.md", "glossary.md"]}
+            policy = {"required_foundation_links": ["00-protocol-laws.md", "02-glossary.md"]}
             findings = LINTER.check_index(root, policy)
             self.assertEqual([finding.code for finding in findings], ["DOC010"])
+
+    def test_missing_document_from_canonical_sequence_is_reported(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            documents = root / "documents"
+            documents.mkdir()
+            (documents / "README.md").write_text("# Index\n", encoding="utf-8")
+            policy = {"ordered_documents": ["documents/00-protocol-laws.md"]}
+            findings = LINTER.check_catalog(root, policy)
+            self.assertEqual([finding.code for finding in findings], ["DOC011", "DOC013"])
+
+    def test_unnumbered_document_is_reported(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            documents = root / "documents"
+            documents.mkdir()
+            (documents / "README.md").write_text(
+                "# Index\n\n[Protocol Laws](00-protocol-laws.md)\n", encoding="utf-8"
+            )
+            (documents / "00-protocol-laws.md").write_text("# Protocol Laws\n", encoding="utf-8")
+            (documents / "glossary.md").write_text("# Glossary\n", encoding="utf-8")
+            policy = {"ordered_documents": ["documents/00-protocol-laws.md"]}
+            findings = LINTER.check_catalog(root, policy)
+            self.assertEqual([finding.code for finding in findings], ["DOC012"])
+
+    def test_index_must_follow_canonical_numeric_sequence(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            documents = root / "documents"
+            documents.mkdir()
+            (documents / "README.md").write_text(
+                "# Index\n\n[Glossary](01-glossary.md)\n[Protocol Laws](00-protocol-laws.md)\n",
+                encoding="utf-8",
+            )
+            (documents / "00-protocol-laws.md").write_text("# Protocol Laws\n", encoding="utf-8")
+            (documents / "01-glossary.md").write_text("# Glossary\n", encoding="utf-8")
+            policy = {
+                "ordered_documents": [
+                    "documents/00-protocol-laws.md",
+                    "documents/01-glossary.md",
+                ]
+            }
+            findings = LINTER.check_catalog(root, policy)
+            self.assertEqual([finding.code for finding in findings], ["DOC014"])
 
 
 if __name__ == "__main__":

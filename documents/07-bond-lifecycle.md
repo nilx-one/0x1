@@ -66,7 +66,7 @@ Map, registry, and auction records do not belong in `bond.chain`.
 
 None of those records can create BBond consent, increase BBond depth, or substitute for `ATTEST`.
 
-See [Business Bonds and Presence](business-bonds-and-presence.md).
+See [Business Bonds and Presence](13-business-bonds-and-presence.md).
 
 ## Synchronization
 
