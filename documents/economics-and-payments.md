@@ -30,13 +30,30 @@ CONTINUE rewards are fixed protocol behavior:
 - assisting participant: `+100 exp`;
 - Bond `level`: unchanged.
 
-## Third-Party Payments
+## Pairwise Payments
 
-Third-party payments use co-signed `PAY-REQ` and `PAY-SETTLE` records with an HTLC-style settlement proof.
+Payments use co-signed `PAY-REQ` and `PAY-SETTLE` records with an HTLC-style settlement proof.
 
-The payer commits to `H(x)`. The receiver reveals preimage `x` before the deadline to prove settlement; otherwise the timelock permits a refund.
+The paying party commits value against `H(x)` and a deadline. The receiving party settles by supplying preimage `x` before that deadline. Without a valid preimage, the escrow becomes void under its pairwise contract.
+
+Every value-moving authorization MUST trace to `sk_bond`. `sk_ack` MUST NOT independently create, redirect, or settle value.
 
 The protocol delegates total transaction ordering to an external exchange or settlement network. 0x1 does not create a global payment ledger.
+
+## Atomic Multi-Bond Settlement
+
+Independent pairwise escrows may share one settlement condition without creating a global transaction object.
+
+[Atomic Multi-Bond Settlement](atomic-multi-bond-settlement.md) defines:
+
+- one settlement secret and one settlement origin;
+- `H(x)` as the only cross-Bond linkage;
+- pre-authorized `PAY-SETTLE` templates;
+- local reveal and propagation;
+- deadline monotonicity;
+- atomic settlement across acyclic pairwise topologies.
+
+No party, operator, or automated process observes the complete settlement graph.
 
 ## Physical Presence
 
@@ -84,3 +101,10 @@ The complete mechanism is defined in [Digital Presence Auction](claim-auction.md
 - observed events never mint `level`, `bnd`, or `exp`;
 - presence spend never changes suggestion ranking;
 - losing physical presence creates no credit or priority in the digital auction.
+
+## Related Documents
+
+- [Glossary](glossary.md)
+- [Cryptography and Wire Protocol](cryptography-and-wire-protocol.md)
+- [Atomic Multi-Bond Settlement](atomic-multi-bond-settlement.md)
+- [Digital Presence Auction](claim-auction.md)
