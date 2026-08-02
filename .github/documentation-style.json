@@ -1,6 +1,12 @@
 {
   "roots": ["README.md", "documents"],
   "excluded_paths": ["documents/protocol-constants-and-open-questions.md"],
+  "foundation_document": "documents/00-protocol-laws.md",
+  "foundation_consumers": [
+    "documents/README.md",
+    "documents/documentation-protocol.md",
+    "documents/glossary.md"
+  ],
   "deprecated_terms": [
     {
       "pattern": "(?<!global )\\bhub(s)?\\b",
@@ -28,6 +34,7 @@
     "pub_dress"
   ],
   "required_foundation_links": [
+    "00-protocol-laws.md",
     "documentation-protocol.md",
     "glossary.md"
   ]

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate 0x1 documentation structure, links, style, and terminology."""
+"""Validate 0x1 documentation structure, foundation, links, style, and terminology."""
 
 from __future__ import annotations
 
@@ -123,10 +123,49 @@ def check_links(root: Path, path: Path, text: str) -> list[Finding]:
     return findings
 
 
+def links_to(root: Path, path: Path, text: str, target: Path) -> bool:
+    pattern = re.compile(r"(?<!!)\[[^]]+\]\(([^)]+)\)")
+    expected = (root / target).resolve()
+    for _, line in prose_lines(text):
+        for raw_target in pattern.findall(line):
+            value = raw_target.split("#", 1)[0]
+            if value and "://" not in value and not value.startswith("mailto:"):
+                if (root / path.parent / value).resolve() == expected:
+                    return True
+    return False
+
+
+def check_foundation(root: Path, policy: dict) -> list[Finding]:
+    findings: list[Finding] = []
+    foundation = Path(policy["foundation_document"])
+    if not (root / foundation).is_file():
+        return [Finding(foundation, 1, "DOC007", "The protocol foundation document is missing.")]
+
+    for value in policy.get("foundation_consumers", []):
+        consumer = Path(value)
+        consumer_path = root / consumer
+        if not consumer_path.is_file():
+            findings.append(Finding(consumer, 1, "DOC008", "A required foundation consumer is missing."))
+            continue
+        text = consumer_path.read_text(encoding="utf-8")
+        if not links_to(root, consumer, text, foundation):
+            findings.append(Finding(consumer, 1, "DOC009", f"Required foundation consumer must link to {foundation}."))
+    return findings
+
+
 def check_index(root: Path, policy: dict) -> list[Finding]:
     path = Path("documents/README.md")
     text = (root / path).read_text(encoding="utf-8")
-    return [Finding(path, 1, "DOC006", f"Documentation index must link to {name}.") for name in policy.get("required_foundation_links", []) if f"({name})" not in text]
+    required = policy.get("required_foundation_links", [])
+    findings: list[Finding] = []
+    for name in required:
+        if f"({name})" not in text:
+            findings.append(Finding(path, 1, "DOC006", f"Documentation index must link to {name}."))
+
+    first_item = re.search(r"^1\. \[[^]]+\]\(([^)#]+)(?:#[^)]+)?\)", text, re.MULTILINE)
+    if required and (not first_item or first_item.group(1) != required[0]):
+        findings.append(Finding(path, 1, "DOC010", f"Documentation reading order must begin with {required[0]}."))
+    return findings
 
 
 def run(root: Path, policy_path: Path) -> list[Finding]:
@@ -138,6 +177,7 @@ def run(root: Path, policy_path: Path) -> list[Finding]:
         findings += check_terms(path, text, policy)
         findings += check_code_terms(path, text, policy)
         findings += check_links(root, path, text)
+    findings += check_foundation(root, policy)
     findings += check_index(root, policy)
     return sorted(findings, key=lambda finding: (str(finding.path), finding.line, finding.code))
 

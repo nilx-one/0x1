@@ -46,6 +46,54 @@ class DocumentationLinterTests(unittest.TestCase):
         findings = LINTER.check_structure(Path("documents/example.md"), "# Example\n\n## Purpose\n")
         self.assertEqual(findings, [])
 
+    def test_missing_foundation_document_is_reported(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            policy = {"foundation_document": "documents/00-protocol-laws.md", "foundation_consumers": []}
+            findings = LINTER.check_foundation(Path(directory), policy)
+            self.assertEqual([finding.code for finding in findings], ["DOC007"])
+
+    def test_required_consumer_must_link_to_foundation(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            documents = root / "documents"
+            documents.mkdir()
+            (documents / "00-protocol-laws.md").write_text("# Protocol Laws\n", encoding="utf-8")
+            (documents / "README.md").write_text("# Index\n", encoding="utf-8")
+            policy = {
+                "foundation_document": "documents/00-protocol-laws.md",
+                "foundation_consumers": ["documents/README.md"],
+            }
+            findings = LINTER.check_foundation(root, policy)
+            self.assertEqual([finding.code for finding in findings], ["DOC009"])
+
+    def test_foundation_link_satisfies_consumer_contract(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            documents = root / "documents"
+            documents.mkdir()
+            (documents / "00-protocol-laws.md").write_text("# Protocol Laws\n", encoding="utf-8")
+            (documents / "README.md").write_text(
+                "# Index\n\n[Protocol Laws](00-protocol-laws.md)\n", encoding="utf-8"
+            )
+            policy = {
+                "foundation_document": "documents/00-protocol-laws.md",
+                "foundation_consumers": ["documents/README.md"],
+            }
+            self.assertEqual(LINTER.check_foundation(root, policy), [])
+
+    def test_reading_order_must_begin_with_protocol_laws(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            documents = root / "documents"
+            documents.mkdir()
+            (documents / "README.md").write_text(
+                "# Index\n\n1. [Glossary](glossary.md)\n2. [Protocol Laws](00-protocol-laws.md)\n",
+                encoding="utf-8",
+            )
+            policy = {"required_foundation_links": ["00-protocol-laws.md", "glossary.md"]}
+            findings = LINTER.check_index(root, policy)
+            self.assertEqual([finding.code for finding in findings], ["DOC010"])
+
 
 if __name__ == "__main__":
     unittest.main()
