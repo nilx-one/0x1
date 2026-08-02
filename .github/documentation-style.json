@@ -16,16 +16,6 @@
       "pattern": "\\bsettlement set(s)?\\b",
       "replacement": "Settlement Context",
       "reason": "The relation is implicit and must not be described as a materialized set."
-    },
-    {
-      "pattern": "\\bglobal social graph\\b",
-      "replacement": "global relationship graph",
-      "reason": "0x1 specifies pairwise relationship truth, not a social-platform graph model."
-    },
-    {
-      "pattern": "\\bcentral coordinator\\b",
-      "replacement": "coordinator",
-      "reason": "The protocol excludes the coordinator role itself; centrality is not the distinction."
     }
   ],
   "canonical_code_terms": [
