@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document owns the shared vocabulary of the 0x1 protocol. Topic documents may refine a term's behavior but MUST NOT assign it a conflicting meaning.
+This document owns the shared vocabulary of the 0x1 protocol. Its definitions derive their normative authority from the [Protocol Laws](00-protocol-laws.md). Topic documents may refine a term's behavior but MUST NOT assign it a conflicting meaning.
 
 ## Identity Terms
 
@@ -148,6 +148,7 @@ Reconstructable public projection combining anonymous activity, registry observa
 
 ## Related Documents
 
+- [Protocol Laws](00-protocol-laws.md)
 - [Documentation Protocol](documentation-protocol.md)
 - [Identity](identity.md)
 - [Protocol Overview](protocol-overview.md)

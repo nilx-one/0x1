@@ -2,7 +2,7 @@
 
 This directory contains the technical specification for the 0x1 identity layer, pairwise Bond protocol, BBond business layer, geographic presence market, and pairwise settlement behavior.
 
-The documentation is organized by authority boundary. Each document owns one architectural concern and links to adjacent contracts.
+The documentation is organized by authority boundary. Each document owns one architectural concern and links to adjacent contracts. All normative rules derive from the [Protocol Laws](00-protocol-laws.md).
 
 ## Product Identity
 
@@ -12,18 +12,20 @@ Its canonical repository is [`nilx-one/0x1`](https://github.com/nilx-one/0x1).
 
 ## Reading Order
 
-Start with the writing and vocabulary contracts, then follow the protocol from identity to enforcement:
+Start with the normative root, then the writing and vocabulary contracts, and follow the protocol from identity to enforcement:
 
-1. [Documentation Protocol](documentation-protocol.md)
-2. [Glossary](glossary.md)
-3. [Protocol Overview](protocol-overview.md)
-4. [Identity](identity.md)
-5. [Architecture and Data Model](architecture-and-data-model.md)
-6. [Cryptography and Wire Protocol](cryptography-and-wire-protocol.md)
-7. Topic-specific behavior and implementation documents
+1. [Protocol Laws](00-protocol-laws.md)
+2. [Documentation Protocol](documentation-protocol.md)
+3. [Glossary](glossary.md)
+4. [Protocol Overview](protocol-overview.md)
+5. [Identity](identity.md)
+6. [Architecture and Data Model](architecture-and-data-model.md)
+7. [Cryptography and Wire Protocol](cryptography-and-wire-protocol.md)
+8. Topic-specific behavior and implementation documents
 
 ## Foundation
 
+- [Protocol Laws](00-protocol-laws.md) — normative root, authority laws, system-wide invariants, hierarchy, and change control.
 - [Documentation Protocol](documentation-protocol.md) — document ownership, normative structure, layer boundaries, and change discipline.
 - [Glossary](glossary.md) — canonical repository-wide vocabulary.
 - [Protocol Overview](protocol-overview.md) — product thesis, authority model, and system invariants.
@@ -64,4 +66,4 @@ Start with the writing and vocabulary contracts, then follow the protocol from i
 
 The terms **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, and **MAY** are used in their conventional RFC sense.
 
-The complete writing contract is defined in [Documentation Protocol](documentation-protocol.md). Where a document describes rationale rather than protocol behavior, it must remain distinguishable from normative requirements.
+The [Protocol Laws](00-protocol-laws.md) are the source of all normative authority. The complete writing contract is defined in the [Documentation Protocol](documentation-protocol.md). Where a document describes rationale rather than protocol behavior, it must remain distinguishable from normative requirements.
