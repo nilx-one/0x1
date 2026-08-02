@@ -2,17 +2,17 @@
 
 ## `bond.chain`
 
-`bond.chain` (`bch`) is the only synchronized source of truth for a Bond.
+`bond.chain` (`bch`) is the only synchronized source of truth for a Bond or BBond.
 
 | Property | Contract |
 |---|---|
 | Ownership | Jointly owned by both participants |
-| Structure | Append-only, hash-linked, co-signed records |
+| Structure | Append-only, hash-linked records with the required bilateral signatures |
 | Synchronization | Fast-forward only |
 | Ordering | Defined by chain position; timestamps are informational |
 | Read access | Either participant may hold the file; semantic payloads require `k` |
 
-A candidate chain is accepted only when it extends the complete local prefix, every appended record has both required signatures, and all hash links are continuous.
+A candidate chain is accepted only when it extends the complete local prefix, every appended record has all required signatures, and all hash links are continuous.
 
 There is no merge operation and no longest-chain rule.
 
@@ -36,9 +36,9 @@ Real device loss therefore causes real journal loss. This is an intentional anti
 
 ## Public Map State
 
-The public map has two state classes with different authority.
+Public map state has four classes with separate authority.
 
-### Anonymous aggregate depth
+### Anonymous activity
 
 The server stores aggregate counters, never event rows.
 
@@ -46,26 +46,78 @@ The server stores aggregate counters, never event rows.
 (H3 cell at resolution 8, day of week, time window) -> count
 ```
 
-Counters increment only from eligible co-signed presence actions, including business `ATTEST`, at most once per pair per day. They decay over approximately 90 days and MUST NOT expose cells below `k >= 20`.
+Counters increment only from eligible co-signed presence actions, including BBond `ATTEST`, at most once per pair per day. They decay over approximately 90 days and MUST NOT expose cells below `k >= 20`.
 
-The server MUST NOT retain `bond_id`, exact timestamps, coordinates, or per-event history.
+The server MUST NOT retain `bond_id`, exact timestamps, exact coordinates, or per-event history.
 
-### Public claim registry
+Cell activation derives from unique eligible pairs over a trailing window. The privacy-preserving deduplication protocol remains implementation-blocking.
 
-Purchased business presence requires globally exclusive cell state. That state MUST NOT be placed in `bond.chain`, because a pairwise chain cannot establish global exclusivity.
+### Registry observations
 
-`claim.registry` is an externally ordered market projection containing cell ownership, current price, active challenge, settlement deadline, and cooldown. It delegates ordering and escrow to the external settlement network. Claim transitions and allocations follow deterministic auction rules; no discretionary market actor selects winners or overrides eligible bids.
+`REG-ATTEST` is a public, operator-signed observation of a supported external business registry.
 
-The registry is global market state, not global social state. It cannot create a Bond action, increase `level`, or enter `matr.ix` ranking.
+It contains only the fields required to bind:
 
-See [Map and Business Presence](map-and-business-presence.md) and [Claim Auction](claim-auction.md).
+```text
+external registry record
+-> business subject
+-> versioned geographic cell
+-> validity window
+```
+
+It does not enter `bond.chain` and does not attest a person, visit, relationship, or transaction.
+
+### Physical-presence projection
+
+A valid registry observation creates one physical presence for the named subject and cell.
+
+Physical presences are non-exclusive. The projection may contain any number of businesses in one cell.
+
+Physical presence ends when its registry evidence expires or is superseded, or when the business signs `PHYS-RELINQUISH`.
+
+### Digital-presence registry
+
+Every active cell has at most one `SLOT-DIGITAL`.
+
+The externally ordered registry contains:
+
+- current business subject;
+- slot-scoped `sk_presence` public key;
+- settled base;
+- active challenge;
+- settlement deadline;
+- cooldown.
+
+This state MUST NOT live in `bond.chain`, because a pairwise chain cannot establish global exclusivity.
+
+## `map.registry`
+
+The public map projection combines, but does not merge, those sources:
+
+```text
+map.registry = {
+  activity,
+  registry_observations,
+  physical_presences,
+  digital_presences,
+  projection_version
+}
+```
+
+Every projected record remains traceable to its authority source.
+
+`map.registry` is reconstructable public state. It cannot create a Bond action, increase `level`, mint `bnd`, or enter `matr.ix` ranking.
 
 ## Ownership Boundaries
 
 - Shared durable relationship state belongs in `bond.chain`.
 - Private adaptive state belongs in `bond.journal`.
-- Public aggregate depth belongs in anonymous counters.
-- Public exclusive placement state belongs in the externally ordered `claim.registry`.
+- Public anonymous activity belongs in aggregate counters.
+- External business-registry observations belong in the registry-oracle log.
+- Physical-presence projection belongs in `map.registry`.
+- Exclusive digital-presence tenure belongs in the externally ordered auction registry.
 - Ephemeral negotiation state belongs in encrypted transport and expires without durable traces.
 
 Moving data across these boundaries is an architectural change, not a storage optimization.
+
+See [Map Architecture](map-architecture.md), [Business Bonds and Presence](business-bonds-and-presence.md), and [Digital Presence Auction](claim-auction.md).

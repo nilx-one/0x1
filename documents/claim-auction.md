@@ -1,88 +1,140 @@
-# Claim Auction
+# Digital Presence Auction
 
-**Status:** draft v1  
-**Companion:** [Map and Business Presence](map-and-business-presence.md)
+**Status:** draft v2  
+**Companions:** [Map Architecture](map-architecture.md), [Business Bonds and Presence](business-bonds-and-presence.md)
 
 ## Purpose
 
-The claim auction assigns scarce map presence through deterministic bidding rules.
+The auction assigns the single digital business presence in an active map cell.
 
-An owner holds a cell under challengeable tenure. A challenger may fund a bid above the current price. The owner may defend by paying only a premium over the challenger bid; no owner response is required. If no valid defense settles before the deadline, the claim transfers automatically.
+It does not govern physical businesses. A registry-backed store, café, restaurant, or other physical tenant cannot be bought, challenged, defended, or displaced through this mechanism.
 
-0x1 is the auction. The term **auction** names the mechanism, not a separate entity or revenue recipient. Its allocation is enforced by settlement rules and cannot price a specific buyer, select a winner, or override an eligible bid.
+0x1 is the auction. The word **auction** names the deterministic mechanism, not a separate operator or revenue recipient.
 
-The mechanism prices presence only. It does not price a business, a Bond, an attestation, or suggestion rank.
+The auction prices digital presence only. It does not price a business, BBond, physical location, attestation, or suggestion rank.
+
+## Object
+
+Each active cell exposes exactly one:
+
+```text
+SLOT-DIGITAL(cell_id)
+```
+
+The slot represents digital business presence in that cell. It may be held by a business that operates physically somewhere else, operates online only, or previously occupied that cell physically.
+
+Physical-presence history creates no preference. A closed physical presence and an acquired digital presence are separate state transitions.
 
 ## Terms
 
 | Symbol | Meaning |
 |---|---|
-| `p` | Current settled price of the cell |
+| `p` | Current settled base of the digital slot |
 | `b` | Challenger bid |
 | `q` | Challenger premium, `b - p` |
-| `h` | Owner defense payment |
+| `h` | Holder defense payment |
 | `s` | Minimum step, initially `5%` |
-| `r` | Previous-owner share of a challenger premium, initially `20%` |
-| `x` | 0x1 auction share of a challenger premium, initially `80%` |
 | `W` | Optional defense window |
-| `C` | Per-cell cooldown after settlement |
+| `C` | Per-slot cooldown after settlement |
 
-`p`, `b`, `q`, and `h` are denominated in `bnd` and MUST use one canonical integer precision. Floating-point arithmetic is invalid for settlement.
-
-The executable rules use integer functions:
+All settlement amounts are denominated in `bnd` and MUST use one canonical integer precision. Floating-point arithmetic is invalid.
 
 ```text
-step(v)        = ceil_div(v, 20)
-share_owner(v) = floor_div(v, 5)
-share_0x1(v)   = v - share_owner(v)
+step(v)         = ceil_div(v, 20)
+share_holder(v) = floor_div(v, 5)
+share_0x1(v)    = v - share_holder(v)
 ```
 
-A valid challenger bid satisfies `b >= p + step(p)`. A valid defense satisfies `h >= step(b)`. Assigning any indivisible challenger-premium remainder to the 0x1 auction preserves every unit and makes the transfer split deterministic.
+A valid bid satisfies:
 
-In exact percentage notation, the minimum challenger premium is `5%` of `p`: `4%` goes to the 0x1 auction and `1%` goes to the previous owner. The previous owner also receives exactly `p`—`100%` of the current settled price. Only the excess `b - p` is split, always `4:1` between the 0x1 auction and the previous owner; there is no separate treatment for an overbid.
+```text
+b >= p + step(p)
+```
+
+A valid defense satisfies:
+
+```text
+h >= step(b)
+```
+
+Any indivisible premium remainder settles to 0x1 so every unit is conserved deterministically.
+
+## Authority
+
+Auction actions use a human-gated, slot-scoped `sk_presence` key.
+
+`sk_presence`:
+
+- MUST NOT be derived from `sk_ack`;
+- MUST NOT reuse a pairwise `sk_bond` identity;
+- authorizes only the named digital slot;
+- installs a successor key atomically on acquisition or transfer;
+- requires an explicit rotation and recovery contract before production.
 
 ## Registry State
 
-Each H3 cell has one externally ordered claim state:
+The externally ordered digital-presence registry contains:
 
 ```text
 cell_id
-owner_claim_pk
-price
-status = unclaimed | owned | challenged | cooldown
-active_challenge = { challenger_claim_pk, bid, opened_at, deadline, escrow_ref }?
+slot_class = SLOT-DIGITAL
+holder_subject_id
+holder_presence_pk
+base
+status = available | held | challenged | cooldown
+active_challenge = {
+  challenger_subject_id,
+  challenger_presence_pk,
+  bid,
+  opened_at,
+  deadline,
+  escrow_ref
+}?
 cooldown_until?
 ```
 
-`claim.registry` is not `bond.chain`. It is a public market projection ordered by the external settlement network. The relay transports none of this state and provides neither ordering nor time.
+This registry is global market state, not global relationship state. It cannot create a BBond record, increase `level`, or enter `matr.ix` ranking.
 
-A claim uses a cell-scoped public key. The corresponding signing authority is human-gated and MUST NOT be derived from or reachable by `sk_ack`. Pairwise `sk_bond` keys MUST NOT be reused as public claim identifiers.
-
-## Standing Transfer Covenant
-
-Acquiring a claim includes an explicit, signed covenant: if an eligible bid clears escrow and no valid defense settles before the deadline, the claim transfers automatically.
-
-`CLAIM-SETTLE` does not require a fresh owner signature or any owner response. It is authorized by the owner's acquisition record, the challenger's signed bid, the elapsed exchange time, and settlement proof.
-
-This is narrow pre-authorization, not autonomous human intent. It applies only to the named cell and the auction transition defined here.
+The relay transports none of this state and supplies neither ordering nor time.
 
 ## Records
 
-| Record | Authorization | Preconditions | Effect |
-|---|---|---|---|
-| `CLAIM` | Buyer claim key | Cell unclaimed; floor payment settled | Assigns first owner and sets `price = floor(cell)` |
-| `CLAIM-BID` | Challenger claim key | Cell owned; no active challenge or cooldown; `b >= p * (1 + s)`; full bid escrowed | Opens one optional defense window |
-| `CLAIM-DEFEND` | Owner claim key | Active challenge; before deadline; `h >= b * s` settled | Owner retains cell; sets `price = b + h` |
-| `CLAIM-SETTLE` | Prior covenant + challenger bid + settlement proof | Active challenge; deadline elapsed; no valid defense | Transfers cell; sets `price = b` |
-| `CLAIM-MARK` | Owner claim key | No active challenge; new price is positive and lower than `p` | Lowers the challenge price without transferring the cell |
+| Record | Authorization | Effect |
+|---|---|---|
+| `SLOT-DIGITAL` | Buyer `sk_presence` | First acquisition at the deterministic cell floor |
+| `CLAIM-BID` | Challenger `sk_presence` | Opens one funded challenge |
+| `CLAIM-DEFEND` | Current holder `sk_presence` | Pays the defense premium and retains the slot |
+| `CLAIM-SETTLE` | Standing covenant + bid + settlement proof | Transfers the slot without a fresh holder signature |
+| `CLAIM-MARK` | Current holder `sk_presence` | Lowers the slot base |
 
-Only one challenge may be active for a cell. Additional bids are rejected until the active challenge settles and the cooldown expires.
+Only one challenge may be active for a digital slot.
+
+## Standing Transfer Covenant
+
+Acquiring `SLOT-DIGITAL` includes a signed covenant:
+
+> If an eligible funded bid remains undefeated when the exchange-defined deadline expires, the digital presence transfers automatically.
+
+`CLAIM-SETTLE` requires no new holder signature and no holder response. It is authorized by:
+
+- the acquisition covenant;
+- the challenger's signed bid;
+- exchange time;
+- escrow proof;
+- absence of a valid defense settlement.
 
 ## Initial Acquisition
 
-The floor for an unclaimed cell is a deterministic, versioned function of historical unique H3 cell-match volume. No party may nominate or override a floor for an individual cell.
+The floor for an available digital slot is a deterministic, versioned function of historical unique-pair activity in the cell.
 
-The buyer settles the full floor amount into the 0x1 auction under the versioned acquisition rule, accepts the standing transfer covenant, and supplies the cell-scoped successor key in one atomic acquisition.
+The buyer:
+
+1. settles the full floor amount;
+2. names the business subject;
+3. supplies the successor `sk_presence` public key;
+4. accepts the standing transfer covenant.
+
+The operation installs the holder, base, and successor key atomically.
 
 ## Challenger Bid
 
@@ -93,18 +145,11 @@ b >= p + step(p)
 q = b - p
 ```
 
-In percentage notation, `b >= p * 1.05`.
+Five percent is the minimum step, not a fixed increment or ceiling. A challenger may bid `5x` or `50x` the base in one move.
 
-Five percent is the minimum step, not a fixed increment or ceiling. A challenger may bid `5x` or `50x` the current price in one move.
+The full bid enters escrow before the challenge becomes active.
 
-The full bid is escrowed at submission. A bid is a funded commitment to acquire the cell if the owner does not defend.
-
-The previous owner receives `p` in full plus one-fifth of the challenger premium `q`. The 0x1 auction receives the remaining four-fifths. Every amount above the minimum `5%` uses the same `4:1` 0x1-to-owner split:
-
-```text
-owner payout        = p + share_owner(q)
-0x1 auction revenue = share_0x1(q)
-```
+A funded bid is a commitment to acquire the digital slot if the holder does not defend.
 
 ## Settlement Branches
 
@@ -113,113 +158,136 @@ owner payout        = p + share_owner(q)
 If no valid defense settles before the deadline:
 
 ```text
-challenger pays     b
-owner receives      p + share_owner(b - p)
-0x1 auction receives share_0x1(b - p)
-cell transfers
-new price           b
+challenger pays       b
+previous holder gets  p + share_holder(b - p)
+0x1 gets              share_0x1(b - p)
+digital slot transfers
+new base              b
 ```
 
-With `r = 20%` and `x = 80%`, exact arithmetic is:
+Only the excess above the previous base is split:
 
 ```text
-p + ((b - p) * 0.20) + ((b - p) * 0.80) = b
+previous holder share = 20% of excess
+0x1 share             = 80% of excess
 ```
 
-The integer functions preserve the same identity by assigning any indivisible remainder to the 0x1 auction.
+At the minimum bid `b = 1.05p`:
 
-At the minimum bid `b = p * 1.05`, the owner receives `100%` of the previous current price `p` plus `1%` of `p`. The 0x1 auction receives `4%` of `p`.
+- the previous holder receives `p + 0.01p`;
+- 0x1 receives `0.04p`.
 
-A larger bid does not change the rule. The previous owner receives `p` plus one-fifth of the full excess `b - p`; the 0x1 auction receives the remaining four-fifths.
+A larger bid uses the same `4:1` 0x1-to-previous-holder split across the full excess.
 
-Example: if `p = 100` and `b = 120`, then `q = 20`. The previous owner receives `100 + 4 = 104`; the 0x1 auction receives `16`.
+Example:
+
+```text
+p = 100
+b = 120
+q = 20
+
+previous holder receives 104
+0x1 receives 16
+```
 
 ### Defense
 
-Defending is optional. The owner does not match or escrow the full challenger bid.
-
-If the owner chooses to defend, the minimum payment is:
+Defense is optional. The holder does not match or escrow the full bid.
 
 ```text
 h >= step(b)
 ```
 
-In percentage notation, `h >= b * 0.05`.
-
-Settlement is:
+Settlement:
 
 ```text
-owner pays          h
-0x1 auction receives h
-bid escrow returns  to challenger
-owner retains cell
-new price           b + h
+holder pays          h
+0x1 receives         h
+challenger escrow    returns
+holder retains slot
+new base             b + h
 ```
 
-The owner may choose `h > b * 0.05` in one action. Because no transfer occurs, there is no previous-owner premium to split: the full defense payment settles to the 0x1 auction.
+Because no transfer occurs, there is no previous-holder premium to split. The full defense payment settles to 0x1.
 
-At the minimum defense, the 0x1 auction receives `5%` of `b`, and the next challenge price begins from `b * 1.05`.
+At the minimum defense, the holder pays `5%` of the challenger bid and the next challenge begins from at least the newly settled base.
 
-## Lowering the Price
+## Lowering the Base
 
-An owner may use `CLAIM-MARK` to lower `p` to any positive representable value when no challenge is active. The operation is free and does not transfer the cell.
+The holder may use `CLAIM-MARK` to lower the base to any positive representable value when no challenge is active.
 
-Lowering is not a listing. It reduces the price from which the next valid challenge is calculated and makes the claim easier to take. The client MUST describe it as reducing protection, not putting the cell up for sale.
+The operation is free and does not transfer the slot.
 
-There is no automatic decay and no recurring holding tax. Liquidity comes from the owner's ability to mark an obsolete or overvalued claim down to where a challenger exists.
+Lowering is not a listing. It reduces protection and invites a cheaper challenge.
+
+There is no automatic price decay and no recurring holding tax.
 
 ## Atomicity and Ordering
 
-The auction reuses the external settlement network and the existing HTLC-style payment contract. It does not add ordering to the relay.
+The auction reuses the external settlement network and the HTLC-style payment contract.
 
-- `CLAIM-BID` locks the full bid before the challenge becomes active.
-- `CLAIM-DEFEND` atomically settles `h` to the 0x1 auction, returns the challenger bid, and installs `price = b + h`.
-- `CLAIM-SETTLE` atomically pays `p + share_owner(b - p)` to the previous owner, pays `share_0x1(b - p)` to the 0x1 auction, installs the challenger's successor key, and transfers the claim.
-- Exchange order resolves races. Relay arrival order and device clocks are never authoritative.
-- `opened_at`, `deadline`, and `cooldown_until` are derived from exchange time.
+- `CLAIM-BID` locks the full bid before activation.
+- `CLAIM-DEFEND` atomically settles `h`, returns the bid escrow, and installs `base = b + h`.
+- `CLAIM-SETTLE` atomically pays both allocations, installs the successor key, and transfers the slot.
+- Exchange order resolves races.
+- Exchange time defines `opened_at`, `deadline`, and `cooldown_until`.
+- Relay arrival order and device clocks are never authoritative.
 
-An implementation MUST NOT expose an intermediate state in which one party controls both the purchase funds and the cell.
+No valid intermediate state may leave one party controlling both the funds and the digital slot.
 
 ## Cooldown
 
-Every transfer or defense closes the cell to new bids for `C`.
+Every transfer or defense closes the digital slot to new bids for `C`.
 
-Cooldown attaches to the cell, not the challenger. This prevents coordinated accounts from rotating challenges against the same owner. A successful defense counts as a settlement and receives the same protection as a transfer.
+Cooldown attaches to `SLOT-DIGITAL`, not to the challenger. This prevents coordinated identities from rotating challenges against one holder.
 
-`CLAIM-MARK` may lower the price during cooldown, but no new challenge becomes valid until `cooldown_until`.
+`CLAIM-MARK` may lower the base during cooldown. A new bid becomes valid only after `cooldown_until`.
 
-## Deliberate Omissions
+## Physical-to-Digital Example
 
-- No fake-claim detector. A claim with no earned map depth remains visibly unproven.
-- No discretionary price-setting, veto, allowlist, or partner allocation.
-- No time decay of `price`.
-- No bid without full escrow.
-- No required owner response.
-- No off-chain side agreement that can override registry state.
+A business may lose a registry-backed physical presence because it moved, closed the location, changed its registry record, or voluntarily relinquished the marker.
 
-## Required Product Language
+That event only closes the physical presence.
+
+```text
+physical presence closes
+digital slot remains unchanged
+```
+
+The former physical tenant may then:
+
+- acquire the digital slot at the floor if it is available; or
+- challenge the current digital holder.
+
+There is no automatic conversion, reservation, reimbursement, or priority.
+
+## Product Language
+
+At acquisition:
+
+> This is a digital business representation, not a verified physical location. It is tenured, not owned, and may be challenged without warning.
 
 When a challenge opens:
 
-> Taking no action is valid. If no defense payment settles before the deadline, the claim transfers automatically. Keeping the cell requires only a defense premium of at least 5% of the latest bid, not payment of the full bid.
+> Taking no action is valid. If no defense payment settles before the deadline, the digital presence transfers automatically. Keeping it requires a defense payment of at least 5% of the latest bid, not payment of the full bid.
 
 At `CLAIM-MARK`:
 
-> This does not list the cell for sale. It lowers the price at which another buyer can challenge and take it.
+> This does not list the digital presence for sale. It lowers the base from which another business may challenge it.
 
-Both disclosures MUST appear before signature.
+All disclosures MUST appear before signature.
 
-## Draft Parameters and Open Decisions
+## Draft Parameters
 
 | Parameter | Draft value | Status |
 |---|---|---|
-| Minimum challenger step `s` | `5%` of current price | Proposed v1 constant |
+| Minimum challenger step | `5%` of current base | Proposed v1 constant |
 | Minimum defense payment | `5%` of challenger bid | Proposed v1 constant |
-| Challenger-premium split | `80%` 0x1 auction / `20%` previous owner | Proposed v1 constant |
-| Defense-payment recipient | `100%` 0x1 auction | Proposed v1 constant |
+| Challenger-premium split | `80%` 0x1 / `20%` previous holder | Proposed v1 constant |
+| Defense-payment recipient | `100%` 0x1 | Proposed v1 constant |
 | Defense window `W` | TBD | Implementation-blocking |
-| Cooldown `C` | One week or one month | Requires market calibration |
-| Initial floor curve | TBD | Requires historical-volume model |
-| Visibility-band curve | TBD | Requires client-density model |
+| Cooldown `C` | One week or one month | Requires calibration |
+| Initial floor curve | TBD | Requires activity model |
+| `sk_presence` lifecycle | TBD | Implementation-blocking |
 
 Parameter changes MUST be versioned and global. No implementation may tune them per buyer, business, or cell.

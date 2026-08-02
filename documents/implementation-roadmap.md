@@ -38,18 +38,73 @@ Implement `level`, `bnd`, `exp`, sublinear issuance, random-blob Bond sale, HTLC
 
 **Exit gate:** choose broadcast routing—cell-wide or graph-bounded—before production broadcast aggregation is enabled. The graph-bounded model is the default recommendation.
 
-## Phase 6 — Business Presence and Claim Market
+## Phase 6 — Map Substrate
 
-Implement business `ATTEST`, anonymous aggregate-depth projection, signed regional claim snapshots, cell-scoped claim keys, the externally ordered claim registry, funded challenges, standing transfer covenants, optional defense payments, atomic transfer and defense settlement, `CLAIM-MARK`, and per-cell cooldown.
+Implement:
 
-**Entry gate:** optional defense window, cooldown, initial floor curve, visibility curve, and claim-key lifecycle are protocol decisions rather than implementation defaults.
+- H3 cell activity aggregation;
+- privacy-preserving unique-pair contribution limits;
+- trailing activation windows;
+- signed regional bundles;
+- MapLibre GL JS and MapLibre Native clients;
+- shared Style Specification;
+- Protomaps delivery;
+- deterministic clustering and visibility bands.
 
-**Exit gate:** model-based tests prove one owner per cell, exact value conservation, the `80:20` 0x1/previous-owner split of every challenger premium, full settlement of defense payments to the 0x1 auction, defense without full-bid payment, no owner-response dependency for transfer, and no path from claim spend to `level` or ranking.
+**Entry gate:** the unique-pair activation protocol and activity window are specified.
+
+**Exit gate:** tests prove that viewport telemetry is absent, rendering density never gates rights, and map spend cannot affect activity or ranking.
+
+## Phase 7 — BBond and Physical Presence
+
+Implement:
+
+- BBond subject binding;
+- business-side human authority;
+- `ATTEST`;
+- versioned public-registry adapters;
+- isolated registry-oracle signing;
+- `REG-ATTEST`;
+- physical-presence projection;
+- automated expiry and supersession;
+- voluntary `PHYS-RELINQUISH`.
+
+**Entry gate:** business representative lifecycle, registry adapter contract, oracle key rotation, and correction semantics are specified.
+
+**Exit gate:** tests prove that physical presence is free, non-exclusive, non-transferable through auction, and removed only by registry lifecycle or voluntary relinquishment.
+
+## Phase 8 — Digital Presence Market
+
+Implement:
+
+- one `SLOT-DIGITAL` per active cell;
+- slot-scoped `sk_presence`;
+- deterministic initial floor;
+- funded challenges;
+- standing transfer covenants;
+- optional defense payments;
+- atomic transfer and defense settlement;
+- `CLAIM-MARK`;
+- per-slot cooldown.
+
+**Entry gate:** defense window, cooldown, floor curve, and `sk_presence` lifecycle are protocol decisions rather than implementation defaults.
+
+**Exit gate:** model-based tests prove:
+
+- at most one digital holder per active cell;
+- any number of physical presences remain unaffected;
+- exact value conservation;
+- `80:20` 0x1/previous-holder split of every challenger premium;
+- full settlement of defense payments to 0x1;
+- defense without full-bid payment;
+- no holder-response dependency for transfer;
+- no automatic physical-to-digital conversion;
+- no path from auction spend to `level`, activity, or ranking.
 
 ## Validation Principles
 
 - Test contracts before optimizing throughput.
 - Treat device loss and partial connectivity as normal operating conditions.
 - Test cryptographic and Data Protection behavior on physical iOS hardware.
-- Keep all operator-side state reconstructable or disposable.
+- Keep operator-side state narrow, auditable, and reconstructable where possible.
 - Reject implementations that broaden plaintext, persistence, or autonomous authority for convenience.

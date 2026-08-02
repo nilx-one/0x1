@@ -2,7 +2,7 @@
 
 ## `level`
 
-`level` is permanent and non-transferable. It increases only through signed actions and represents relationship depth rather than a competitive score.
+`level` is permanent and non-transferable. It increases only through eligible signed actions and represents relationship depth rather than a competitive score.
 
 The product MUST NOT expose leaderboards based on `level`.
 
@@ -38,20 +38,49 @@ The payer commits to `H(x)`. The receiver reveals preimage `x` before the deadli
 
 The protocol delegates total transaction ordering to an external exchange or settlement network. 0x1 does not create a global payment ledger.
 
-## Purchased Map Presence
+## Physical Presence
 
-`bnd` may purchase a challengeable claim on one H3 cell. The claim buys public map presence only. It cannot purchase `level`, `exp`, `ATTEST`, placement in `matr.ix`, or a higher aggregate-depth score.
+Registry-backed physical presence is free.
 
-The claim auction reuses the external settlement network for escrow, ordering, deadlines, and atomic transfer. Its global market state remains outside `bond.chain`.
+It has:
 
-On transfer, the previous owner receives `100%` of the current price plus one-fifth of the challenger's excess above that price. The 0x1 auction receives the remaining four-fifths. An optional defense requires only a payment of at least `5%` of the challenger bid; because no transfer occurs, that payment settles in full to the 0x1 auction. The complete mechanism is defined in [Claim Auction](claim-auction.md).
+- no acquisition price;
+- no auction fee;
+- no defense payment;
+- no transfer premium;
+- no recurring tax.
+
+A business loses the physical-presence projection only when its supporting registry fact ends or the business voluntarily relinquishes it.
+
+## Purchased Digital Presence
+
+`bnd` may acquire or challenge the single `SLOT-DIGITAL` in an active cell.
+
+Digital presence buys public map representation only. It cannot purchase:
+
+- `level`;
+- `exp`;
+- BBond `ATTEST`;
+- placement in `matr.ix`;
+- aggregate map activity;
+- a verified physical address.
+
+The auction reuses the external settlement network for escrow, ordering, deadlines, and atomic transfer. Its global market state remains outside `bond.chain`.
+
+On transfer, the previous holder receives the full prior base plus one-fifth of the challenger's excess above that base. 0x1 receives the remaining four-fifths.
+
+An optional defense requires only a payment of at least `5%` of the challenger bid. Because no transfer occurs, that payment settles in full to 0x1.
+
+The complete mechanism is defined in [Digital Presence Auction](claim-auction.md).
 
 ## Economic Constraints
 
 - no percentage fee on relationship transactions;
-- claim-auction allocations apply only to purchased map presence;
+- no price on registry-backed physical presence;
+- auction allocations apply only to digital presence;
 - no reward field inside OFFER;
 - rewards remain retrospective and unpredictable;
 - recovery rewards never increase Bond depth;
 - observed events never mint `level`, `bnd`, or `exp`;
-- claim spend never changes suggestion ranking.
+- presence spend never changes suggestion ranking;
+- losing physical presence creates no credit or priority in the digital auction.
