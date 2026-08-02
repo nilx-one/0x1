@@ -1,0 +1,44 @@
+{
+  "roots": ["README.md", "documents"],
+  "excluded_paths": ["documents/protocol-constants-and-open-questions.md"],
+  "deprecated_terms": [
+    {
+      "pattern": "\\bhub(s)?\\b",
+      "replacement": "transit party / transit parties",
+      "reason": "Hub implies a protocol actor. AMS roles are local edge positions."
+    },
+    {
+      "pattern": "\\banchor(s)?\\b",
+      "replacement": "settlement origin",
+      "reason": "Anchor is not a canonical 0x1 identity or role."
+    },
+    {
+      "pattern": "\\bsettlement set(s)?\\b",
+      "replacement": "Settlement Context",
+      "reason": "The relation is implicit and must not be described as a materialized set."
+    },
+    {
+      "pattern": "\\bglobal social graph\\b",
+      "replacement": "global relationship graph",
+      "reason": "0x1 specifies pairwise relationship truth, not a social-platform graph model."
+    },
+    {
+      "pattern": "\\bcentral coordinator\\b",
+      "replacement": "coordinator",
+      "reason": "The protocol excludes the coordinator role itself; centrality is not the distinction."
+    }
+  ],
+  "canonical_code_terms": [
+    "bond.chain",
+    "bond.journal",
+    "matr.ix",
+    "sk_bond",
+    "sk_ack",
+    "sk_presence",
+    "pub_dress"
+  ],
+  "required_foundation_links": [
+    "documentation-protocol.md",
+    "glossary.md"
+  ]
+}
