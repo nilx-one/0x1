@@ -128,7 +128,9 @@ Two relationship units exist. They are not equivalent and never convert into one
 
 `bnd` is proof of interaction, not proof of work. To a buyer it carries weight, not history.
 
-Settlement uses HTLC-style escrow through `PAY-REQ` and `PAY-SETTLE`, with preimage `x`, against an external exchange. 0x1 borrows total ordering where needed instead of building global consensus where it does not belong.
+Settlement uses HTLC-style escrow through `PAY-REQ` and `PAY-SETTLE`, with preimage `x`, against an external exchange. Independent pairwise escrows may share one condition through Atomic Multi-Bond Settlement without creating a global transaction graph or coordinator.
+
+0x1 borrows total ordering where needed instead of building global consensus where it does not belong.
 
 Physical business presence is free. The digital-presence market is the only protocol surface that sells map visibility.
 
@@ -155,15 +157,18 @@ The chain is the receipt. The other party is the witness.
 
 ## Documentation
 
-The protocol is organized as topic-focused engineering documents:
+The specification is organized by authority boundary. Its writing and vocabulary contracts come first:
 
 ```text
 documents/
 ├── README.md
+├── documentation-protocol.md
+├── glossary.md
 ├── protocol-overview.md
 ├── architecture-and-data-model.md
 ├── cryptography-and-wire-protocol.md
 ├── bond-lifecycle.md
+├── atomic-multi-bond-settlement.md
 ├── proximity-relay-and-broadcast.md
 ├── map-architecture.md
 ├── business-bonds-and-presence.md
@@ -176,13 +181,15 @@ documents/
 └── implementation-roadmap.md
 ```
 
-Start with [`documents/protocol-overview.md`](documents/protocol-overview.md), then follow the authority boundaries outward: chain, keys, proximity, map substrate, BBond presence, auction, recovery, and economics.
+Start with [`documents/documentation-protocol.md`](documents/documentation-protocol.md), then [`documents/glossary.md`](documents/glossary.md) and [`documents/protocol-overview.md`](documents/protocol-overview.md). Follow the authority boundaries outward through chain state, keys, behavior, proximity, public projection, recovery, and economics.
 
 ---
 
 ## Status
 
 The v1 architecture is specified for the Bond layer, key hierarchy, proximity protocol, offer mechanics, device lifecycle, recovery, and economic boundaries.
+
+Atomic Multi-Bond Settlement is a v1 draft with its authority, privacy, reveal, and timeout invariants specified.
 
 The map and BBond layers are draft v2. Presence classes and auction allocation are specified. Privacy-preserving cell activation, registry adapters, business authority, timing, and key lifecycle remain open.
 
