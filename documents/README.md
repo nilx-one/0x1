@@ -4,6 +4,12 @@ This directory contains the v1 technical specification for the 0x1 pairwise Bond
 
 The documentation is organized by authority boundary. Each document owns one architectural concern and links to adjacent contracts.
 
+## Product Identity
+
+`0x1` is a protocol product within the `nilx.one` ecosystem. It is not a GitHub organization, company identity, or alias for `nilx.one`.
+
+Its canonical repository is [`nilx-one/0x1`](https://github.com/nilx-one/0x1).
+
 ## Documents
 
 - [Protocol Overview](protocol-overview.md) — product thesis, authority model, and system invariants.
