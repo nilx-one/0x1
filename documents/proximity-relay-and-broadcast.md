@@ -6,6 +6,8 @@ Peers derive HMAC visibility tokens from the active pairwise key and spatial cel
 
 The v1 profile uses H3 resolution 8 for proximity and map aggregation. Matching is asymmetric: one side emits a token for one cell while the other checks the center cell and a bounded neighbor set (`1 <-> 9`). This tolerates cell-boundary placement without exposing coordinates.
 
+A successful geometry match establishes only that an eligible pair was near the same cell boundary. The signed counterparty determines whether the action belongs to a person-to-person Bond or a BBond.
+
 ## Constant-Rate Transport
 
 Proximity traffic MUST use a constant cadence. Real and dummy payloads occupy indistinguishable slots inside a fixed-size envelope.
@@ -22,16 +24,28 @@ The relay is content-agnostic, RAM-only, and non-persistent. It provides transie
 - resolve identity;
 - attest consent;
 - participate in recovery;
-- order claim-auction transitions;
+- order map or auction transitions;
+- validate registry facts;
 - retain semantic payloads.
 
-## Aggregate Map
+## Aggregate Map Activity
 
-Only eligible co-signed presence actions may increment public map counters. Generic interactions use signed `ACCEPT`; business depth uses signed `ATTEST` after a successful cell match.
+Only eligible co-signed presence actions may increment public map counters. Generic interactions use signed `ACCEPT`; business depth uses signed BBond `ATTEST` after a successful cell match.
 
-The map uses H3 resolution 8, a roughly 90-day decay window, one increment per pair per day, and `k >= 20` disclosure protection.
+The current public profile uses:
 
-Purchased business markers are a separate projection. A `CLAIM` cannot increment aggregate depth, fabricate proximity, or alter ranking. See [Map and Business Presence](map-and-business-presence.md).
+- H3 resolution 8;
+- approximately 90-day decay;
+- one contribution per pair per day;
+- `k >= 20` disclosure protection.
+
+Cell activation uses unique eligible pairs over a trailing window. Raw action volume MUST NOT substitute for independent pair activity.
+
+The exact privacy-preserving unique-pair deduplication protocol remains open. It MUST NOT create a public or operator-visible social graph.
+
+Physical and digital business markers are separate public projections. Neither `REG-ATTEST` nor auction spend can increment aggregate activity, fabricate proximity, or alter ranking.
+
+See [Map Architecture](map-architecture.md).
 
 ## Broadcast Layer
 
