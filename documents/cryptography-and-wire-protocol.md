@@ -18,20 +18,42 @@ Binding `k` to the chain head makes divergence self-penalizing. A rollback or co
 
 ### `sk_bond`
 
-Human-gated signing authority. It authorizes commitment-bearing records such as `INIT`, `CONSENT`, `ACCEPT`, `REKEY`, `REVOKE`, and `CONTINUE`.
+Human-gated pairwise signing authority. It authorizes commitment-bearing Bond and BBond records such as `INIT`, `CONSENT`, `ACCEPT`, `ATTEST`, `REKEY`, `REVOKE`, and `CONTINUE`.
 
 ### `sk_ack`
 
 Engine authority derived from `sk_bond`. It may issue `READ`, `ACK`, `EXP`, defensive rekey acknowledgements, and negotiation messages. It MUST NOT create a human commitment.
+
+### `sk_presence`
+
+Human-gated, slot-scoped authority for one `SLOT-DIGITAL`.
+
+It authorizes digital-presence market actions such as `SLOT-DIGITAL`, `CLAIM-BID`, `CLAIM-DEFEND`, and `CLAIM-MARK`.
+
+`sk_presence`:
+
+- is not pairwise;
+- MUST NOT be derived from `sk_ack`;
+- MUST NOT reuse `sk_bond`;
+- MUST be replaced atomically with a successor key on transfer;
+- requires an explicit rotation and recovery lifecycle before production.
+
+### Registry-oracle key
+
+nilx.one uses a distinct operator key to sign `REG-ATTEST` records.
+
+That key is authorized only to publish versioned observations of supported external business registries. It cannot sign Bond, BBond, auction, recovery, or human-intent records.
 
 ## Platform Mapping
 
 | Role | Primitive | Storage |
 |---|---|---|
 | Hardware anchor | P-256 | Secure Enclave |
-| Record signatures | Ed25519 | Keychain |
-| Key agreement | X25519 | Keychain |
+| Pairwise record signatures | Ed25519 | Keychain |
+| Pairwise key agreement | X25519 | Keychain |
+| Digital-presence signatures | Ed25519 | Keychain |
 | Payload encryption | ChaCha20-Poly1305 or HPKE | Ephemeral/runtime |
+| Registry-oracle signatures | Ed25519 | Operator HSM or equivalent isolated signer |
 
 Secure Enclave support is limited to P-256 for this design. Ed25519 and X25519 keys remain software keys protected by the Keychain.
 
@@ -43,9 +65,11 @@ Only validation structure is plaintext:
 { type, sig_a, sig_b, h_prev, h_self, level }
 ```
 
-All semantic content is encrypted under `k` using AEAD.
+All semantic Bond content is encrypted under `k` using AEAD.
 
 This separation allows an untrusted party to hold or transfer a `bch` file without learning its meaning. Possession of the file does not grant read access or signing authority.
+
+Public map and auction records use separate, versioned envelopes because they are intentionally public and have different signature requirements. They MUST NOT be inserted into `bond.chain`.
 
 ## Ephemeral Envelope
 
