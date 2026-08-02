@@ -1,0 +1,34 @@
+{
+  "roots": ["README.md", "documents"],
+  "excluded_paths": ["documents/protocol-constants-and-open-questions.md"],
+  "deprecated_terms": [
+    {
+      "pattern": "(?<!global )\\bhub(s)?\\b",
+      "replacement": "transit party / transit parties",
+      "reason": "Hub implies a protocol actor. AMS roles are local edge positions."
+    },
+    {
+      "pattern": "\\bsettlement anchor(s)?\\b",
+      "replacement": "settlement origin",
+      "reason": "Settlement origin is the canonical local role."
+    },
+    {
+      "pattern": "\\bsettlement set(s)?\\b",
+      "replacement": "Settlement Context",
+      "reason": "The relation is implicit and must not be described as a materialized set."
+    }
+  ],
+  "canonical_code_terms": [
+    "bond.chain",
+    "bond.journal",
+    "matr.ix",
+    "sk_bond",
+    "sk_ack",
+    "sk_presence",
+    "pub_dress"
+  ],
+  "required_foundation_links": [
+    "documentation-protocol.md",
+    "glossary.md"
+  ]
+}

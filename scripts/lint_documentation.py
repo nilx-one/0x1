@@ -1,0 +1,160 @@
+#!/usr/bin/env python3
+"""Validate 0x1 documentation structure, links, style, and terminology."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Iterable
+
+
+@dataclass(frozen=True)
+class Finding:
+    path: Path
+    line: int
+    code: str
+    message: str
+
+    def github(self) -> str:
+        return f"::error file={self.path},line={self.line},title={self.code}::{self.message}"
+
+
+def load_policy(path: Path) -> dict:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def markdown_files(root: Path, policy: dict) -> list[Path]:
+    excluded = {Path(value) for value in policy.get("excluded_paths", [])}
+    result: set[Path] = set()
+    for value in policy["roots"]:
+        candidate = root / value
+        if candidate.is_file() and candidate.suffix == ".md":
+            result.add(candidate.relative_to(root))
+        elif candidate.is_dir():
+            result.update(path.relative_to(root) for path in candidate.rglob("*.md"))
+    return sorted(result - excluded)
+
+
+def prose_lines(text: str) -> Iterable[tuple[int, str]]:
+    in_fence = False
+    fence = ""
+    for number, line in enumerate(text.splitlines(), start=1):
+        match = re.match(r"\s*(```+|~~~+)", line)
+        if match:
+            marker = match.group(1)[0]
+            if not in_fence:
+                in_fence, fence = True, marker
+            elif marker == fence:
+                in_fence, fence = False, ""
+            continue
+        if not in_fence:
+            yield number, line
+
+
+def without_inline_code(line: str) -> str:
+    return re.sub(r"`[^`]*`", "", line)
+
+
+def check_structure(path: Path, text: str) -> list[Finding]:
+    findings: list[Finding] = []
+    lines = text.splitlines()
+    h1 = [number for number, line in enumerate(lines, start=1) if line.startswith("# ")]
+    if len(h1) != 1:
+        findings.append(Finding(path, 1, "DOC001", "Markdown documents must contain exactly one H1 heading."))
+    elif h1[0] != 1:
+        findings.append(Finding(path, h1[0], "DOC002", "The H1 heading must be the first line."))
+    for number, line in enumerate(lines, start=1):
+        trailing_spaces = len(line) - len(line.rstrip(" "))
+        if trailing_spaces not in (0, 2):
+            findings.append(Finding(path, number, "DOC003", "Trailing spaces are forbidden except the two-space Markdown line break."))
+        if "\t" in line:
+            findings.append(Finding(path, number, "DOC004", "Tabs are not allowed in Markdown."))
+        if re.match(r"^#{1,6}[^ #]", line):
+            findings.append(Finding(path, number, "DOC005", "A heading marker must be followed by one space."))
+    return findings
+
+
+def check_terms(path: Path, text: str, policy: dict) -> list[Finding]:
+    findings: list[Finding] = []
+    rules = [(re.compile(item["pattern"], re.IGNORECASE), item) for item in policy.get("deprecated_terms", [])]
+    for number, raw in prose_lines(text):
+        if "doclint: allow-terms" in raw:
+            continue
+        line = without_inline_code(raw)
+        for pattern, item in rules:
+            match = pattern.search(line)
+            if match:
+                findings.append(Finding(path, number, "TERM001", f"Deprecated term '{match.group(0)}'. Use {item['replacement']}. {item['reason']}"))
+    return findings
+
+
+def check_code_terms(path: Path, text: str, policy: dict) -> list[Finding]:
+    findings: list[Finding] = []
+    for number, raw in prose_lines(text):
+        if raw.lstrip().startswith("#") or "doclint: allow-code-terms" in raw:
+            continue
+        prose = without_inline_code(raw)
+        for term in policy.get("canonical_code_terms", []):
+            if re.search(re.escape(term), prose, re.IGNORECASE):
+                findings.append(Finding(path, number, "TERM002", f"Canonical code term '{term}' must use inline code formatting."))
+    return findings
+
+
+def check_links(root: Path, path: Path, text: str) -> list[Finding]:
+    findings: list[Finding] = []
+    pattern = re.compile(r"(?<!!)\[[^]]+\]\(([^)]+)\)")
+    for number, line in prose_lines(text):
+        for raw_target in pattern.findall(line):
+            target = raw_target.split("#", 1)[0]
+            if not target or "://" in target or target.startswith("mailto:"):
+                continue
+            resolved = (root / path.parent / target).resolve()
+            try:
+                resolved.relative_to(root.resolve())
+            except ValueError:
+                findings.append(Finding(path, number, "LINK001", f"Local link escapes the repository: {target}"))
+                continue
+            if not resolved.exists():
+                findings.append(Finding(path, number, "LINK002", f"Broken local link: {target}"))
+    return findings
+
+
+def check_index(root: Path, policy: dict) -> list[Finding]:
+    path = Path("documents/README.md")
+    text = (root / path).read_text(encoding="utf-8")
+    return [Finding(path, 1, "DOC006", f"Documentation index must link to {name}.") for name in policy.get("required_foundation_links", []) if f"({name})" not in text]
+
+
+def run(root: Path, policy_path: Path) -> list[Finding]:
+    policy = load_policy(policy_path)
+    findings: list[Finding] = []
+    for path in markdown_files(root, policy):
+        text = (root / path).read_text(encoding="utf-8")
+        findings += check_structure(path, text)
+        findings += check_terms(path, text, policy)
+        findings += check_code_terms(path, text, policy)
+        findings += check_links(root, path, text)
+    findings += check_index(root, policy)
+    return sorted(findings, key=lambda finding: (str(finding.path), finding.line, finding.code))
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--root", type=Path, default=Path.cwd())
+    parser.add_argument("--policy", type=Path, default=Path(".github/documentation-style.json"))
+    args = parser.parse_args()
+    root = args.root.resolve()
+    policy = args.policy if args.policy.is_absolute() else root / args.policy
+    findings = run(root, policy)
+    for finding in findings:
+        print(finding.github())
+    print(f"documentation lint {'failed with ' + str(len(findings)) + ' finding(s)' if findings else 'passed'}")
+    return 1 if findings else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

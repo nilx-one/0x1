@@ -68,7 +68,7 @@ Prefer statements of capability and impossibility:
 - a Bond MUST NOT;
 - a record is invalid unless.
 
-Avoid creating actors for narrative convenience. Terms such as coordinator, operator, hub, master, and authority are not primitives unless a separate contract explicitly defines them.
+Avoid creating actors for narrative convenience. Coordinator, master, and generic authority roles are not primitives unless a separate contract explicitly defines them. Local settlement positions use the canonical terms defined in the [Glossary](glossary.md).
 
 ## Ownership Test
 
@@ -89,6 +89,21 @@ A document links to adjacent contracts instead of repeating them.
 - Unresolved values belong in [Protocol Constants and Open Questions](protocol-constants-and-open-questions.md).
 - Implementation staging belongs in [Implementation Roadmap](implementation-roadmap.md).
 
+## Automated Enforcement
+
+Documentation CI validates the complete active specification on every relevant pull request and every documentation change pushed to `master`.
+
+The check is deterministic and repository-owned:
+
+- `.github/documentation-style.json` owns deprecated terminology and canonical code terms;
+- `scripts/lint_documentation.py` owns structural, terminology, formatting, and local-link validation;
+- `tests/test_documentation_linter.py` protects the linter contract from regressions;
+- `.github/workflows/documentation-ci.yml` exposes the result as the `Documentation policy` check.
+
+A deprecated term fails CI with its canonical replacement and architectural reason. Code examples are excluded from prose terminology checks. A narrow exception MAY use an inline `doclint` marker, but the exception must remain visible in review and MUST NOT replace a glossary change when the vocabulary itself has evolved.
+
+The linter enforces explicit rules only. It does not infer intent, judge prose aesthetically, or call an external model. New style laws become enforceable only after they are stated in this document or the [Glossary](glossary.md) and encoded in the repository policy.
+
 ## Change Discipline
 
 A documentation change MUST preserve one of the following states:
@@ -108,6 +123,7 @@ A revision MUST identify the former contract, the new contract, and the affected
 5. Storage, transport, cryptography, and UI cannot silently create authority.
 6. Open questions remain explicit until resolved.
 7. Cross-document contradictions are specification defects.
+8. Automated enforcement is deterministic, versioned, and reviewable inside the repository.
 
 ## Related Documents
 
