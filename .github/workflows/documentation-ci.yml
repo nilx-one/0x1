@@ -1,0 +1,50 @@
+name: Documentation CI
+
+on:
+  pull_request:
+    paths:
+      - "README.md"
+      - "documents/**"
+      - ".github/documentation-style.json"
+      - ".github/workflows/documentation-ci.yml"
+      - "scripts/lint_documentation.py"
+      - "tests/test_documentation_linter.py"
+  push:
+    branches:
+      - master
+    paths:
+      - "README.md"
+      - "documents/**"
+      - ".github/documentation-style.json"
+      - ".github/workflows/documentation-ci.yml"
+      - "scripts/lint_documentation.py"
+      - "tests/test_documentation_linter.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: documentation-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  documentation-policy:
+    name: Documentation policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Test linter contracts
+        run: python -m unittest tests/test_documentation_linter.py
+
+      - name: Validate documentation
+        run: python scripts/lint_documentation.py
