@@ -157,31 +157,33 @@ The chain is the receipt. The other party is the witness.
 
 ## Documentation
 
-The specification is organized by authority boundary. Its writing and vocabulary contracts come first:
+The specification is organized by authority boundary. The Protocol Laws come first; every subordinate document is numbered by dependency order:
 
 ```text
 documents/
 ├── README.md
-├── documentation-protocol.md
-├── glossary.md
-├── protocol-overview.md
-├── architecture-and-data-model.md
-├── cryptography-and-wire-protocol.md
-├── bond-lifecycle.md
-├── atomic-multi-bond-settlement.md
-├── proximity-relay-and-broadcast.md
-├── map-architecture.md
-├── business-bonds-and-presence.md
-├── claim-auction.md
-├── offers-and-matrix-engine.md
-├── devices-and-recovery.md
-├── economics-and-payments.md
-├── security-and-platform-notes.md
-├── protocol-constants-and-open-questions.md
-└── implementation-roadmap.md
+├── 00-protocol-laws.md
+├── 01-documentation-protocol.md
+├── 02-glossary.md
+├── 03-protocol-overview.md
+├── 04-identity.md
+├── 05-architecture-and-data-model.md
+├── 06-cryptography-and-wire-protocol.md
+├── 07-bond-lifecycle.md
+├── 08-offers-and-matrix-engine.md
+├── 09-atomic-multi-bond-settlement.md
+├── 10-economics-and-payments.md
+├── 11-proximity-relay-and-broadcast.md
+├── 12-map-architecture.md
+├── 13-business-bonds-and-presence.md
+├── 14-claim-auction.md
+├── 15-devices-and-recovery.md
+├── 16-security-and-platform-notes.md
+├── 17-protocol-constants-and-open-questions.md
+└── 18-implementation-roadmap.md
 ```
 
-Start with [`documents/documentation-protocol.md`](documents/documentation-protocol.md), then [`documents/glossary.md`](documents/glossary.md) and [`documents/protocol-overview.md`](documents/protocol-overview.md). Follow the authority boundaries outward through chain state, keys, behavior, proximity, public projection, recovery, and economics.
+Start with [`documents/00-protocol-laws.md`](documents/00-protocol-laws.md), then follow the numeric sequence through authority, state, behavior, presence, operations, open questions, and delivery.
 
 ---
 

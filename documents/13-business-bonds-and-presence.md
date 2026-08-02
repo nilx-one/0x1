@@ -1,7 +1,7 @@
 # Business Bonds and Presence
 
 **Status:** draft v2  
-**Companions:** [Map Architecture](map-architecture.md), [Digital Presence Auction](claim-auction.md)
+**Companions:** [Map Architecture](12-map-architecture.md), [Digital Presence Auction](14-claim-auction.md)
 
 ## BBond
 

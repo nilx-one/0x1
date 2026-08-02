@@ -1,7 +1,7 @@
 # Digital Presence Auction
 
 **Status:** draft v2  
-**Companions:** [Map Architecture](map-architecture.md), [Business Bonds and Presence](business-bonds-and-presence.md)
+**Companions:** [Map Architecture](12-map-architecture.md), [Business Bonds and Presence](13-business-bonds-and-presence.md)
 
 ## Purpose
 

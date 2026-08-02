@@ -44,7 +44,7 @@ The protocol delegates total transaction ordering to an external exchange or set
 
 Independent pairwise escrows may share one settlement condition without creating a global transaction object.
 
-[Atomic Multi-Bond Settlement](atomic-multi-bond-settlement.md) defines:
+[Atomic Multi-Bond Settlement](09-atomic-multi-bond-settlement.md) defines:
 
 - one settlement secret and one settlement origin;
 - `H(x)` as the only cross-Bond linkage;
@@ -88,7 +88,7 @@ On transfer, the previous holder receives the full prior base plus one-fifth of 
 
 An optional defense requires only a payment of at least `5%` of the challenger bid. Because no transfer occurs, that payment settles in full to 0x1.
 
-The complete mechanism is defined in [Digital Presence Auction](claim-auction.md).
+The complete mechanism is defined in [Digital Presence Auction](14-claim-auction.md).
 
 ## Economic Constraints
 
@@ -104,7 +104,7 @@ The complete mechanism is defined in [Digital Presence Auction](claim-auction.md
 
 ## Related Documents
 
-- [Glossary](glossary.md)
-- [Cryptography and Wire Protocol](cryptography-and-wire-protocol.md)
-- [Atomic Multi-Bond Settlement](atomic-multi-bond-settlement.md)
-- [Digital Presence Auction](claim-auction.md)
+- [Glossary](02-glossary.md)
+- [Cryptography and Wire Protocol](06-cryptography-and-wire-protocol.md)
+- [Atomic Multi-Bond Settlement](09-atomic-multi-bond-settlement.md)
+- [Digital Presence Auction](14-claim-auction.md)

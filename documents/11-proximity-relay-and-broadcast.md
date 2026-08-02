@@ -45,7 +45,7 @@ The exact privacy-preserving unique-pair deduplication protocol remains open. It
 
 Physical and digital business markers are separate public projections. Neither `REG-ATTEST` nor auction spend can increment aggregate activity, fabricate proximity, or alter ranking.
 
-See [Map Architecture](map-architecture.md).
+See [Map Architecture](12-map-architecture.md).
 
 ## Broadcast Layer
 

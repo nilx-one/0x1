@@ -153,6 +153,43 @@ def check_foundation(root: Path, policy: dict) -> list[Finding]:
     return findings
 
 
+def check_catalog(root: Path, policy: dict) -> list[Finding]:
+    expected = [Path(value) for value in policy.get("ordered_documents", [])]
+    if not expected:
+        return []
+
+    documents = root / "documents"
+    actual = {
+        path.relative_to(root)
+        for path in documents.glob("*.md")
+        if path.name != "README.md"
+    }
+    expected_set = set(expected)
+    findings: list[Finding] = []
+
+    for path in expected:
+        if path not in actual:
+            findings.append(Finding(path, 1, "DOC011", "A document from the canonical sequence is missing."))
+
+    for path in sorted(actual - expected_set):
+        findings.append(Finding(path, 1, "DOC012", "Document is not part of the canonical numbered sequence."))
+
+    index_path = Path("documents/README.md")
+    index_text = (root / index_path).read_text(encoding="utf-8")
+    positions: list[int] = []
+    for path in expected:
+        marker = f"({path.name})"
+        position = index_text.find(marker)
+        if position == -1:
+            findings.append(Finding(index_path, 1, "DOC013", f"Documentation index must link to {path.name}."))
+        else:
+            positions.append(position)
+
+    if len(positions) == len(expected) and positions != sorted(positions):
+        findings.append(Finding(index_path, 1, "DOC014", "Documentation index must follow the canonical numeric sequence."))
+    return findings
+
+
 def check_index(root: Path, policy: dict) -> list[Finding]:
     path = Path("documents/README.md")
     text = (root / path).read_text(encoding="utf-8")
@@ -162,9 +199,9 @@ def check_index(root: Path, policy: dict) -> list[Finding]:
         if f"({name})" not in text:
             findings.append(Finding(path, 1, "DOC006", f"Documentation index must link to {name}."))
 
-    first_item = re.search(r"^1\. \[[^]]+\]\(([^)#]+)(?:#[^)]+)?\)", text, re.MULTILINE)
-    if required and (not first_item or first_item.group(1) != required[0]):
-        findings.append(Finding(path, 1, "DOC010", f"Documentation reading order must begin with {required[0]}."))
+    first_link = re.search(r"\[[^]]+\]\(([^)#]+\.md)(?:#[^)]+)?\)", text)
+    if required and (not first_link or first_link.group(1) != required[0]):
+        findings.append(Finding(path, 1, "DOC010", f"Documentation index must begin with {required[0]}."))
     return findings
 
 
@@ -178,6 +215,7 @@ def run(root: Path, policy_path: Path) -> list[Finding]:
         findings += check_code_terms(path, text, policy)
         findings += check_links(root, path, text)
     findings += check_foundation(root, policy)
+    findings += check_catalog(root, policy)
     findings += check_index(root, policy)
     return sorted(findings, key=lambda finding: (str(finding.path), finding.line, finding.code))
 
