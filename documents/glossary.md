@@ -4,6 +4,28 @@
 
 This document owns the shared vocabulary of the 0x1 protocol. Topic documents may refine a term's behavior but MUST NOT assign it a conflicting meaning.
 
+## Identity Terms
+
+### Identity
+
+The authority to continue authenticated history. External classifications may describe a party but cannot create, revoke, or rewrite identity inside a Bond.
+
+### `pub_dress`
+
+An immutable human-readable identity handle shaped as `0x{d}{username}`, where the hexadecimal prefix is assigned rather than chosen. It is a discovery pointer, not the cryptographic foundation of identity.
+
+### Identity provider
+
+A mechanism through which a person can currently prove control of an identity record. Providers are access boundaries, not identity truth.
+
+### `pk_identity`
+
+The public key that anchors a self-signed identity record once native identity keys exist. A Bond fixes the accepted handle-key binding in its own genesis history.
+
+### Identity registry
+
+A discovery and uniqueness index for identity records. In the target architecture it is rebuildable from self-signed records and cannot create identity.
+
 ## Core Terms
 
 ### Party
@@ -127,6 +149,7 @@ Reconstructable public projection combining anonymous activity, registry observa
 ## Related Documents
 
 - [Documentation Protocol](documentation-protocol.md)
+- [Identity](identity.md)
 - [Protocol Overview](protocol-overview.md)
 - [Architecture and Data Model](architecture-and-data-model.md)
 - [Cryptography and Wire Protocol](cryptography-and-wire-protocol.md)
