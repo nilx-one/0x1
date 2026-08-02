@@ -1,6 +1,6 @@
 # 0x1 Protocol Documentation
 
-This directory contains the technical specification for the 0x1 pairwise Bond protocol, BBond business layer, geographic presence market, and pairwise settlement behavior.
+This directory contains the technical specification for the 0x1 identity layer, pairwise Bond protocol, BBond business layer, geographic presence market, and pairwise settlement behavior.
 
 The documentation is organized by authority boundary. Each document owns one architectural concern and links to adjacent contracts.
 
@@ -12,20 +12,22 @@ Its canonical repository is [`nilx-one/0x1`](https://github.com/nilx-one/0x1).
 
 ## Reading Order
 
-Start with the writing and vocabulary contracts, then follow the protocol from model to enforcement:
+Start with the writing and vocabulary contracts, then follow the protocol from identity to enforcement:
 
 1. [Documentation Protocol](documentation-protocol.md)
 2. [Glossary](glossary.md)
 3. [Protocol Overview](protocol-overview.md)
-4. [Architecture and Data Model](architecture-and-data-model.md)
-5. [Cryptography and Wire Protocol](cryptography-and-wire-protocol.md)
-6. Topic-specific behavior and implementation documents
+4. [Identity](identity.md)
+5. [Architecture and Data Model](architecture-and-data-model.md)
+6. [Cryptography and Wire Protocol](cryptography-and-wire-protocol.md)
+7. Topic-specific behavior and implementation documents
 
 ## Foundation
 
 - [Documentation Protocol](documentation-protocol.md) — document ownership, normative structure, layer boundaries, and change discipline.
 - [Glossary](glossary.md) — canonical repository-wide vocabulary.
 - [Protocol Overview](protocol-overview.md) — product thesis, authority model, and system invariants.
+- [Identity](identity.md) — `pub_dress`, provider boundaries, registry stages, pairwise private identity, authenticated introduction, continuity, and recovery limits.
 - [Architecture and Data Model](architecture-and-data-model.md) — `bond.chain`, `bond.journal`, public projections, and state ownership.
 - [Cryptography and Wire Protocol](cryptography-and-wire-protocol.md) — key hierarchy, record envelopes, encryption, and fork safety.
 
@@ -53,6 +55,7 @@ Start with the writing and vocabulary contracts, then follow the protocol from m
 ## Status
 
 **Version:** v1  
+**Identity layer:** Stage 1 provider-backed registration is implemented; Stage 2 self-signed identity and transparent registry behavior are specified as the target contract.  
 **Bond architecture:** Final, except for the open questions explicitly listed in [Protocol Constants and Open Questions](protocol-constants-and-open-questions.md).  
 **Atomic Multi-Bond Settlement:** Draft v1. Core authority, privacy, reveal, and timeout invariants are specified; exact transport timing and external settlement integration remain implementation concerns.  
 **Map and BBond layers:** Draft v2. Presence classes and auction allocation are specified; cell activation, registry adapters, business authority, timing, and key lifecycle remain open.
