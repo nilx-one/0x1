@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -10,6 +11,7 @@ MODULE_PATH = Path(__file__).parents[1] / "scripts" / "lint_documentation.py"
 SPEC = importlib.util.spec_from_file_location("lint_documentation", MODULE_PATH)
 assert SPEC and SPEC.loader
 LINTER = importlib.util.module_from_spec(SPEC)
+sys.modules[SPEC.name] = LINTER
 SPEC.loader.exec_module(LINTER)
 
 
