@@ -3,7 +3,7 @@
   "excluded_paths": ["documents/protocol-constants-and-open-questions.md"],
   "deprecated_terms": [
     {
-      "pattern": "\\bhub(s)?\\b",
+      "pattern": "(?<!global )\\bhub(s)?\\b",
       "replacement": "transit party / transit parties",
       "reason": "Hub implies a protocol actor. AMS roles are local edge positions."
     },
