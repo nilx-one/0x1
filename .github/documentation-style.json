@@ -8,9 +8,9 @@
       "reason": "Hub implies a protocol actor. AMS roles are local edge positions."
     },
     {
-      "pattern": "\\banchor(s)?\\b",
+      "pattern": "\\bsettlement anchor(s)?\\b",
       "replacement": "settlement origin",
-      "reason": "Anchor is not a canonical 0x1 identity or role."
+      "reason": "Settlement origin is the canonical local role."
     },
     {
       "pattern": "\\bsettlement set(s)?\\b",
