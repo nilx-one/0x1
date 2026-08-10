@@ -1,18 +1,27 @@
 # Business Bonds and Presence
 
 **Status:** draft v2  
-**Companions:** [Map Architecture](12-map-architecture.md), [Digital Presence Auction](14-claim-auction.md)
+**Companions:** [BondChain Interaction Model](04-bondchain-interaction-model.md), [Map Architecture](12-map-architecture.md), [Digital Presence Auction](14-claim-auction.md)
 
-## BBond
+## Business Bond
 
-A **BBond** is a Bond between a person and a business subject.
+A **BBond** is a business-scoped Bond: a protocol participant whose subject is a business and whose actions require valid human representative authority.
 
-The business subject is named explicitly in the encrypted Bond state. Human signing authority still sits on both sides: the customer signs for themselves, and a human-authorized representative signs for the business. A company, bot, model, or server cannot manufacture bilateral commitment.
+BBond is not a separate relationship or chain primitive. A person-to-business interaction uses the same BondChain model as every other pairwise interaction:
 
-BBond reuses the Bond contract:
+```text
+Bond(person) <-> BBond(business)
+              bch
+```
 
-- append-only `bond.chain`;
-- two-party co-signature;
+The business-side signature is still human-authorized: a representative signs under business authority rather than a server signing as the company. A company, bot, model, relay, or operator cannot manufacture bilateral commitment.
+
+A business BondChain reuses the same bounded interaction contracts:
+
+- exactly two participating Bonds;
+- one causally bounded interaction intent;
+- reciprocal action before bilateral relationship truth exists;
+- append-only `bond.chain` encoding for that `bch`;
 - head-bound encryption;
 - fast-forward synchronization only;
 - `sk_bond` for human commitment;
@@ -37,7 +46,7 @@ Each right is scoped to:
 (subject_id, cell_id, presence_class)
 ```
 
-The same business may be physically present in Paris and hold a digital presence in Lyon. It may hold physical and digital presences simultaneously. Losing one presence does not modify any other presence or terminate existing BBonds.
+The same business may be physically present in Paris and hold a digital presence in Lyon. It may hold physical and digital presences simultaneously. Losing one presence does not modify any other presence or erase existing BondChains with that business Bond.
 
 ## Physical Presence
 
@@ -123,27 +132,28 @@ Presence and depth are separate axes.
 | Axis | Meaning | Source | Purchasable |
 |---|---|---|---|
 | `PRESENCE` | The business is projected in a cell | Registry or auction | Digital only |
-| `ATTEST` | A person and business co-signed an eligible interaction | BBond | No |
+| `ATTEST` | A person and business completed the eligible reciprocal interaction | Business BondChain | No |
 
 A marker can be visible with zero attestations. That state means present, not yet met.
 
-Business `ATTEST` is valid only after the existing proximity flow confirms a cell match and both BBond participants sign the action. Geometry opens the possibility of a signature; it never chooses the counterparty.
+Business `ATTEST` is valid only after the existing proximity flow confirms the required cell predicate and both participating Bonds authorize the interaction outcome. Geometry opens the possibility of a reciprocal action; it never chooses the counterparty.
 
-Digital presence removes the colocation requirement for discovery. It does not fabricate a visit, a purchase, a relationship, or trust.
+Digital presence removes the colocation requirement for discovery. It does not fabricate a visit, a purchase, a BondChain, or trust.
 
-## BBond Records
+## Business Interaction Records
 
-Commitment-bearing BBond records belong in `bond.chain`.
+Commitment-bearing business interaction records belong in the `bond.chain` of the BondChain that owns them.
 
-Important classes include:
+Possible classes include:
 
-- `INIT` and `CONSENT`;
+- `INIT` and `CONSENT` where an explicit introduction contract uses them;
+- `MESSAGE` and authorized `READ` acknowledgement where the messaging contract uses them;
 - `ACCEPT`;
 - `ATTEST`;
 - `PAY-REQ` and `PAY-SETTLE`;
-- `REKEY`, `REVOKE`, and `CONTINUE`.
+- `REKEY`, `REVOKE`, and `CONTINUE` where the owning lifecycle permits them.
 
-Map and auction records do not belong in `bond.chain`:
+Map and auction records do not belong in an interaction `bond.chain`:
 
 - `REG-ATTEST`;
 - `PHYS-RELINQUISH`;
@@ -167,17 +177,19 @@ At digital-presence acquisition:
 
 When physical presence closes:
 
-> The registry-backed physical marker has ended. Existing BBonds and any separately held digital presences are unchanged.
+> The registry-backed physical marker has ended. Existing BondChains and any separately held digital presences are unchanged.
 
 ## Invariants
 
-1. Registry evidence grants physical presence.
-2. Auction settlement grants digital presence.
-3. Neither right converts into the other.
-4. Physical presence is free, unbounded, and non-challengeable.
-5. Digital presence is singular per active cell and challengeable.
-6. A business may hold different presence classes across different cells.
-7. Losing a physical presence does not erase BBonds or digital presences.
-8. Historical physical occupancy creates no auction priority.
-9. Presence cannot buy depth.
-10. Only bilateral BBond actions can create BBond depth.
+1. A BBond is a business-scoped Bond, not a separate relationship primitive.
+2. Person-to-business activity uses the same BondChain primitive as person-to-person activity.
+3. Registry evidence grants physical presence.
+4. Auction settlement grants digital presence.
+5. Neither right converts into the other.
+6. Physical presence is free, unbounded, and non-challengeable.
+7. Digital presence is singular per active cell and challengeable.
+8. A business may hold different presence classes across different cells.
+9. Losing a physical presence does not erase existing BondChains or digital presences.
+10. Historical physical occupancy creates no auction priority.
+11. Presence cannot buy depth.
+12. Only eligible bilateral business BondChain outcomes can create business relationship depth.
