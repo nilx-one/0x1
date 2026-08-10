@@ -45,6 +45,21 @@
       "pattern": "\\bsettlement set(s)?\\b",
       "replacement": "Settlement Context",
       "reason": "The relation is implicit and must not be described as a materialized set."
+    },
+    {
+      "pattern": "\\bA Bond is (?:a )?(?:pairwise )?(?:cryptographic )?relationship\\b",
+      "replacement": "Bond as a human-authorized protocol participant",
+      "reason": "BondChain, not Bond, owns one causally bounded bilateral interaction."
+    },
+    {
+      "pattern": "\\bBond sale(s)?\\b",
+      "replacement": "bnd transfer",
+      "reason": "A Bond is a participant and is not a saleable asset."
+    },
+    {
+      "pattern": "\\bBond graph\\b",
+      "replacement": "local relationship projection",
+      "reason": "The protocol does not materialize a global graph of Bond relationships."
     }
   ],
   "canonical_code_terms": [
