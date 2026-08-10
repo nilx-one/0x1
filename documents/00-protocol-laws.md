@@ -27,9 +27,14 @@ Only a human-authorized party can create or change a human commitment.
 
 ## Law 2: Pairwise Truth
 
-Relationship truth belongs to the parties that created it.
+Bilateral relationship truth belongs to the Bonds that created it.
 
-- One Bond or BBond has exactly one synchronized source of truth: its own `bond.chain`.
+- A Bond is a human-authorized participant; it is not itself a relationship.
+- One established BondChain (`bch`) contains exactly two Bonds and represents one causally bounded bilateral interaction.
+- One `bch` has exactly one synchronized record history: its own `bond.chain`.
+- A unilateral action MAY open a candidate interaction but MUST NOT become bilateral relationship truth until the reciprocal action required by its owning contract occurs.
+- A terminal BondChain MUST NOT be reopened by later semantic activity; a causally independent action begins another BondChain.
+- The longer-lived relationship between two Bonds is a projection over their BondChains, not a new shared protocol object or global social-graph edge.
 - The operator MUST NOT own, reconstruct, or arbitrate relationship truth.
 - A local observation, prediction, index, cache, projection, or `bond.journal` entry MUST NOT become shared evidence without the authorization required by its owning protocol record.
 - No implementation convenience may create a server-side social graph or a new shared relationship object.
@@ -41,17 +46,18 @@ Intent is not commitment.
 - An initiated action remains a proposal until every required party has authorized the corresponding record.
 - Reading, observing, receiving, or computing MAY be defined as an explicit protocol action only when the owning contract states the resulting record and required authority.
 - Silence, transport success, storage, or model inference MUST NOT be interpreted as consent.
+- A reciprocal action proves only the participation or commitment explicitly assigned to it by its owning contract; it MUST NOT imply broader semantic consent.
 - Examples and product copy MUST NOT introduce consent semantics absent from a normative contract.
 
 ## Law 4: Append-Only Continuity
 
-Shared history advances by valid extension, never reinterpretation.
+Shared BondChain history advances by valid extension, never reinterpretation.
 
-- `bond.chain` MUST be append-only and hash-linked.
+- `bond.chain` MUST be append-only and hash-linked within one BondChain.
 - Synchronization MUST accept fast-forward extension only.
 - Divergent histories MUST NOT be merged into a synthetic shared past.
 - Invalid signatures, broken ancestry, unknown authority, or ambiguous ownership MUST fail closed.
-- Recovery MAY continue an authenticated history; it MUST NOT rewrite that history or grant the operator custodial authority.
+- Recovery MAY continue an authenticated non-terminal history where its owning lifecycle permits it; it MUST NOT rewrite history or grant the operator custodial authority.
 
 ## Law 5: Authority Does Not Emerge from Mechanism
 
@@ -78,7 +84,7 @@ Economic value, relationship depth, and public visibility are distinct protocol 
 
 - `level` MUST remain non-transferable relationship depth.
 - `bnd` MUST NOT replace, erase, or purchase relationship history.
-- Spend, presence, or settlement MUST NOT mint trust, `level`, attestation, or suggestion rank.
+- Spend, presence, settlement, or unilateral interaction attempts MUST NOT mint trust, `level`, attestation, or suggestion rank.
 - A geographic cell MUST NOT become property.
 - Physical presence, digital presence, relationship state, and payment state MUST retain independent authority contracts.
 
@@ -88,8 +94,8 @@ Global state exists only where one shared public fact is necessary.
 
 - Each global surface MUST define its exact fact, authority, ordering source, retention, and correction behavior.
 - A public projection MUST be reconstructable or independently verifiable according to its owning contract.
-- A global surface MUST NOT expose or imply the topology of private Bonds.
-- No global coordinator, account, or transaction object may be introduced unless a versioned protocol revision first establishes its necessity and authority.
+- A global surface MUST NOT expose or imply the topology of private BondChains.
+- No global coordinator, account, relationship edge, or transaction object may be introduced unless a versioned protocol revision first establishes its necessity and authority.
 
 ## Law 9: Explicit Failure
 
@@ -105,27 +111,29 @@ Unavailability, ambiguity, and unrecoverable loss remain visible protocol outcom
 A change to these laws is a protocol revision, not an editorial clarification.
 
 - A revision MUST identify the former law, the replacement, affected authority boundaries, migration behavior, and dependent documents.
-- Every affected normative document and enforcement rule MUST change in the same pull request.
+- Every affected normative document and enforcement rule MUST change in the same pull request or atomic change set.
 - A subordinate document MUST NOT weaken a law through local wording, exception, example, or implementation note.
 - Documentation CI MUST verify the presence and required use of this document as the specification foundation.
 
 ## Invariants
 
 1. People own commitments.
-2. Each relationship owns its own shared truth.
-3. Intent becomes commitment only through the required authorization.
-4. Shared history is append-only and fast-forward only.
-5. Mechanisms cannot manufacture authority.
-6. Disclosure is bounded by purpose.
-7. Value, depth, and visibility do not convert into one another.
-8. Global state is narrow, explicit, and never relationship truth.
-9. Failure remains visible.
-10. Normative change is versioned and atomic.
+2. A Bond is a participant; a BondChain is one causally bounded bilateral interaction between two Bonds.
+3. Intent becomes bilateral truth only through the reciprocal authorization required by its owning interaction contract.
+4. One BondChain owns one append-only, fast-forward-only shared history.
+5. A terminal BondChain does not become an infinite relationship log; later independent activity begins another BondChain.
+6. Mechanisms cannot manufacture authority.
+7. Disclosure is bounded by purpose.
+8. Value, depth, and visibility do not convert into one another.
+9. Global state is narrow, explicit, and never relationship truth.
+10. Failure remains visible.
+11. Normative change is versioned and atomic.
 
 ## Related Documents
 
 - [Documentation Protocol](01-documentation-protocol.md)
 - [Glossary](02-glossary.md)
 - [Protocol Overview](03-protocol-overview.md)
+- [BondChain Interaction Model](04-bondchain-interaction-model.md)
 - [Architecture and Data Model](05-architecture-and-data-model.md)
 - [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
