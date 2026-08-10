@@ -1,8 +1,10 @@
 # Offers and Matrix Engine
 
+The [BondChain Interaction Model](04-bondchain-interaction-model.md) owns interaction boundaries. OFFER negotiation may prepare a BondChain candidate, but ephemeral negotiation does not itself become relationship truth.
+
 ## OFFER
 
-An OFFER is encrypted, ephemeral, and never appended to `bond.chain`.
+An OFFER is encrypted, ephemeral, and never appended to `bond.chain` merely because it was emitted.
 
 ```text
 body = {
@@ -21,13 +23,15 @@ Silence, rejection, and timeout remain externally indistinguishable.
 
 ## ACCEPT
 
-An ACCEPT is a co-signed chain record bound to the OFFER hash:
+An ACCEPT is an authorized interaction record bound to the OFFER hash:
 
 ```text
 sig_b(H(OFFER)) -> sig_a
 ```
 
-The ACCEPT location cell is a jointly signed claim and may increment the global aggregate map.
+Where the owning interaction contract defines ACCEPT as the reciprocal action, it establishes bilateral truth for that BondChain. Where additional causally dependent actions are required, ACCEPT advances the same `bch` without changing its causal boundary.
+
+The ACCEPT location cell is a jointly authorized claim and may increment the global aggregate map only under the map contribution contract.
 
 ## Flex Authorization
 
@@ -67,15 +71,17 @@ Well-being is a hard constraint, not an optimization target. The engine does not
 
 ### Veto
 
-The engine may silently suppress a proposal. It may not initiate a commitment. Veto reasons are never exposed to either participant or the other engine.
+The engine may silently suppress a proposal. It may not initiate a human commitment. Veto reasons are never exposed to either participant or the other engine.
 
 ### Ranking
 
 ```text
-rank(offer) = P(bond growth | similar events in this Bond)
+rank(offer) = P(relationship growth | similar authorized interactions with this counterpart)
 ```
 
-Ranking uses only this Bond's signed and local observed history. Only signed history changes `level`. Observed history remains local, expires, may be disabled, and never earns rewards.
+Ranking may use completed BondChains and local observed history available to the Bond's local engine for the relevant counterpart. Only eligible bilateral outcomes may change `level`. Unilateral candidates, rejected or expired interactions, transport events, and local observations do not create relationship depth.
+
+Observed history remains local, expires, may be disabled, and never earns rewards.
 
 ### Exploration
 
