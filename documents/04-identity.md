@@ -4,11 +4,13 @@
 
 This document specifies the identity layer of 0x1: what a `pub_dress` is, what the registry does and deliberately does not guarantee, where private identity actually lives, and why identity is treated as continuity rather than classification.
 
+The [BondChain Interaction Model](04-bondchain-interaction-model.md) owns the meaning of Bond and BondChain. This document uses those terms without redefining them.
+
 ## Purpose
 
 Identity in 0x1 is not a profile assembled by an operator. It is the authority to continue authenticated history.
 
-A public handle helps another party find the intended person. A Bond fixes which key that handle meant in one relationship. Neither a registry, diagnosis, score, profession, nationality, or platform account can retroactively redefine that shared history.
+A public handle helps another party find the intended person. Authenticated BondChain records fix which identity keys the participating Bonds presented for that interaction. Neither a registry, diagnosis, score, profession, nationality, nor platform account can retroactively redefine already authorized history.
 
 ## `pub_dress`
 
@@ -23,7 +25,7 @@ pub_dress = 0x{d}{username}
 
 The prefix belongs to the address, not to the person. `0x0sky` and `0x7sky` are independent identities. Each username therefore has sixteen possible public slots.
 
-A `pub_dress` is immutable. It may be superseded by a new identity, but it is never renamed in place. Existing Bonds continue to reference the original handle-key binding fixed in their genesis records.
+A `pub_dress` is immutable. It may be superseded by a new identity, but it is never renamed in place. Existing signed BondChain histories continue to reference the original handle-key bindings they authenticated.
 
 Registration is the insert. There is no reservation queue or cooldown. The registrar attempts shuffled digits until one insert succeeds or all sixteen slots are occupied. Collisions are resolved by the primary key rather than by a separate allocation process.
 
@@ -42,7 +44,7 @@ Providers are equal-rank entries. A provider MAY be detached only while at least
 
 In the current stage, Telegram is the only provider. Device multiplicity remains delegated to Telegram sessions and Telegram 2FA because 0x1 cannot independently attest those devices yet.
 
-Native device keys (`dev:<pubkey>`) arrive with the local core. Once device authority is cryptographically represented, attaching a device becomes a human-authorized CONSENT-class action. `sk_ack` MUST NOT attach one.
+Native device keys (`dev:<pubkey>`) arrive with the local core. Once device authority is cryptographically represented, attaching a device becomes a human-authorized consent-class action under its owning contract. `sk_ack` MUST NOT attach one.
 
 ## Registry boundary
 
@@ -67,7 +69,7 @@ Once identity keys exist, the identity record becomes self-signed:
 }
 ```
 
-Authority then belongs to the holder of `sk_identity`. The signed record remains with its owner and may be replicated to Bond holders through the records each Bond is authorized to carry.
+Authority then belongs to the holder of `sk_identity`. The signed record remains with its owner and may be replicated to counterpart Bonds only through protocol records each BondChain is authorized to carry.
 
 The registrar becomes an index: a lookup cache and uniqueness surface rebuildable from signed identity records. Losing the index MUST NOT destroy identity truth.
 
@@ -77,7 +79,7 @@ The registry never creates identity. It indexes identity already authorized by i
 
 Global human-readable uniqueness is not the foundation of identity.
 
-`pk_identity` is the cryptographic identity. `pub_dress` is a human-readable pointer. A Bond genesis record fixes the handle-key binding accepted by its two parties. From that point, the relationship does not follow a conflicting registry answer or later rename.
+`pk_identity` is the cryptographic identity. `pub_dress` is a human-readable pointer. An authenticated BondChain fixes the handle-key bindings accepted by its two participating Bonds for that interaction. That signed history does not follow a conflicting registry answer or later rename.
 
 The global registry remains useful for discovery and for the sixteen-slot rule. Its primary threat is equivocation: presenting different bindings to different observers.
 
@@ -90,25 +92,25 @@ The target registry therefore requires:
 
 Registry equivocation need not be trusted away. It must be detectable and provable.
 
-> Uniqueness is not a property of the name. It is a property of the connection.
+> Uniqueness is not a property of the name. It is a property of authenticated continuity.
 
 ## Pairwise private identity
 
 Private identity is an ability proved through action, not secret data transmitted for inspection.
 
-When a Bond forms, `INIT` and `CONSENT` bind the relationship to the required public keys. The corresponding private keys never leave their holders.
+When an interaction contract establishes a BondChain, its authorized records bind that `bch` to the required public keys. The corresponding private keys never leave their holders.
 
-The active pairwise key is derived from both the pairwise secret and chain state:
+The active pairwise key is derived from both the relevant pairwise secret and BondChain state:
 
 ```text
 k = HKDF(ECDH || H(head))
 ```
 
-The resulting authority is pairwise and history-bound. No global private credential is exposed across Bonds merely to make them linkable.
+The resulting authority is pairwise and history-bound. No global private credential is exposed across BondChains merely to make them linkable.
 
-Inside each Bond, a party is the holder able to extend precisely that shared history.
+Inside each BondChain, a participating Bond is authenticated by the authority able to extend precisely that history while the lifecycle permits extension.
 
-> What identifies you is not what you show, but what only you can do: continue our shared history.
+> What identifies you is not what you show, but what only you can do: continue history you were authorized to create.
 
 ## Bootstrap
 
@@ -124,9 +126,9 @@ There is no operator seed escrow or phone-number identity primitive.
 
 During Stage 1, access follows the configured identity providers. With Telegram as the only provider, Telegram sessions and 2FA remain part of that temporary access boundary.
 
-During Stage 2, recovery proceeds through signed identity material and the Bonds whose parties can legitimately return their own shared state. No holder restores the whole person, and no global custodian exists.
+During Stage 2, recovery proceeds through signed identity material and counterpart Bonds that can legitimately return BondChain histories they are authorized to hold. No counterparty restores the whole person, and no global custodian exists.
 
-The operator holds no complete relationship state and cannot restore what it never possessed. A permanently unavailable Bond party may make that Bond permanently unrecoverable.
+The operator holds no complete relationship state and cannot restore what it never possessed. A permanently unavailable counterparty may make some BondChain history permanently unrecoverable.
 
 Exact recovery proofs, holder authorization, quorum rules, and conflict handling belong to the dedicated recovery contract and MUST NOT be inferred from this document.
 
@@ -134,11 +136,11 @@ Exact recovery proofs, holder authorization, quorum rules, and conflict handling
 
 0x1 does not define a person through a diagnosis, profession, nationality, score, reputation, legal category, social role, or another external classification.
 
-Those systems may describe a person for their own purposes. They do not own identity inside a Bond.
+Those systems may describe a person for their own purposes. They do not own identity inside authenticated protocol history.
 
-The protocol recognizes a narrower property: the authority to continue mutually authenticated history. A Bond is not a judgment about either participant. It is the observable continuity of actions both sides were authorized to create.
+The protocol recognizes a narrower property: the authority to continue mutually authenticated history. A Bond is a participant, not a judgment. A BondChain is an observable interaction history both sides were authorized to create, not a classification of either participant.
 
-External labels may change. Institutions may disagree. Context may collapse and later be rebuilt. None of those events can rewrite already co-signed history.
+External labels may change. Institutions may disagree. Context may collapse and later be rebuilt. None of those events can rewrite already authorized history.
 
 > **Identity is continuity. If you can continue the history that only you could have created, you are still you.**
 
@@ -159,21 +161,22 @@ The bot attests one temporary Stage 1 fact: a human-created `pub_dress ↔ tg_id
 
 ## Invariants
 
-1. `pub_dress` is immutable; existing Bonds never follow a rename.
+1. `pub_dress` is immutable; existing signed BondChain histories never follow a rename.
 2. The hexadecimal prefix is assigned and MUST NOT be chosen.
 3. An identity has at least one active provider while provider-backed access remains in use.
-4. A Bond fixes the handle-key binding accepted by its parties.
-5. Pairwise private authority is history-bound and MUST NOT expose a shared global private identifier across Bonds.
+4. An authenticated BondChain fixes the handle-key bindings accepted by its participating Bonds for that interaction.
+5. Pairwise private authority is history-bound and MUST NOT expose a shared global private identifier across BondChains.
 6. Attaching a native device key is human-authorized and MUST NOT be reachable from `sk_ack`.
 7. Stage 2 registry state MUST be rebuildable from self-signed identity records.
 8. Registry equivocation MUST be detectable through transparency proofs and tree-head comparison.
-9. External classifications cannot create, revoke, or rewrite identity inside a Bond.
+9. External classifications cannot create, revoke, or rewrite identity inside authenticated BondChain history.
 10. Identity is the authority to continue authenticated history.
 
 ## Related Documents
 
 - [Glossary](02-glossary.md)
 - [Protocol Overview](03-protocol-overview.md)
-- [Bond Lifecycle](07-bond-lifecycle.md)
+- [BondChain Interaction Model](04-bondchain-interaction-model.md)
+- [Bond and BondChain Lifecycle](07-bond-lifecycle.md)
 - [Cryptography and Wire Protocol](06-cryptography-and-wire-protocol.md)
 - [Devices and Recovery](15-devices-and-recovery.md)
