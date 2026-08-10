@@ -5,13 +5,15 @@
   "foundation_consumers": [
     "documents/README.md",
     "documents/01-documentation-protocol.md",
-    "documents/02-glossary.md"
+    "documents/02-glossary.md",
+    "documents/04-bondchain-interaction-model.md"
   ],
   "ordered_documents": [
     "documents/00-protocol-laws.md",
     "documents/01-documentation-protocol.md",
     "documents/02-glossary.md",
     "documents/03-protocol-overview.md",
+    "documents/04-bondchain-interaction-model.md",
     "documents/04-identity.md",
     "documents/05-architecture-and-data-model.md",
     "documents/06-cryptography-and-wire-protocol.md",
@@ -46,6 +48,7 @@
     }
   ],
   "canonical_code_terms": [
+    "bch",
     "bond.chain",
     "bond.journal",
     "matr.ix",
