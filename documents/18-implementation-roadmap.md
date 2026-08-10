@@ -1,49 +1,95 @@
 # Implementation Roadmap
 
-## Phase 0 — Cryptographic Core and Chain
+The roadmap implements the model in dependency order. The [BondChain Interaction Model](04-bondchain-interaction-model.md) is a prerequisite: implementation MUST NOT restore the former assumption that one Bond equals one permanent relationship chain.
 
-Build the co-signed append-only chain, fast-forward validator, head-bound key derivation, Ed25519 signatures, X25519 key agreement, and ChaChaPoly or HPKE payload encryption.
+## Phase 0 — BondChain Kernel
+
+Implement:
+
+- Bond as the human-authorized participant identity used by interaction contracts;
+- `bch_id` generation and exactly-two-Bond binding;
+- candidate versus established BondChain state;
+- causal interaction boundaries;
+- terminal states;
+- prohibition on semantic append after terminal state;
+- reference from a new `bch` to an earlier `bch` without merge;
+- append-only `bond.chain` encoding per BondChain;
+- fast-forward validation and no-merge semantics.
+
+**Entry gate:** the first enabled interaction contracts have explicit initiating, reciprocal, and terminal actions.
+
+**Exit gate:** tests prove that two independent interactions between the same Bonds cannot be accidentally concatenated and that a unilateral action cannot become bilateral truth without its required reciprocal action.
+
+## Phase 1 — Cryptography and Identity Binding
+
+Build head-bound key derivation, Ed25519 signatures, X25519 key agreement, ChaChaPoly or HPKE payload encryption, and the identity bindings required by each `bch`.
 
 Establish the plaintext boundary before higher-level features.
 
-**Exit gate:** an independent review confirms that conflicting valid histories cannot be merged and that rollback causes deterministic key divergence.
+**Exit gate:** an independent review confirms that conflicting histories for one `bch_id` cannot be merged, rollback causes deterministic key divergence, and separate BondChains remain cryptographically distinct.
 
-## Phase 1 — Bond Formation and Journal
+## Phase 2 — Messaging and First Reciprocal Contract
 
-Implement `INIT`, consent-by-reply `CONSENT`, local journal storage, Data Protection, and backup exclusion.
+Implement the smallest product-complete interaction contract first:
 
-**Exit gate:** physical-device tests prove that journal data is unavailable while locked and absent from backups and migrations.
+```text
+MESSAGE -> READ
+```
 
-## Phase 2 — Proximity and Relay
+The contract MUST define the observed human read event, authority for the `READ` acknowledgement, expiry behavior, and terminal state. `READ` establishes participation in that message interaction and MUST NOT imply agreement with message semantics.
 
-Implement HMAC proximity tokens, H3 resolution 8 matching, `1 <-> 9` checks, the 256-slot constant-rate envelope, dummy traffic, RAM-only relay transport, and head exchange during matching.
+Implement reply references as new BondChains rather than extensions of the completed message chain.
 
-**Exit gate:** a network observer cannot distinguish an active Bond from an idle one using traffic timing or envelope size.
+**Exit gate:** the same behavior works for previously familiar Bonds and strangers; a sent-but-unread message never becomes established bilateral relationship truth.
 
-## Phase 3 — OFFER, Flex, and `matr.ix`
+## Phase 3 — Journal, Proximity, and Relay
 
-Implement ephemeral OFFER transport, pre-signed flex scopes, two-round engine negotiation, the well-being gate, silent veto, local ranking, the exploration class, and monthly drift tests.
+Implement local journal storage, Data Protection, backup exclusion, HMAC proximity tokens, H3 resolution 8 matching, `1 <-> 9` checks, the 256-slot constant-rate envelope, dummy traffic, and RAM-only relay transport.
+
+`H(head)` synchronization MUST always be scoped to a specific non-terminal or recoverable `bch_id`.
+
+**Exit gate:** physical-device and network tests prove that journal data is unavailable while locked, absent from backups, and that an observer cannot distinguish real pairwise activity from dummy traffic using timing or envelope size.
+
+## Phase 4 — OFFER, Flex, and `matr.ix`
+
+Implement ephemeral OFFER transport, pre-signed flex scopes, two-round engine negotiation, the well-being gate, silent veto, local relationship-projection ranking, the exploration class, and monthly drift tests.
+
+OFFER/ACCEPT implementations MUST declare whether ACCEPT establishes the BondChain or only advances it toward another required terminal action.
 
 **Course-correction gate:** if free scenarios lose recommendation share while the catalog remains stable, increase exploration before modifying economic incentives.
 
-## Phase 4 — Device Lifecycle and Recovery
+## Phase 5 — Device Lifecycle and Recovery
 
-Implement active/dormant/dead key states, synchronous device handoff, `DEVICE-REVOKE`, defensive rekeying, REC-REQ, six-digit out-of-band verification, complete-history validation, and CONTINUE.
+Implement active/dormant/dead key states, synchronous device handoff, `DEVICE-REVOKE`, REC-REQ, six-digit out-of-band verification, independent BondChain-history validation, and CONTINUE only for non-terminal histories whose contracts permit it.
 
-**Exit gate:** human testing demonstrates that participants understand who is being verified, which key is being approved, and that recovery cannot be completed remotely by accident.
+A single ceremony MAY restore multiple histories from one counterpart, but MUST validate them independently and MUST NOT concatenate them into a permanent relationship chain.
 
-## Phase 5 — Economics, Payments, and Broadcast
+**Exit gate:** human testing demonstrates that participants understand who is being verified, which histories are being restored, and that terminal histories remain immutable receipts.
 
-Implement `level`, `bnd`, `exp`, sublinear issuance, random-blob Bond sale, HTLC payment records, App Attest enrollment, hourly broadcast epochs, and emission gates.
+## Phase 6 — Relationship Projection, Economics, Payments, and Broadcast
 
-**Exit gate:** choose broadcast routing—cell-wide or graph-bounded—before production broadcast aggregation is enabled. The graph-bounded model is the default recommendation.
+Implement:
 
-## Phase 6 — Map Substrate
+- deterministic local relationship projection over authorized terminal BondChains;
+- replay-safe aggregation of eligible `level_delta` contributions;
+- `level`, `bnd`, and `exp`;
+- sublinear `bnd` issuance or the selected capped issuance rule;
+- authorized `bnd` transfer without sale of Bond identity or BondChain history;
+- HTLC payment BondChains;
+- Atomic Multi-Bond Settlement across independent payment BondChains;
+- App Attest enrollment;
+- hourly broadcast epochs and emission gates.
+
+**Entry gate:** the relationship-projection and `level` aggregation contract is specified without a new synchronized pair log or operator-owned social graph.
+
+**Exit gate:** choose broadcast routing—cell-wide or bounded by the sender's local relationship projection—before production broadcast aggregation is enabled.
+
+## Phase 7 — Map Substrate
 
 Implement:
 
 - H3 cell activity aggregation;
-- privacy-preserving unique-pair contribution limits;
+- privacy-preserving unique-pair contribution limits without stable `bch_id` retention;
 - trailing activation windows;
 - signed regional bundles;
 - MapLibre GL JS and MapLibre Native clients;
@@ -53,15 +99,15 @@ Implement:
 
 **Entry gate:** the unique-pair activation protocol and activity window are specified.
 
-**Exit gate:** tests prove that viewport telemetry is absent, rendering density never gates rights, and map spend cannot affect activity or ranking.
+**Exit gate:** tests prove that viewport telemetry is absent, rendering density never gates rights, map spend cannot affect activity or ranking, and map aggregation does not expose relationship topology.
 
-## Phase 7 — BBond and Physical Presence
+## Phase 8 — Business Bonds and Physical Presence
 
 Implement:
 
-- BBond subject binding;
-- business-side human authority;
-- `ATTEST`;
+- business-scoped Bond identity;
+- business-side human authority and representative lifecycle;
+- business interaction contracts such as purchase and `ATTEST`;
 - versioned public-registry adapters;
 - isolated registry-oracle signing;
 - `REG-ATTEST`;
@@ -69,11 +115,11 @@ Implement:
 - automated expiry and supersession;
 - voluntary `PHYS-RELINQUISH`.
 
-**Entry gate:** business representative lifecycle, registry adapter contract, oracle key rotation, and correction semantics are specified.
+**Entry gate:** business representative lifecycle, registry adapter contract, oracle key rotation, correction semantics, and the exact purchase/ATTEST reciprocal contracts are specified.
 
-**Exit gate:** tests prove that physical presence is free, non-exclusive, non-transferable through auction, and removed only by registry lifecycle or voluntary relinquishment.
+**Exit gate:** tests prove that business interactions use ordinary BondChains, physical presence is free and non-exclusive, and presence cannot manufacture interaction depth.
 
-## Phase 8 — Digital Presence Market
+## Phase 9 — Digital Presence Market
 
 Implement:
 
@@ -103,8 +149,9 @@ Implement:
 
 ## Validation Principles
 
-- Test contracts before optimizing throughput.
+- Test ontology and interaction contracts before cryptographic optimization.
+- Test causal boundaries before adding more interaction kinds.
 - Treat device loss and partial connectivity as normal operating conditions.
 - Test cryptographic and Data Protection behavior on physical iOS hardware.
 - Keep operator-side state narrow, auditable, and reconstructable where possible.
-- Reject implementations that broaden plaintext, persistence, or autonomous authority for convenience.
+- Reject implementations that broaden plaintext, persistence, autonomous authority, or relationship materialization for convenience.
