@@ -1,0 +1,3 @@
+# BondChain Interaction Model
+
+<!-- placeholder -->
