@@ -69,4 +69,4 @@ Identity appears only after a response to the one-time public key establishes an
 
 Broadcast access uses App Attest assertions, server-issued one-time challenges, monotonic counters, hourly epoch-key rotation, TLS, and certificate pinning. No static broadcast key may be embedded in the application binary.
 
-Broadcast emission may be gated by relationship depth, rate limits, and geographic scope. The unresolved routing choice is whether delivery targets every attested client in a cell or only clients reachable through a bounded number of edges in the sender's **local relationship projection**. No operator-visible global Bond graph may be created for routing.
+Broadcast emission may be gated by relationship depth, rate limits, and geographic scope. The unresolved routing choice is whether delivery targets every attested client in a cell or only clients reachable through a bounded number of edges in the sender's **local relationship projection**. No operator-visible global relationship graph may be created for routing.
