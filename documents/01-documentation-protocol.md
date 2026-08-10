@@ -41,7 +41,9 @@ A short document MAY omit irrelevant sections. It MUST NOT change the meaning of
 
 Every active specification document MUST use the `NN-topic.md` filename form. `00` is reserved for the Protocol Laws, and `documents/README.md` remains the unnumbered index.
 
-The two-digit prefix encodes dependency and reading order, not a document version. A sequence change MUST update the canonical catalog, documentation index, and every affected link in the same pull request.
+The two-digit prefix encodes dependency tier, not a document version. Documents MAY share one prefix only when they belong to the same dependency tier and do not redefine one another. Within a shared tier, the order declared by `.github/documentation-style.json` and reproduced in `documents/README.md` is canonical.
+
+A sequence change MUST update the canonical catalog, documentation index, and every affected link in the same atomic change.
 
 ## Layer Boundaries
 
@@ -63,6 +65,8 @@ model
 
 A lower layer MUST NOT silently redefine an upper layer. For example, a convenient storage schema cannot create shared truth, and a cryptographic primitive cannot introduce a new protocol actor.
 
+The [BondChain Interaction Model](04-bondchain-interaction-model.md) owns the model-layer distinction between Bond, BondChain (`bch`), `bond.chain`, causal interaction boundaries, and relationship projection. Downstream documents MUST link to that contract instead of redefining those terms locally.
+
 ## Normative Language
 
 The terms **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, and **MAY** use their conventional RFC meanings.
@@ -76,6 +80,7 @@ Prefer statements of capability and impossibility:
 - the protocol cannot;
 - the relay never learns;
 - a Bond MUST NOT;
+- a BondChain MUST NOT;
 - a record is invalid unless.
 
 Avoid creating actors for narrative convenience. Coordinator, master, and generic authority roles are not primitives unless a separate contract explicitly defines them. Local settlement positions use the canonical terms defined in the [Glossary](02-glossary.md).
@@ -96,6 +101,7 @@ A document links to adjacent contracts instead of repeating them.
 
 - Protocol-wide laws belong only in [Protocol Laws](00-protocol-laws.md).
 - Shared terminology belongs in [Glossary](02-glossary.md).
+- Bond/BondChain ontology and causal boundaries belong in [BondChain Interaction Model](04-bondchain-interaction-model.md).
 - Scoped behavior belongs in the most specific owning document.
 - Unresolved values belong in [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md).
 - Implementation staging belongs in [Implementation Roadmap](18-implementation-roadmap.md).
@@ -132,7 +138,7 @@ A revision MUST identify the former contract, the new contract, and the affected
 
 1. All normative authority derives from the Protocol Laws.
 2. One protocol term has one repository-wide meaning.
-3. The canonical filename sequence exposes dependency and reading order.
+3. The canonical filename sequence exposes dependency tiers and deterministic reading order.
 4. One document owns each architectural concern.
 5. Invariants precede implementation guidance.
 6. Examples cannot define behavior.
@@ -146,5 +152,6 @@ A revision MUST identify the former contract, the new contract, and the affected
 - [Protocol Laws](00-protocol-laws.md)
 - [Glossary](02-glossary.md)
 - [Protocol Overview](03-protocol-overview.md)
+- [BondChain Interaction Model](04-bondchain-interaction-model.md)
 - [Architecture and Data Model](05-architecture-and-data-model.md)
 - [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
