@@ -2,23 +2,28 @@
 
 ## `bond.chain`
 
-`bond.chain` (`bch`) is the only synchronized source of truth for a Bond or BBond.
+`bond.chain` is the append-only record encoding of one BondChain (`bch`). The [BondChain Interaction Model](04-bondchain-interaction-model.md) owns the meaning and causal boundary of `bch`; this document owns its durable representation.
 
 | Property | Contract |
 |---|---|
-| Ownership | Jointly owned by both participants |
-| Structure | Append-only, hash-linked records with the required bilateral signatures |
+| Ownership | Jointly held by the two Bonds participating in that `bch` |
+| Scope | Exactly one causally bounded BondChain |
+| Structure | Append-only, hash-linked records with the signatures required by the interaction contract |
 | Synchronization | Fast-forward only |
 | Ordering | Defined by chain position; timestamps are informational |
-| Read access | Either participant may hold the file; semantic payloads require `k` |
+| Read access | Either participating Bond may hold the file; semantic payloads require `k` |
 
-A candidate chain is accepted only when it extends the complete local prefix, every appended record has all required signatures, and all hash links are continuous.
+A candidate chain is accepted only when it extends the complete local prefix, every appended record satisfies the owning interaction contract, and all hash links are continuous.
 
 There is no merge operation and no longest-chain rule.
 
+A terminal `bond.chain` is not extended by later semantic activity. A causally independent interaction creates another BondChain and therefore another bounded `bond.chain`. A later BondChain MAY reference an earlier `bch_id` without becoming part of the earlier chain.
+
+The longer-lived relationship between two Bonds is a derived projection over their terminal BondChains. It MUST NOT be materialized as a new synchronized relationship log merely for storage convenience.
+
 ## `bond.journal`
 
-`bond.journal` is a separate, single-owner local store. It is not part of `bond.chain` and is never synchronized between participants.
+`bond.journal` is a separate, single-owner local store. It is not part of any `bond.chain` and is never synchronized between Bonds.
 
 The journal contains observed events and local engine priors, including density counters keyed by `{cell, day_of_week, window}`.
 
@@ -28,9 +33,9 @@ Required properties:
 - not shared;
 - not exported or migrated;
 - excluded from iCloud and device backups;
-- encrypted with material derived from `sk_bond`;
+- encrypted with material derived from local Bond authority;
 - protected with `NSFileProtectionComplete`;
-- deleted with Bond keys during revocation.
+- deleted with the owning local keys during revocation.
 
 Real device loss therefore causes real journal loss. This is an intentional anti-abuse condition for CONTINUE rewards.
 
@@ -46,9 +51,9 @@ The server stores aggregate counters, never event rows.
 (H3 cell at resolution 8, day of week, time window) -> count
 ```
 
-Counters increment only from eligible co-signed presence actions, including BBond `ATTEST`, at most once per pair per day. They decay over approximately 90 days and MUST NOT expose cells below `k >= 20`.
+Counters increment only from eligible co-signed presence interactions, including business `ATTEST`, at most once per pair per day. They decay over approximately 90 days and MUST NOT expose cells below `k >= 20`.
 
-The server MUST NOT retain `bond_id`, exact timestamps, exact coordinates, or per-event history.
+The server MUST NOT retain `bch_id`, stable pair identifiers, exact timestamps, exact coordinates, or per-event history.
 
 Cell activation derives from unique eligible pairs over a trailing window. The privacy-preserving deduplication protocol remains implementation-blocking.
 
@@ -88,7 +93,7 @@ The externally ordered registry contains:
 - settlement deadline;
 - cooldown.
 
-This state MUST NOT live in `bond.chain`, because a pairwise chain cannot establish global exclusivity.
+This state MUST NOT live in `bond.chain`, because one bounded pairwise interaction cannot establish global exclusivity.
 
 ## `map.registry`
 
@@ -106,11 +111,12 @@ map.registry = {
 
 Every projected record remains traceable to its authority source.
 
-`map.registry` is reconstructable public state. It cannot create a Bond action, increase `level`, mint `bnd`, or enter `matr.ix` ranking.
+`map.registry` is reconstructable public state. It cannot establish a BondChain, increase `level`, mint `bnd`, or enter `matr.ix` ranking as purchased influence.
 
 ## Ownership Boundaries
 
-- Shared durable relationship state belongs in `bond.chain`.
+- Shared durable state for one established BondChain belongs in that `bch`'s `bond.chain`.
+- Longer-lived relationship views are projections over authorized BondChains and MUST NOT become a new synchronized relationship object.
 - Private adaptive state belongs in `bond.journal`.
 - Public anonymous activity belongs in aggregate counters.
 - External business-registry observations belong in the registry-oracle log.
@@ -120,4 +126,4 @@ Every projected record remains traceable to its authority source.
 
 Moving data across these boundaries is an architectural change, not a storage optimization.
 
-See [Map Architecture](12-map-architecture.md), [Business Bonds and Presence](13-business-bonds-and-presence.md), and [Digital Presence Auction](14-claim-auction.md).
+See [BondChain Interaction Model](04-bondchain-interaction-model.md), [Map Architecture](12-map-architecture.md), [Business Bonds and Presence](13-business-bonds-and-presence.md), and [Digital Presence Auction](14-claim-auction.md).
