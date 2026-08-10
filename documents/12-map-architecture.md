@@ -1,7 +1,7 @@
 # Map Architecture
 
 **Status:** draft v2  
-**Companions:** [Business Bonds and Presence](13-business-bonds-and-presence.md), [Digital Presence Auction](14-claim-auction.md)
+**Companions:** [BondChain Interaction Model](04-bondchain-interaction-model.md), [Business Bonds and Presence](13-business-bonds-and-presence.md), [Digital Presence Auction](14-claim-auction.md)
 
 ## Purpose
 
@@ -11,7 +11,7 @@ The map is the geographic substrate for business discovery in 0x1. It answers th
 2. which public presences may be projected in a cell;
 3. how clients render that state without turning viewport behavior into product telemetry.
 
-The map does not decide whether a business is legitimate, who may represent it, or who wins an auction. Those are business-layer contracts. The map only exposes deterministic geographic state.
+The map does not decide whether a business is legitimate, who may represent it, who wins an auction, or whether two Bonds established a BondChain. Those are separate contracts. The map only exposes deterministic geographic state.
 
 ## Three Units
 
@@ -31,17 +31,18 @@ A cell becomes active when ordinary 0x1 usage demonstrates that it is a real pla
 
 ```text
 density(cell, W) =
-    unique eligible co-signing pairs
+    unique eligible bilateral pairs
     observed in cell
     during trailing window W
 ```
 
-Density counts unique pairs, not raw actions. Repeated activity from one pair MUST NOT substitute for independent relationships.
+Density counts unique eligible pairs, not raw actions or BondChain count. Repeated activity from one pair MUST NOT substitute for independent pair activity.
 
 The exact privacy-preserving deduplication protocol remains implementation-blocking. Any implementation MUST preserve these properties:
 
 - no exact coordinates leave the device;
-- no public or operator-visible Bond graph is created;
+- no public or operator-visible relationship graph is created;
+- no stable `bch_id` is retained for aggregation;
 - each pair contributes at most once per configured period;
 - contributions expire through a deterministic trailing window;
 - relay order and relay clocks are never authoritative;
@@ -67,7 +68,7 @@ The current profile applies one contribution per pair per day, an approximately 
 
 Physical presence is derived from active `REG-ATTEST` records. Any number of valid physical presences may exist in one cell.
 
-The map does not sell, rank, or ration them. Their lifecycle belongs to the BBond business layer.
+The map does not sell, rank, or ration them. Their lifecycle belongs to the business-presence contract.
 
 ### 3. Digital presence
 
@@ -77,7 +78,7 @@ The map projects its current holder and marker metadata. The auction determines 
 
 ## `map.registry`
 
-Public map state lives outside `bond.chain`.
+Public map state lives outside every `bond.chain`.
 
 ```text
 map.registry = {
@@ -88,7 +89,7 @@ map.registry = {
 }
 ```
 
-`map.registry` is reconstructable public state. It is not a social graph and cannot create a Bond action, increase `level`, mint `bnd`, or enter `matr.ix` ranking.
+`map.registry` is reconstructable public state. It is not a social graph and cannot establish a BondChain, increase `level`, mint `bnd`, or enter `matr.ix` ranking as purchased influence.
 
 Authoritative sources are separate:
 
@@ -141,6 +142,6 @@ A prominent marker with no earned depth must read honestly as present, not trust
 3. Physical and digital presence remain separate projections.
 4. Any number of physical presences may coexist in one cell.
 5. At most one digital presence exists per active cell.
-6. Map activity cannot create a business right.
+6. Map activity cannot create a business right or establish a BondChain.
 7. Business spend cannot create activity, depth, or recommendation rank.
 8. The relay transports state but never orders it.
