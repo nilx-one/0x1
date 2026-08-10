@@ -1,6 +1,6 @@
 # 0x1
 
-**A peer-to-peer social protocol where the smallest unit of truth is a signature between two human-authorized parties.**
+**A peer-to-peer social protocol where bilateral truth exists only when two human-authorized participants meet in one reciprocal interaction.**
 
 status: `spec / pre-alpha`
 
@@ -12,11 +12,15 @@ Every social platform built so far stores your relationships on someone else's s
 
 0x1 turns that architecture inside out.
 
-There is no social graph on the server. There is no server-side concept of a user. A relationship—a **Bond**—is a co-signed, hash-chained record held by exactly the parties who created it.
+There is no operator-owned social graph and no server-side relationship object.
 
-A person-to-business relationship is a **BBond**. The business is the subject; human authority still signs both sides.
+A **Bond** is a human-authorized protocol participant. A **BondChain (`bch`)** is one causally bounded bilateral interaction between exactly two Bonds.
 
-No third party keeps the memory.  
+One Bond may act alone. That action can open an interaction candidate, but it does not become bilateral relationship truth until the other Bond performs the reciprocal action required by that interaction contract.
+
+The longer-lived relationship between two Bonds is a projection over their BondChains, not a permanent shared edge stored by the operator.
+
+No third party keeps the whole memory.  
 No operator can rewrite the past.  
 No machine can promise on a person's behalf.
 
@@ -24,40 +28,86 @@ The operating principle:
 
 > **People own the signatures. The core owns the guesses. The operator owns no relationship truth.**
 
-A Bond exists only where two intentions meet—and remains only where both signatures continue the same line.
-
 ---
 
 ## Primitives
 
 ### Bond
 
-A Bond is an append-only log between two parties. Every commitment-bearing entry carries the required bilateral signatures. Every entry commits to the hash of the one before it.
+A Bond is a human-authorized participant.
 
-The shared key is derived as:
+It may represent:
+
+- a person acting for themselves; or
+- a business subject acting through explicit human authority.
+
+A business-scoped Bond is called a **BBond** where the business-authority distinction matters. BBond does not define a second relationship or chain primitive.
+
+### BondChain (`bch`)
+
+A BondChain is one causally bounded bilateral interaction between exactly two Bonds.
+
+```text
+Bond 0 -- unilateral action --> Bond 1
+Bond 1 -- reciprocal action --> Bond 0
+                               |
+                               v
+                         established bch
+```
+
+The boundary is causal, not based on action type.
+
+Different action types may belong to one `bch` when they continue the same intent:
+
+```text
+ORDER -> PAY -> ACCEPT -> FULFILL -> RECEIVE
+```
+
+The same action type starts a new `bch` when it begins a new independent interaction. For messaging, one `MESSAGE -> READ` may be one BondChain, while the reply starts another BondChain that may reference the first.
+
+Once a BondChain reaches a terminal state, later semantic activity does not reopen it.
+
+### `bond.chain`
+
+`bond.chain` is the append-only, hash-linked record encoding of one BondChain. It is not the name of the permanent relationship between two Bonds.
+
+The shared key is derived from the pairwise secret and current chain state:
 
 ```text
 k = HKDF(ECDH(a, b) || H(head))
 ```
 
-The `H(head)` binding is the critical part. The key is a function of chain state, so a fork does not need a separate consensus mechanism. Divergent histories derive divergent keys, and the branches stop understanding each other.
+The `H(head)` binding makes divergent histories derive divergent keys. Forks therefore fail closed without requiring a global consensus layer.
 
-A fork is therefore self-punishing.
+### Relationship projection
 
-There is no global consensus layer for relationship truth because there is no global relationship object to agree on. Global state exists only for narrow public surfaces: anonymous map activity, external business-registry observations, and the single digital-presence tenure in each active cell.
+Two Bonds may accumulate many BondChains:
 
-### BBond
+```text
+Bond 0                           Bond 1
+  |                                |
+  +------ bch #1 MESSAGE/READ ------+
+  +------ bch #2 MESSAGE/READ ------+
+  +------ bch #3 MEET/ACCEPT -------+
+  +------ bch #4 PAY/SETTLE --------+
+```
 
-A BBond applies the same Bond contract to a person and a business subject.
+A client may derive a relationship view from the BondChains it is authorized to hold. That projection is not a new synchronized protocol object and never becomes an operator-owned social graph.
 
-A human representative signs for the business. The company, bot, model, and relay cannot manufacture bilateral commitment.
+### Core (`matr.ix`)
 
-Business discovery has two independent presence classes:
+`matr.ix` is a per-Bond local engine. It ranks, suggests, negotiates within pre-authorized bounds, and sometimes stays silent. It may reason about interaction history without gaining the right to create a human commitment.
 
-- **physical presence** follows supported public registry facts and is free, unbounded, and non-challengeable;
-- **digital presence** is one challengeable commercial representation per active cell.
+Two invariants define its limits:
 
-A business may be physical in Paris and digital in Lyon. Losing a registry-backed physical presence does not erase BBonds or modify any separately held digital presence.
+- **Information symmetry.** The core must not keep hidden conclusions about its person.
+- **Blind ranking.** Suggestions are ranked without access to partner, commission, presence class, auction spend, or monetization status.
+
+Decision generation and language generation are separate layers. Models may change. The contract does not.
+
+The core may guess.  
+It may veto.  
+It may never promise.
 
 ### Key split
 
@@ -65,30 +115,15 @@ Three authorities. Hard boundaries.
 
 | Key | Signs | Reachable from emission? |
 |---|---|---|
-| `sk_bond` | Human-initiated Bond and BBond commitments | Yes |
+| `sk_bond` | Human-authorized BondChain commitments | Yes |
 | `sk_ack` | Core-automatic acknowledgements and protective actions | **Never** |
-| `sk_presence` | Human-initiated actions for one digital-presence slot | **Never from `sk_ack`** |
+| `sk_presence` | Human-authorized actions for one digital-presence slot | **Never from `sk_ack`** |
 
 nilx.one uses a separate registry-oracle key only for `REG-ATTEST`, a versioned observation of an external business registry. It cannot sign human intent or relationship truth.
 
-### Core (`matr.ix`)
-
-`matr.ix` is a per-Bond engine that runs locally. It ranks, suggests, negotiates, and sometimes stays silent. It can reason about a Bond without gaining the right to act as either person inside it.
-
-Two invariants define its limits:
-
-- **Information symmetry.** The core must not keep hidden conclusions about its person.
-- **Blind ranking.** Suggestions are ranked without access to partner, commission, presence class, auction spend, or monetization status.
-
-Decision generation and language generation are separate layers. The core emits a structured decision object; a downstream layer turns it into words. Models may change. The contract does not.
-
-The core may guess.  
-It may veto.  
-It may never promise.
-
 ### Relay
 
-RAM-only. Content-agnostic pub/sub. Zero persistence, no queues, and no disk as a protocol category. Clients re-emit on their own cadence until they observe an `ACK`.
+RAM-only. Content-agnostic pub/sub. Zero persistence, no queues, and no disk as a protocol category. Clients re-emit on their own cadence until they observe the protocol acknowledgement required by the owning transport contract.
 
 Capture the relay and the prize is fixed-length ciphertext moving between ephemeral topics.
 
@@ -116,17 +151,19 @@ Registry evidence grants physical presence. Auction settlement grants digital pr
 
 Presence buys discovery, not depth. A physical or digital marker cannot buy `ATTEST`, `level`, aggregate activity, or `matr.ix` rank.
 
+A person-to-business purchase, message, visit, or other eligible interaction uses the same BondChain primitive as person-to-person interaction; only the business-side authority contract differs.
+
 ---
 
 ## Economy
 
 Two relationship units exist. They are not equivalent and never convert into one another.
 
-**`level`** is non-transferable and permanent. It grows only from eligible co-signed actions. It records depth: what two parties actually did together. It cannot be bought, sold, or moved.
+**`level`** is non-transferable and permanent. It grows only from eligible bilateral BondChain outcomes. It records depth: what two Bonds actually completed together. It cannot be bought, sold, or moved.
 
-**`bnd`** is divisible, fungible, and spendable. It is derived deterministically from `level` on a sublinear curve with a daily cap. Selling changes `bnd`; it does not erase `level`.
+**`bnd`** is divisible, fungible, and spendable. It is derived deterministically from `level` under the economic contract. Selling changes `bnd`; it does not erase `level`.
 
-`bnd` is proof of interaction, not proof of work. To a buyer it carries weight, not history.
+`bnd` is proof of interaction weight, not a disclosure of interaction history.
 
 Settlement uses HTLC-style escrow through `PAY-REQ` and `PAY-SETTLE`, with preimage `x`, against an external exchange. Independent pairwise escrows may share one condition through Atomic Multi-Bond Settlement without creating a global transaction graph or coordinator.
 
@@ -142,22 +179,22 @@ We say **trust-minimized**. We do not say unbreakable.
 
 - The relay can be seized. It holds nothing durable.
 - A device can be stolen. Key state, revocation, and recovery are first-class protocol concerns.
-- SIM swap is outside the identity surface because phone numbers are not identity primitives.
+- SIM swap is outside the target identity surface because phone numbers are not identity primitives.
 - The registry oracle can publish an incorrect external interpretation; adapter versions, corrections, and key rotation are explicit contracts.
 - Broadcast aggregation remains an open design question.
-- A permanently unreachable person can make a Bond permanently unrecoverable.
+- Some authenticated history may become permanently unrecoverable when every legitimate counterparty copy is permanently unreachable.
 
 Do not trust the operator.  
 Do not trust the story.  
 Verify the signatures and their authority.
 
-The chain is the receipt. The other party is the witness.
+The chain is the receipt. The other Bond is the witness.
 
 ---
 
 ## Documentation
 
-The specification is organized by authority boundary. The Protocol Laws come first; every subordinate document is numbered by dependency order:
+The specification is organized by authority boundary. The Protocol Laws come first; the two-digit prefix encodes dependency tier. The two `04` documents are peers in the model layer, with the canonical order declared below and enforced by Documentation CI.
 
 ```text
 documents/
@@ -166,6 +203,7 @@ documents/
 ├── 01-documentation-protocol.md
 ├── 02-glossary.md
 ├── 03-protocol-overview.md
+├── 04-bondchain-interaction-model.md
 ├── 04-identity.md
 ├── 05-architecture-and-data-model.md
 ├── 06-cryptography-and-wire-protocol.md
@@ -183,21 +221,23 @@ documents/
 └── 18-implementation-roadmap.md
 ```
 
-Start with [`documents/00-protocol-laws.md`](documents/00-protocol-laws.md), then follow the numeric sequence through authority, state, behavior, presence, operations, open questions, and delivery.
+Start with [`documents/00-protocol-laws.md`](documents/00-protocol-laws.md), then follow the canonical catalog in [`documents/README.md`](documents/README.md).
 
 ---
 
 ## Status
 
-The v1 architecture is specified for the Bond layer, key hierarchy, proximity protocol, offer mechanics, device lifecycle, recovery, and economic boundaries.
+The Bond/BondChain ontology is normative: Bond is the participant; BondChain is one causally bounded bilateral interaction; `bond.chain` is that interaction's bounded record encoding.
+
+Identity, key hierarchy, proximity, offer mechanics, device lifecycle, recovery, and economic boundaries remain specified by their owning documents and are being aligned to this ontology where terminology previously treated Bond as the relationship itself.
 
 Atomic Multi-Bond Settlement is a v1 draft with its authority, privacy, reveal, and timeout invariants specified.
 
-The map and BBond layers are draft v2. Presence classes and auction allocation are specified. Privacy-preserving cell activation, registry adapters, business authority, timing, and key lifecycle remain open.
+The map and business layers are draft v2. Presence classes and auction allocation are specified. Privacy-preserving cell activation, registry adapters, business authority, timing, and key lifecycle remain open.
 
 Open questions are documented instead of softened into implied certainty.
 
 ---
 
 *Built by [0x0sky](https://github.com/0x0sky).*  
-*Two signatures. One line. Nothing true without both.*
+*Two Bonds. Reciprocal action. One bounded truth.*
