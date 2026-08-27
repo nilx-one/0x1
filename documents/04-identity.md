@@ -12,6 +12,21 @@ Identity in 0x1 is not a profile assembled by an operator. It is the authority t
 
 A public handle helps another party find the intended person. Authenticated BondChain records fix which identity keys the participating Bonds presented for that interaction. Neither a registry, diagnosis, score, profession, nationality, nor platform account can retroactively redefine already authorized history.
 
+## `0x` notation
+
+The name `0x1` deliberately references the `0x`-prefixed hexadecimal address notation used by systems such as Ethereum and Sui.
+
+In Ethereum, an account address is represented as 40 hexadecimal characters with `0x` added at the beginning. Sui tooling likewise represents addresses as `0x`-prefixed values. The shared reference is the address notation: `0x` marks a hexadecimal/address value rather than belonging to a human-readable slug.
+
+`0x1` is a protocol name and notation reference. It MUST NOT be interpreted as a claim that the literal string `0x1` is a valid Ethereum or Sui account address, a network selector, a private key, or a cross-chain identifier.
+
+The 0x1 identity layer borrows the same visual address language for `pub_dress`, but a `pub_dress` is its own protocol-level human-readable address. Because its username component may contain characters outside hexadecimal `[0-9a-f]`, the complete `pub_dress` MUST NOT be parsed or validated as a blockchain address or as a hexadecimal number.
+
+External references:
+
+- [Ethereum accounts](https://ethereum.org/developers/docs/accounts/) — Ethereum account addresses are 20-byte values rendered as 40 hexadecimal characters plus the `0x` prefix.
+- [Sui cryptography](https://sdk.mystenlabs.com/sui/cryptography) — Mysten Labs tooling derives and handles Sui addresses as `0x`-prefixed address values.
+
 ## `pub_dress`
 
 A `pub_dress` is a human-readable handle:
