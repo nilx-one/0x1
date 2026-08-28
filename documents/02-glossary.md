@@ -12,7 +12,7 @@ The authority to continue authenticated history. External classifications may de
 
 ### `pub_dress`
 
-An immutable human-readable identity handle shaped as `0x{d}{username}`, where the hexadecimal prefix is assigned rather than chosen. It is a discovery pointer, not the cryptographic foundation of identity.
+An immutable human-readable identity handle shaped as the literal prefix `0x` followed by a 2–32-character slug from the exact character set defined by the [Identity](04-identity.md) contract. It is a discovery pointer, not the cryptographic foundation of identity.
 
 ### Identity provider
 
