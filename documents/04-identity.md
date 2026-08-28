@@ -32,17 +32,25 @@ External references:
 A `pub_dress` is a human-readable handle:
 
 ```text
-pub_dress = 0x{d}{username}
+pub_dress = "0x" slug
 ```
 
-- `{username}` is chosen by the person and matches `[a-z][a-z0-9_]{2,20}`.
-- `{d}` is one hexadecimal digit (`0`–`f`) assigned randomly by the system and never chosen.
+- `0x` is the fixed literal prefix and is not part of `slug`.
+- `slug` contains 2–32 Unicode scalar values.
+- Each scalar in `slug` MUST be an ASCII lowercase letter (`a`–`z`), an ASCII digit (`0`–`9`), or exactly one of these symbols: `- / : ; ( ) ₴ & @ " . , ? ! ' [ ] { } # % ^ * + = _ \ | ~ < > € $ £ •`.
+- Spaces, uppercase letters, other writing systems, emoji, control characters, combining marks, invisible characters, typographic quote variants, and every other scalar are invalid.
 
-The prefix belongs to the address, not to the person. `0x0sky` and `0x7sky` are independent identities. Each username therefore has sixteen possible public slots.
+Validation operates on the exact scalar sequence. An implementation MUST NOT trim, case-fold, transliterate, or replace a character before validating or comparing a `pub_dress`. The complete handle therefore contains 4–34 Unicode scalar values.
+
+The prefix belongs to the address notation, while the complete slug belongs to the handle. `0x0sky` and `0x7sky` remain independent identities because `0sky` and `7sky` are different slugs; no character inside either slug is an allocation slot.
 
 A `pub_dress` is immutable. It may be superseded by a new identity, but it is never renamed in place. Existing signed BondChain histories continue to reference the original handle-key bindings they authenticated.
 
-Registration is the insert. There is no reservation queue or cooldown. The registrar attempts shuffled digits until one insert succeeds or all sixteen slots are occupied. Collisions are resolved by the primary key rather than by a separate allocation process.
+Registration is the insert. There is no reservation queue or cooldown. A collision occurs only when the complete `pub_dress` already exists and is resolved by the primary key rather than by a separate allocation process.
+
+When a `pub_dress` is carried as one URI path segment, the sender MUST percent-encode the UTF-8 bytes required by the URI syntax, including literal `/`, `?`, `#`, and `%` slug characters. The receiver MUST percent-decode that path segment exactly once and then validate the resulting scalar sequence against this grammar. A transport encoding never changes the stored or compared `pub_dress`.
+
+This grammar replaces the former `0x{d}{username}` contract and its sixteen-slot allocation rule. Every handle valid under that former grammar remains syntactically valid because its assigned digit and username now form one slug. Migration MUST preserve each existing complete handle and provider binding without rename or reassignment. The revision changes handle validation, collision detection, and URI transport; it does not change the cryptographic identity or continuity boundaries.
 
 ## Identity providers
 
@@ -96,7 +104,7 @@ Global human-readable uniqueness is not the foundation of identity.
 
 `pk_identity` is the cryptographic identity. `pub_dress` is a human-readable pointer. An authenticated BondChain fixes the handle-key bindings accepted by its two participating Bonds for that interaction. That signed history does not follow a conflicting registry answer or later rename.
 
-The global registry remains useful for discovery and for the sixteen-slot rule. Its primary threat is equivocation: presenting different bindings to different observers.
+The global registry remains useful for discovery and exact-handle collision detection. Its primary threat is equivocation: presenting different bindings to different observers.
 
 The target registry therefore requires:
 
@@ -169,7 +177,7 @@ It contains:
 - `/start` for registration;
 - `/whoami` for the protocol-shaped identity record;
 - `/recover` for the current recovery boundary;
-- transactional insert-as-reservation over shuffled hexadecimal digits;
+- transactional insert-as-reservation over the complete `pub_dress`;
 - blind probing behavior for nonexistent handles.
 
 The bot attests one temporary Stage 1 fact: a human-created `pub_dress ↔ tg_id` binding.
@@ -177,7 +185,7 @@ The bot attests one temporary Stage 1 fact: a human-created `pub_dress ↔ tg_id
 ## Invariants
 
 1. `pub_dress` is immutable; existing signed BondChain histories never follow a rename.
-2. The hexadecimal prefix is assigned and MUST NOT be chosen.
+2. `pub_dress` uses the literal `0x` prefix and an exact 2–32-character slug from the canonical allowlist.
 3. An identity has at least one active provider while provider-backed access remains in use.
 4. An authenticated BondChain fixes the handle-key bindings accepted by its participating Bonds for that interaction.
 5. Pairwise private authority is history-bound and MUST NOT expose a shared global private identifier across BondChains.
