@@ -45,6 +45,7 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 - [Devices and Recovery](15-devices-and-recovery.md) — device states, revocation, rekeying, REC-REQ, and CONTINUE.
 - [Security and Platform Notes](16-security-and-platform-notes.md) — threat model, iOS implementation guidance, and post-quantum migration.
 - [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md) — fixed invariants, draft parameters, unresolved decisions, and the still-open autonomous AI authority profile.
+- [0x1 Core and Client Architecture](18-core-and-client-architecture.md) — shared Rust product engine, WebAssembly and UniFFI boundaries, peer Web/iOS clients, MapLibre, and GPU fallback contracts.
 - [Implementation Roadmap](18-implementation-roadmap.md) — staged delivery plan and validation gates.
 
 ## Status
@@ -60,6 +61,8 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 **Atomic Multi-Bond Settlement:** Draft v1. Core authority, privacy, reveal, and timeout invariants are specified; exact transport timing and external settlement integration remain implementation concerns.
 
 **Map and business layers:** Draft v2. Presence classes and auction allocation are specified; cell activation, registry adapters, business authority, timing, and key lifecycle remain open. Current `map.registry` does not expose live per-Bond movement.
+
+**Core and clients:** Proposed implementation baseline. 0x1 Core owns behavior shared across runtimes and is implemented in Rust. Web and native iOS are first-class peer clients using WebAssembly and UniFFI respectively. MapLibre remains the geographic renderer; custom Web graphics use WebGPU with WebGL2 fallback and no Canvas 2D path.
 
 ## Normative Language
 

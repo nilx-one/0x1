@@ -126,20 +126,26 @@ A client may derive a relationship view from the BondChains it is authorized to 
 
 For AI Bonds this distinction is especially important: personality and memory may influence behavior, but they do not directly set shared relationship state.
 
-### Core (`matr.ix`)
+### 0x1 Core
+
+[0x1 Core](documents/18-core-and-client-architecture.md) is the portable product engine implemented in Rust and shared by server, WebAssembly, native iOS, and future device runtimes. It owns all product behavior that must remain identical across platforms: interaction transitions, Relationship projections, progression and gamification, economic rules, spatial semantics, synchronization, and client projections.
+
+The Protocol Laws remain normative. Running the Core on a client, server, or device does not grant that runtime authority that an owning contract does not define.
+
+Web and native iOS are first-class peer clients over the same Core. Messenger Mini Apps host the Web client. React, SwiftUI, MapLibre, storage, and transport remain adapters rather than independent sources of product truth.
+
+### Local engine (`matr.ix`)
 
 `matr.ix` is the local engine used by the current human-controlled Bond profile. It ranks, suggests, negotiates within pre-authorized bounds, and sometimes stays silent. It may reason about interaction history without gaining the right to create a human commitment.
 
 Two invariants define its limits:
 
-- **Information symmetry.** The core must not keep hidden conclusions about its person.
+- **Information symmetry.** The local engine must not keep hidden conclusions about its person.
 - **Blind ranking.** Suggestions are ranked without access to partner, commission, presence class, auction spend, or monetization status.
 
 Decision generation and language generation are separate layers. Models may change. The contract does not.
 
-The core may guess.  
-It may veto.  
-It may never manufacture human authority.
+The local engine may guess. It may veto. It may never manufacture human authority.
 
 AI Bond autonomy is a separate authority contract and does not emerge from `matr.ix` or `sk_ack`.
 
@@ -150,7 +156,7 @@ The current human-controlled profile uses three authorities with hard boundaries
 | Key | Signs | Reachable from emission? |
 |---|---|---|
 | `sk_bond` | Human-authorized BondChain commitments | Yes |
-| `sk_ack` | Core-automatic acknowledgements and protective actions | **Never** |
+| `sk_ack` | `matr.ix`-automatic acknowledgements and protective actions | **Never** |
 | `sk_presence` | Human-authorized actions for one digital-presence slot | **Never from `sk_ack`** |
 
 nilx.one uses a separate registry-oracle key only for `REG-ATTEST`, a versioned observation of an external business registry. It cannot sign human intent or relationship truth.
@@ -286,6 +292,7 @@ documents/
 ├── 15-devices-and-recovery.md
 ├── 16-security-and-platform-notes.md
 ├── 17-protocol-constants-and-open-questions.md
+├── 18-core-and-client-architecture.md
 └── 18-implementation-roadmap.md
 ```
 
@@ -299,7 +306,7 @@ The Bond/BondChain ontology is normative: Bond is the authority-bearing particip
 
 AI Bond is normative at the ontology and authority-boundary level. Autonomous signing, identity bootstrap, custody, compromise recovery, and concrete AI-capable interaction schemas remain open before production.
 
-Identity, current human key hierarchy, proximity, offer mechanics, device lifecycle, recovery, and economic boundaries remain specified by their owning documents.
+Identity, current human key hierarchy, proximity, offer mechanics, device lifecycle, recovery, and economic boundaries remain specified by their owning documents. 0x1 Core is the shared Rust implementation boundary; Web and native iOS consume it through platform-specific bindings without reproducing those rules.
 
 Atomic Multi-Bond Settlement is a v1 draft with its authority, privacy, reveal, and timeout invariants specified.
 

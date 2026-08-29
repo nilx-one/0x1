@@ -2,6 +2,8 @@
 
 The [BondChain Interaction Model](04-bondchain-interaction-model.md) owns the distinction between a Bond participant, one BondChain interaction, and the longer-lived relationship projection. This document owns economic state derived from eligible interaction outcomes.
 
+Shared progression, reward eligibility, issuance, and economic transition rules MUST be implemented in [0x1 Core](18-core-and-client-architecture.md). A client may project a possible result but cannot authorize value, depth, or reward by executing the rule locally.
+
 ## `level`
 
 `level` is permanent and non-transferable relationship depth between two Bonds. It increases only through eligible bilateral BondChain outcomes and represents depth rather than a competitive score.
@@ -118,3 +120,4 @@ The complete mechanism is defined in [Digital Presence Auction](14-claim-auction
 - [Cryptography and Wire Protocol](06-cryptography-and-wire-protocol.md)
 - [Atomic Multi-Bond Settlement](09-atomic-multi-bond-settlement.md)
 - [Digital Presence Auction](14-claim-auction.md)
+- [0x1 Core and Client Architecture](18-core-and-client-architecture.md)

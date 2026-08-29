@@ -4,6 +4,8 @@ The [BondChain Interaction Model](04-bondchain-interaction-model.md) owns intera
 
 This document describes the current **human-controlled Bond profile** and its local `matr.ix` engine. It MUST NOT be interpreted as the autonomous authority profile for an [AI Bond](04-ai-bonds.md). An AI Bond may use different implementation machinery, but any commitment-bearing action still requires the authority defined by its owning AI-capable interaction contract.
 
+These decision, ranking, negotiation, exploration, and well-being rules are shared product behavior and MUST be implemented in [0x1 Core](18-core-and-client-architecture.md). Platform clients may present inputs and projections but MUST NOT reimplement or override the rules.
+
 ## OFFER
 
 An OFFER is encrypted, ephemeral, and never appended to `bond.chain` merely because it was emitted.
@@ -112,3 +114,4 @@ These constraints apply to the current human `matr.ix` profile. AI Bond behavior
 - [BondChain Interaction Model](04-bondchain-interaction-model.md)
 - [AI Bonds](04-ai-bonds.md)
 - [Cryptography and Wire Protocol](06-cryptography-and-wire-protocol.md)
+- [0x1 Core and Client Architecture](18-core-and-client-architecture.md)

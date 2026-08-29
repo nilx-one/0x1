@@ -30,6 +30,7 @@
     "documents/15-devices-and-recovery.md",
     "documents/16-security-and-platform-notes.md",
     "documents/17-protocol-constants-and-open-questions.md",
+    "documents/18-core-and-client-architecture.md",
     "documents/18-implementation-roadmap.md"
   ],
   "deprecated_terms": [

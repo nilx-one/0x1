@@ -34,6 +34,8 @@ The specification is organized by **authority boundary**, and the two-digit file
 - `documents/01-documentation-protocol.md` governs how the specification is written, divided, and enforced. Read it before authoring or restructuring any document — it defines the canonical section order (Purpose, Principles, Model, Records, Protocol, Lifecycle, Failure, Privacy, Invariants, Examples, Related Documents), the layer boundaries (model → behavior → protocol records → cryptography → implementation), and the change-discipline categories (clarification / extension / revision).
 - `documents/02-glossary.md` owns canonical vocabulary repository-wide. One term, one meaning. Define a term there rather than locally.
 - `documents/17-protocol-constants-and-open-questions.md` owns unresolved values. An open question must stay marked open — never resolve one by writing it as a stable guarantee elsewhere.
+- `documents/18-core-and-client-architecture.md` owns the portable Rust product-engine boundary, peer Web/iOS client model, bindings, MapLibre integration, and GPU fallback contract.
+- `documents/18-implementation-roadmap.md` stages delivery against the protocol and Core boundaries.
 - `documents/README.md` is the unnumbered index and is itself linted for completeness and order.
 
 Each document owns exactly one architectural concern and **links** to adjacent contracts instead of restating them.
