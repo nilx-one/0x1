@@ -16,27 +16,54 @@ Every protocol requirement, authority boundary, invariant, and subordinate speci
 
 If a subordinate document conflicts with these laws, these laws govern and the conflict is a specification defect. Silence in this document does not authorize a lower layer to violate an established law.
 
-## Law 1: Human Authority
+## Revision: Artificial Participants
 
-Only a human-authorized party can create or change a human commitment.
+This revision replaces the former protocol-wide assumption that every Bond is human-authorized.
 
-- Commitment-bearing records MUST carry the signatures required by their owning contract.
-- A model, bot, relay, registry, operator, storage layer, or user interface MUST NOT manufacture bilateral consent.
-- Derived or automated authority MUST remain narrower than the human authority from which it was delegated.
+Former contract:
+
+- every Bond was defined as a human-authorized participant;
+- human authority was treated as the only possible root for commitment-bearing participation;
+- automation could act only as bounded execution of prior human authority.
+
+Replacement contract:
+
+- a Bond is an authority-bearing protocol participant and MAY be human-controlled or artificial;
+- human commitments still require human authority;
+- an artificial Bond MAY exercise autonomous authority over its own commitments only where an owning interaction contract explicitly permits artificial participation and defines the relevant authority profile;
+- delegated authority remains narrower than its source regardless of whether the delegate is human or artificial;
+- pairwise truth, reciprocity, causal BondChain boundaries, append-only history, disclosure limits, and operator non-ownership remain unchanged.
+
+This revision changes the participant-authority boundary, not the meaning of bilateral truth. Existing interaction, business, settlement, recovery, presence, and key contracts that require human authority remain human-only until explicitly revised. No migration rewrites existing BondChains or changes the authority under which historical records were created.
+
+Affected subordinate contracts are updated atomically with this revision through the [Glossary](02-glossary.md), [Protocol Overview](03-protocol-overview.md), [BondChain Interaction Model](04-bondchain-interaction-model.md), and [AI Bonds](04-ai-bonds.md). Production-capable autonomous AI signing, custody, recovery, and identity bootstrap remain explicit open protocol work rather than implied capabilities.
+
+## Law 1: Subject Authority
+
+A commitment may be created or changed only by authority valid for the Bond subject that bears it.
+
+- A human commitment MUST require human authorization.
+- An artificial Bond MAY create or change its own commitment only when the owning interaction contract explicitly permits artificial participation and defines the required authority profile.
+- A Bond acting for another subject MUST have explicit delegated authority for that action.
+- Derived or delegated authority MUST remain narrower than the authority from which it was granted.
+- A model, bot, relay, registry, operator, storage layer, or user interface MUST NOT manufacture bilateral consent or authority over another Bond.
 - Pre-authorization MAY permit bounded execution, but the scope, conditions, and revocation behavior MUST be explicit before execution.
+- Technical capability, credential possession, model output, or API access MUST NOT be treated as authority unless an owning contract explicitly assigns that authority.
 
 ## Law 2: Pairwise Truth
 
 Bilateral relationship truth belongs to the Bonds that created it.
 
-- A Bond is a human-authorized participant; it is not itself a relationship.
+- A Bond is an authority-bearing protocol participant; it is not itself a relationship.
+- A Bond MAY be human-controlled or artificial. Artificial participation does not create a separate Bond or chain primitive.
+- An interaction contract MAY restrict which participant types or authority profiles it accepts.
 - One established BondChain (`bch`) contains exactly two Bonds and represents one causally bounded bilateral interaction.
 - One `bch` has exactly one synchronized record history: its own `bond.chain`.
 - A unilateral action MAY open a candidate interaction but MUST NOT become bilateral relationship truth until the reciprocal action required by its owning contract occurs.
 - A terminal BondChain MUST NOT be reopened by later semantic activity; a causally independent action begins another BondChain.
 - The longer-lived relationship between two Bonds is a projection over their BondChains, not a new shared protocol object or global social-graph edge.
 - The operator MUST NOT own, reconstruct, or arbitrate relationship truth.
-- A local observation, prediction, index, cache, projection, or `bond.journal` entry MUST NOT become shared evidence without the authorization required by its owning protocol record.
+- A local observation, prediction, index, cache, projection, model memory, or `bond.journal` entry MUST NOT become shared evidence without the authorization required by its owning protocol record.
 - No implementation convenience may create a server-side social graph or a new shared relationship object.
 
 ## Law 3: Explicit Consent
@@ -117,17 +144,18 @@ A change to these laws is a protocol revision, not an editorial clarification.
 
 ## Invariants
 
-1. People own commitments.
-2. A Bond is a participant; a BondChain is one causally bounded bilateral interaction between two Bonds.
-3. Intent becomes bilateral truth only through the reciprocal authorization required by its owning interaction contract.
-4. One BondChain owns one append-only, fast-forward-only shared history.
-5. A terminal BondChain does not become an infinite relationship log; later independent activity begins another BondChain.
-6. Mechanisms cannot manufacture authority.
-7. Disclosure is bounded by purpose.
-8. Value, depth, and visibility do not convert into one another.
-9. Global state is narrow, explicit, and never relationship truth.
-10. Failure remains visible.
-11. Normative change is versioned and atomic.
+1. Commitments follow valid subject authority; human commitments remain human-authorized.
+2. A Bond is an authority-bearing participant; a BondChain is one causally bounded bilateral interaction between exactly two Bonds.
+3. A Bond MAY be human-controlled or artificial without changing the BondChain primitive.
+4. Intent becomes bilateral truth only through the reciprocal authorization required by its owning interaction contract.
+5. One BondChain owns one append-only, fast-forward-only shared history.
+6. A terminal BondChain does not become an infinite relationship log; later independent activity begins another BondChain.
+7. Mechanisms cannot manufacture authority.
+8. Disclosure is bounded by purpose.
+9. Value, depth, and visibility do not convert into one another.
+10. Global state is narrow, explicit, and never relationship truth.
+11. Failure remains visible.
+12. Normative change is versioned and atomic.
 
 ## Related Documents
 
@@ -135,5 +163,6 @@ A change to these laws is a protocol revision, not an editorial clarification.
 - [Glossary](02-glossary.md)
 - [Protocol Overview](03-protocol-overview.md)
 - [BondChain Interaction Model](04-bondchain-interaction-model.md)
+- [AI Bonds](04-ai-bonds.md)
 - [Architecture and Data Model](05-architecture-and-data-model.md)
 - [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
