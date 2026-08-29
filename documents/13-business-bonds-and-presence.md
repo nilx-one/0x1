@@ -1,7 +1,7 @@
 # Business Bonds and Presence
 
 **Status:** draft v2  
-**Companions:** [BondChain Interaction Model](04-bondchain-interaction-model.md), [Map Architecture](12-map-architecture.md), [Digital Presence Auction](14-claim-auction.md)
+**Companions:** [BondChain Interaction Model](04-bondchain-interaction-model.md), [Creator Offers and Donations](10-creator-offers-and-donations.md), [Map Architecture](12-map-architecture.md), [Digital Presence Auction](14-claim-auction.md)
 
 ## Business Bond
 
@@ -30,6 +30,26 @@ A business BondChain reuses the same bounded interaction contracts:
 
 The lifecycle for business-side delegation and representative rotation remains an explicit open contract. It MUST NOT be improvised as a server-side account reset.
 
+## Creator Is Not Automatically a Business
+
+A person who sings, paints, writes, develops software, makes candles, performs, accepts commissions, or sells other authorized creative output does not become a BBond merely because that activity has economic value.
+
+When the subject making the offer and commitment is the person, the ordinary Bond remains the participant.
+
+```text
+Bond(person) <-> Bond(buyer or supporter)
+```
+
+When the subject making the commitment is a business, the BBond contract applies.
+
+```text
+BBond(studio) <-> Bond(customer)
+```
+
+Creator is therefore a contextual role, not a business authority class. [Creator Offers and Donations](10-creator-offers-and-donations.md) owns creator offers, creator sales, donations, and authored geographic projection semantics.
+
+Creator activity MUST NOT acquire registry-backed physical business presence, business representative authority, or `SLOT-DIGITAL` merely by being published or sold.
+
 ## Presence Is Not the Business
 
 A business subject may have many independent map presences.
@@ -47,6 +67,8 @@ Each right is scoped to:
 ```
 
 The same business may be physically present in Paris and hold a digital presence in Lyon. It may hold physical and digital presences simultaneously. Losing one presence does not modify any other presence or erase existing BondChains with that business Bond.
+
+A future creator projection is not one of these business presence rights. It represents authored discovery state and MUST use its own versioned map contract.
 
 ## Physical Presence
 
@@ -140,6 +162,8 @@ Business `ATTEST` is valid only after the existing proximity flow confirms the r
 
 Digital presence removes the colocation requirement for discovery. It does not fabricate a visit, a purchase, a BondChain, or trust.
 
+Creator projection likewise removes colocation from discovery, but it is not business presence and MUST NOT claim a verified business address or auction entitlement.
+
 ## Business Interaction Records
 
 Commitment-bearing business interaction records belong in the `bond.chain` of the BondChain that owns them.
@@ -165,6 +189,8 @@ Map and auction records do not belong in an interaction `bond.chain`:
 
 Those records have different authority, visibility, and ordering contracts.
 
+Future creator-projection records likewise remain outside interaction `bond.chain` until their own public-projection contract defines authority and lifecycle.
+
 ## Product Language
 
 At physical-presence activation:
@@ -179,17 +205,22 @@ When physical presence closes:
 
 > The registry-backed physical marker has ended. Existing BondChains and any separately held digital presences are unchanged.
 
+A creator projection MUST use language that describes the work, offer, or performance rather than saying that the person is physically at the projected point.
+
 ## Invariants
 
 1. A BBond is a business-scoped Bond, not a separate relationship primitive.
 2. Person-to-business activity uses the same BondChain primitive as person-to-person activity.
-3. Registry evidence grants physical presence.
-4. Auction settlement grants digital presence.
-5. Neither right converts into the other.
-6. Physical presence is free, unbounded, and non-challengeable.
-7. Digital presence is singular per active cell and challengeable.
-8. A business may hold different presence classes across different cells.
-9. Losing a physical presence does not erase existing BondChains or digital presences.
-10. Historical physical occupancy creates no auction priority.
-11. Presence cannot buy depth.
-12. Only eligible bilateral business BondChain outcomes can create business relationship depth.
+3. A creator role does not automatically create a BBond.
+4. A person's authorized creator sale may remain person-to-person Bond interaction.
+5. Registry evidence grants physical business presence.
+6. Auction settlement grants digital business presence.
+7. Neither business presence right converts into the other.
+8. Physical presence is free, unbounded, and non-challengeable.
+9. Digital presence is singular per active cell and challengeable.
+10. A business may hold different presence classes across different cells.
+11. Losing a physical presence does not erase existing BondChains or digital presences.
+12. Historical physical occupancy creates no auction priority.
+13. Presence cannot buy depth.
+14. Only eligible bilateral business BondChain outcomes can create business relationship depth.
+15. Creator projections MUST remain distinct from business physical and digital presence.
