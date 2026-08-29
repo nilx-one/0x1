@@ -44,6 +44,18 @@ An artificial Bond whose identity and authority may persist beyond one request-r
 
 A business-scoped Bond: a Bond whose subject is a business and whose current actions require valid human representative authority under the business contract. BBond does not define a separate chain primitive. AI Bond support does not silently revise business-representation authority.
 
+### Creator
+
+A contextual role in which a Bond publishes creative work, goods, performances, commissions, or other authorized output. Creator is not a new fundamental identity type and does not imply BBond status or physical presence.
+
+### Creator offer
+
+An authorized public proposal by a Bond that exposes creative output or a delivery commitment for discovery and optional interaction. Publishing an offer is unilateral public state and does not establish a BondChain. See [Creator Offers and Donations](10-creator-offers-and-donations.md).
+
+### Donation
+
+A voluntary pairwise value transfer from one Bond to another without required economic consideration in return. Donation is distinct from payment even when both use the same settlement infrastructure. Donation amount does not purchase relationship depth, trust, rank, or visibility.
+
 ### BondChain (`bch`)
 
 One causally bounded bilateral interaction between exactly two Bonds. Its bilateral truth exists only after the reciprocal action required by the owning interaction contract. Its lifecycle and causal boundary are owned by the [BondChain Interaction Model](04-bondchain-interaction-model.md).
@@ -154,9 +166,13 @@ A free, non-exclusive map projection derived from a supported public registry fa
 
 One challengeable commercial representation per active cell, allocated through external settlement and ordering.
 
+### Creator projection
+
+A future authored public projection that exposes a creator offer, work, or performance for geographic discovery without claiming the author's physical location. It is distinct from physical business presence and `SLOT-DIGITAL`; its production map contract remains open.
+
 ### `map.registry`
 
-Reconstructable public projection combining anonymous activity, registry observations, physical presences, and digital presences without merging their authority sources. It is not a live per-Bond location registry.
+Reconstructable public projection combining anonymous activity, registry observations, physical presences, and digital presences without merging their authority sources. It is not a live per-Bond location registry. The current contract does not yet include creator projections.
 
 ## Related Documents
 
@@ -167,5 +183,5 @@ Reconstructable public projection combining anonymous activity, registry observa
 - [AI Bonds](04-ai-bonds.md)
 - [Identity](04-identity.md)
 - [Architecture and Data Model](05-architecture-and-data-model.md)
-- [Cryptography and Wire Protocol](06-cryptography-and-wire-protocol.md)
 - [Economics and Payments](10-economics-and-payments.md)
+- [Creator Offers and Donations](10-creator-offers-and-donations.md)
