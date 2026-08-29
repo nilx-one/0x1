@@ -1,12 +1,12 @@
 # Economics and Payments
 
-The [BondChain Interaction Model](04-bondchain-interaction-model.md) owns the distinction between a Bond participant, one BondChain interaction, and the longer-lived relationship projection. This document owns economic state derived from eligible interaction outcomes.
+The [BondChain Interaction Model](04-bondchain-interaction-model.md) owns the distinction between a Bond participant, one BondChain interaction, and the longer-lived relationship projection. This document owns economic state derived from eligible interaction outcomes. [Creator Offers and Donations](10-creator-offers-and-donations.md) owns the creator-role, sale, donation, and authored-presence semantics built on this economic layer.
 
 ## `level`
 
 `level` is permanent and non-transferable relationship depth between two Bonds. It increases only through eligible bilateral BondChain outcomes and represents depth rather than a competitive score.
 
-A unilateral candidate, rejected or expired interaction, transport acknowledgement, observed local event, presence purchase, or payment amount MUST NOT increase `level` merely by existing.
+A unilateral candidate, rejected or expired interaction, transport acknowledgement, observed local event, presence purchase, creator-offer publication, donation amount, or payment amount MUST NOT increase `level` merely by existing.
 
 Each eligible `bch` may contribute a signed `level_delta` under its owning interaction contract. The relationship-level projection derives its depth from those authorized contributions without creating a new operator-owned relationship object.
 
@@ -44,9 +44,35 @@ Payments use authorized `PAY-REQ` and `PAY-SETTLE` records with an HTLC-style se
 
 The paying Bond commits value against `H(x)` and a deadline. The receiving Bond settles by supplying preimage `x` before that deadline. Without a valid preimage, the escrow becomes void under its pairwise contract.
 
-Every value-moving authorization MUST trace to human-gated authority. `sk_ack` MUST NOT independently create, redirect, or settle value.
+Every value-moving authorization MUST trace to authority valid for the Bond subject under the owning interaction contract. In the current human-controlled profile that authority is human-gated; `sk_ack` MUST NOT independently create, redirect, or settle value.
 
 The protocol delegates total transaction ordering to an external exchange or settlement network. 0x1 does not create a global payment ledger.
+
+## Creator Sales
+
+An ordinary Bond MAY sell its authorized creative work, goods, performances, commissions, licenses, access, or digital delivery through a creator offer without becoming a BBond solely because value is exchanged.
+
+The purchase remains one pairwise interaction between buyer and creator. A map, marketplace, relay, or settlement route does not become a third participant merely by enabling discovery or execution.
+
+Payment settlement and fulfillment remain separate facts unless the owning purchase contract explicitly defines settlement as sufficient completion evidence.
+
+Creator sale value MUST NOT purchase relationship depth, trust, suggestion rank, or privileged map visibility.
+
+## Donations
+
+Donation is a voluntary pairwise value transfer without required economic consideration in return.
+
+Donation and payment are distinct semantic interaction types even when they reuse the same settlement infrastructure.
+
+A receiving Bond MAY pre-authorize bounded donation acceptance under an owning donation contract. The pre-authorization MUST NOT grant broader authority or imply a reciprocal good, service, endorsement, friendship, or other relationship state.
+
+Donation amount MUST NOT directly mint `level`, trust, suggestion rank, attestation, or privileged visibility.
+
+Donation settlement is provider-agnostic at the 0x1 semantic layer. A direct peer-to-peer route, `bnd`, an external ledger, 0xda-market, or another supported provider MAY execute or evidence settlement where the owning contract permits it.
+
+0xda-market MAY choose fee-free donation execution as an integration policy. That fee policy is not a 0x1 protocol invariant, and 0x1 MUST NOT require 0xda-market for the semantic meaning of donation.
+
+A settlement service becomes a separate interaction counterparty only when it enters its own commitment, for example through exchange, credit, custody, or settlement guarantee. Infrastructure alone does not change the pairwise creator or donation interaction.
 
 ## Atomic Multi-Bond Settlement
 
@@ -102,6 +128,10 @@ The complete mechanism is defined in [Digital Presence Auction](14-claim-auction
 
 - Bonds and BondChain histories are not saleable assets;
 - no percentage fee on ordinary relationship interactions;
+- creator status does not require BBond status;
+- creator-offer publication does not mint economic or relationship value;
+- donation amount does not buy relationship depth or visibility;
+- donation settlement remains provider-agnostic;
 - no price on registry-backed physical presence;
 - auction allocations apply only to digital presence;
 - no reward field inside OFFER;
@@ -117,4 +147,5 @@ The complete mechanism is defined in [Digital Presence Auction](14-claim-auction
 - [BondChain Interaction Model](04-bondchain-interaction-model.md)
 - [Cryptography and Wire Protocol](06-cryptography-and-wire-protocol.md)
 - [Atomic Multi-Bond Settlement](09-atomic-multi-bond-settlement.md)
+- [Creator Offers and Donations](10-creator-offers-and-donations.md)
 - [Digital Presence Auction](14-claim-auction.md)
