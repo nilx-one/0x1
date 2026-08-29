@@ -2,11 +2,13 @@
 
 The roadmap implements the model in dependency order. The [BondChain Interaction Model](04-bondchain-interaction-model.md) is a prerequisite: implementation MUST NOT restore the former assumption that one Bond equals one permanent relationship chain.
 
+All behavior shared across server, Web, native iOS, and future devices is implemented in [0x1 Core](18-core-and-client-architecture.md). Web and native iOS begin from the same Core baseline as first-class peer clients. TypeScript and Swift adapters MUST NOT become independent implementations of protocol, Relationship, gamification, economic, map-state, or synchronization rules.
+
 ## Phase 0 — BondChain Kernel
 
 Implement:
 
-- Bond as the human-authorized participant identity used by interaction contracts;
+- Bond as the authority-bearing participant identity used by interaction contracts, with authority constrained by the relevant human-controlled or artificial profile;
 - `bch_id` generation and exactly-two-Bond binding;
 - candidate versus established BondChain state;
 - causal interaction boundaries;
@@ -14,7 +16,9 @@ Implement:
 - prohibition on semantic append after terminal state;
 - reference from a new `bch` to an earlier `bch` without merge;
 - append-only `bond.chain` encoding per BondChain;
-- fast-forward validation and no-merge semantics.
+- fast-forward validation and no-merge semantics;
+- versioned Core command, event, error, and projection contracts;
+- equivalent native Rust, WebAssembly, and Swift binding fixtures.
 
 **Entry gate:** the first enabled interaction contracts have explicit initiating, reciprocal, and terminal actions.
 
@@ -95,7 +99,11 @@ Implement:
 - MapLibre GL JS and MapLibre Native clients;
 - shared Style Specification;
 - Protomaps delivery;
-- deterministic clustering and visibility bands.
+- deterministic Core-owned clustering inputs and visibility bands;
+- WebAssembly map projections for Web and UniFFI projections for native iOS;
+- shared `wgpu` rendering where custom high-density world layers require it;
+- WebGPU with required WebGL2 fallback on Web and Metal on iOS;
+- an explicit unsupported-graphics state rather than a Canvas 2D fallback.
 
 **Entry gate:** the unique-pair activation protocol and activity window are specified.
 
@@ -151,6 +159,9 @@ Implement:
 
 - Test ontology and interaction contracts before cryptographic optimization.
 - Test causal boundaries before adding more interaction kinds.
+- Run shared contract fixtures against native Rust, WebAssembly, and Swift bindings.
+- Treat Web and native iOS as peer delivery tracks over one 0x1 Core implementation.
+- Keep platform adapters thin; shared behavior belongs in 0x1 Core.
 - Treat device loss and partial connectivity as normal operating conditions.
 - Test cryptographic and Data Protection behavior on physical iOS hardware.
 - Keep operator-side state narrow, auditable, and reconstructable where possible.

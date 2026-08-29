@@ -67,7 +67,7 @@ Providers are equal-rank entries. A provider MAY be detached only while at least
 
 In the current stage, Telegram is the only provider. Device multiplicity remains delegated to Telegram sessions and Telegram 2FA because 0x1 cannot independently attest those devices yet.
 
-Native device keys (`dev:<pubkey>`) arrive with the local core. Once device authority is cryptographically represented, attaching a device becomes a human-authorized consent-class action under its owning contract. `sk_ack` MUST NOT attach one.
+Native device keys (`dev:<pubkey>`) arrive with [0x1 Core](18-core-and-client-architecture.md). Once device authority is cryptographically represented, attaching a device becomes a human-authorized consent-class action under its owning contract. `sk_ack` MUST NOT attach one.
 
 ## Registry boundary
 

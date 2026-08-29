@@ -126,4 +126,4 @@ Every projected record remains traceable to its authority source.
 
 Moving data across these boundaries is an architectural change, not a storage optimization.
 
-See [BondChain Interaction Model](04-bondchain-interaction-model.md), [Map Architecture](12-map-architecture.md), [Business Bonds and Presence](13-business-bonds-and-presence.md), and [Digital Presence Auction](14-claim-auction.md).
+See [BondChain Interaction Model](04-bondchain-interaction-model.md), [Map Architecture](12-map-architecture.md), [Business Bonds and Presence](13-business-bonds-and-presence.md), [Digital Presence Auction](14-claim-auction.md), and [0x1 Core and Client Architecture](18-core-and-client-architecture.md).

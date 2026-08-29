@@ -125,12 +125,17 @@ A prominent marker with no earned depth must read honestly as present, not trust
 
 ## Client Contract
 
-- Mini App rendering uses MapLibre GL JS.
+- Web and messenger-hosted rendering use MapLibre GL JS.
 - Native iOS rendering uses MapLibre Native.
-- Both clients consume one versioned MapLibre Style Specification.
+- Both first-class clients consume one versioned MapLibre Style Specification.
+- 0x1 Core owns shared map-state interpretation, visibility rules, clustering inputs, spatial queries, and versioned client projections.
+- Web consumes Core map projections through WebAssembly and `wasm-bindgen`; native iOS consumes them through UniFFI-generated Swift bindings.
+- MapLibre objects, platform views, GPU handles, and per-frame rendering calls do not cross either domain binding boundary.
 - Basemap data uses self-hosted Protomaps packages.
 - H3 boundaries render as client-side GeoJSON.
 - Regional map state is delivered through signed, versioned bundles.
+- Custom high-density rendering may use the shared Rust `wgpu` module: WebGPU with required WebGL2 fallback on Web and Metal on iOS.
+- Canvas 2D is not a supported rendering fallback. If neither WebGPU nor WebGL2 can initialize, the affected Web surface exposes an explicit unsupported-graphics state.
 - Pan, zoom, and viewport events are never sent as product telemetry.
 - Coarse regional delivery MAY reveal which bundle was requested; the product MUST NOT describe that residual metadata as zero-knowledge.
 - Telegram may provide signaling and discovery, but signing keys never reach the bot.
@@ -145,3 +150,11 @@ A prominent marker with no earned depth must read honestly as present, not trust
 6. Map activity cannot create a business right or establish a BondChain.
 7. Business spend cannot create activity, depth, or recommendation rank.
 8. The relay transports state but never orders it.
+9. 0x1 Core owns shared map semantics; MapLibre and GPU systems only render their projections.
+10. Web graphics provide WebGPU or WebGL2 behavior, never a Canvas 2D approximation.
+
+## Related Documents
+
+- [Protocol Laws](00-protocol-laws.md)
+- [Architecture and Data Model](05-architecture-and-data-model.md)
+- [0x1 Core and Client Architecture](18-core-and-client-architecture.md)

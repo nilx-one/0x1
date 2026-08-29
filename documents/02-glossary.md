@@ -28,6 +28,10 @@ A discovery and uniqueness index for identity records. In the target architectur
 
 ## Core Terms
 
+### 0x1 Core
+
+The portable product engine implemented in Rust and shared by server, WebAssembly, native mobile, and future device runtimes. It is the canonical executable implementation of shared 0x1 behavior, including interaction transitions, Relationship projections, progression, gamification, spatial semantics, synchronization, and client projections. The Protocol Laws remain normative, and execution inside 0x1 Core grants no authority that an owning contract does not define. See [0x1 Core and Client Architecture](18-core-and-client-architecture.md).
+
 ### Party
 
 An authority role used by an owning protocol contract. Current human, business, and settlement contracts may require human authorization; the term itself does not expand the authority that contract grants.
@@ -169,3 +173,4 @@ Reconstructable public projection combining anonymous activity, registry observa
 - [Architecture and Data Model](05-architecture-and-data-model.md)
 - [Cryptography and Wire Protocol](06-cryptography-and-wire-protocol.md)
 - [Economics and Payments](10-economics-and-payments.md)
+- [0x1 Core and Client Architecture](18-core-and-client-architecture.md)

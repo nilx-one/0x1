@@ -104,6 +104,7 @@ A document links to adjacent contracts instead of repeating them.
 - Bond/BondChain ontology and causal boundaries belong in [BondChain Interaction Model](04-bondchain-interaction-model.md).
 - Scoped behavior belongs in the most specific owning document.
 - Unresolved values belong in [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md).
+- Portable execution, binding, client, and renderer boundaries belong in [0x1 Core and Client Architecture](18-core-and-client-architecture.md).
 - Implementation staging belongs in [Implementation Roadmap](18-implementation-roadmap.md).
 
 ## Automated Enforcement
@@ -155,3 +156,4 @@ A revision MUST identify the former contract, the new contract, and the affected
 - [BondChain Interaction Model](04-bondchain-interaction-model.md)
 - [Architecture and Data Model](05-architecture-and-data-model.md)
 - [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
+- [0x1 Core and Client Architecture](18-core-and-client-architecture.md)
