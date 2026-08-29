@@ -167,9 +167,9 @@ External labels may change. Institutions may disagree. Context may collapse and 
 
 > **Identity is continuity. If you can continue the history that only you could have created, you are still you.**
 
-## Current implementation
+## Stage 1 reference implementation
 
-The current reference surface is `identity-bot/`, implemented in Rust with teloxide and SQLite.
+The Stage 1 reference surface is [`identity-bot/`](../identity-bot/), implemented in Rust with teloxide and SQLite.
 
 It contains:
 
@@ -178,7 +178,7 @@ It contains:
 - `/whoami` for the protocol-shaped identity record;
 - `/recover` for the current recovery boundary;
 - transactional insert-as-reservation over the complete `pub_dress`;
-- blind probing behavior for nonexistent handles.
+- a non-enumerating collision response that does not disclose the existing binding.
 
 The bot attests one temporary Stage 1 fact: a human-created `pub_dress ↔ tg_id` binding.
 

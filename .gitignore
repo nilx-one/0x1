@@ -1,0 +1,6 @@
+# © 2026 aiaiaiai · aiaiaiai.org
+
+identity-bot/target/
+identity-bot/identity.db
+identity-bot/identity.db-shm
+identity-bot/identity.db-wal
