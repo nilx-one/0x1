@@ -2,6 +2,8 @@
 
 The [BondChain Interaction Model](04-bondchain-interaction-model.md) owns the meaning and causal boundary of `bch`. This document defines cryptographic enforcement for one BondChain and its `bond.chain` encoding.
 
+The key roles below describe the current **human-controlled Bond profile** unless an owning contract explicitly states otherwise. The generic Bond ontology also permits artificial Bonds, but a production autonomous AI authority profile is not defined by reusing these human key semantics.
+
 ## Pairwise Key Derivation
 
 The active key for one BondChain history is derived as:
@@ -20,11 +22,15 @@ Binding `k` to the chain head makes divergence self-penalizing. A rollback or co
 
 ### `sk_bond`
 
-Human-gated signing authority for commitment-bearing BondChain records such as `INIT`, `CONSENT`, `ACCEPT`, `ATTEST`, `REKEY`, `REVOKE`, and `CONTINUE` where the owning interaction contract defines them.
+Human-gated signing authority for commitment-bearing BondChain records in the current human-controlled Bond profile, such as `INIT`, `CONSENT`, `ACCEPT`, `ATTEST`, `REKEY`, `REVOKE`, and `CONTINUE` where the owning interaction contract defines them.
+
+`sk_bond` MUST NOT be treated as autonomous AI authority merely because an AI runtime can invoke software that has access to the signing path.
 
 ### `sk_ack`
 
-Derived engine authority. It may issue protocol acknowledgements such as `READ`, `ACK`, `EXP`, defensive rekey acknowledgements, and negotiation messages only within the authority assigned by their owning contracts. It MUST NOT manufacture a human commitment.
+Derived engine authority in the current human-controlled Bond profile. It may issue protocol acknowledgements such as `READ`, `ACK`, `EXP`, defensive rekey acknowledgements, and negotiation messages only within the authority assigned by their owning contracts. It MUST NOT manufacture a human commitment.
+
+`sk_ack` is not an authority root for an AI Bond and MUST NOT be promoted into one by implementation convention.
 
 A `READ` acknowledgement may serve as the reciprocal action for a messaging BondChain only when the messaging contract defines the observed human read event, its authority, and the resulting record. It does not imply agreement with message semantics.
 
@@ -48,7 +54,33 @@ nilx.one uses a distinct operator key to sign `REG-ATTEST` records.
 
 That key is authorized only to publish versioned observations of supported external business registries. It cannot sign BondChain, auction, recovery, or human-intent records.
 
+## Artificial Bond Authority
+
+The [AI Bonds](04-ai-bonds.md) model permits an artificial Bond to hold autonomous authority over its own commitments only where an owning interaction contract explicitly permits artificial participation.
+
+This document does **not** yet define that production authority profile.
+
+Before an AI Bond can emit autonomous commitment-bearing records, a versioned profile MUST define at least:
+
+- the authority root and subject binding;
+- signing and key-agreement keys;
+- key custody and runtime isolation;
+- capability and interaction scopes;
+- delegated authority when acting for another Bond;
+- revocation and rotation;
+- compromise behavior;
+- recovery and unrecoverable-loss behavior;
+- how counterparties identify and validate the artificial authority profile.
+
+The profile MUST NOT derive autonomous authority from model output, `sk_ack`, credential possession, API reachability, or the ability to invoke a signer.
+
+Until that profile exists, artificial-Bond autonomy is normative at the ontology and authority-boundary level but not production-capable for autonomous commitment-bearing signatures.
+
+See [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md).
+
 ## Platform Mapping
+
+The current human-controlled profile maps roles as follows:
 
 | Role | Primitive | Storage |
 |---|---|---|
@@ -60,6 +92,8 @@ That key is authorized only to publish versioned observations of supported exter
 | Registry-oracle signatures | Ed25519 | Operator HSM or equivalent isolated signer |
 
 Secure Enclave support is limited to P-256 for this design. Ed25519 and X25519 keys remain software keys protected by the Keychain.
+
+An AI authority profile MAY choose different custody primitives, but it MUST preserve the authority boundaries defined by the Protocol Laws and MUST NOT silently reinterpret this table as an AI runtime contract.
 
 ## Record Envelope
 
@@ -95,10 +129,19 @@ Associated data binds the ciphertext to one BondChain candidate or established `
 An implementation MUST reject a candidate `bond.chain` unless:
 
 1. the local history for that `bch_id` is an exact prefix of the candidate;
-2. each new record carries the authority required by its owning interaction contract;
+2. each new record carries the authority required by its owning interaction contract and participant authority profile;
 3. each `h_prev` points to the previous accepted record;
 4. each record hash recomputes correctly;
 5. epoch transitions follow an authorized `REKEY`, `DEVICE-REVOKE`, or `CONTINUE` record where the lifecycle permits them;
 6. no semantic record appears after the BondChain's terminal state.
 
 The protocol does not define merge conflict resolution because conflicting shared histories for one `bch_id` are outside the valid state space. Separate BondChains between the same two Bonds remain separate histories by construction.
+
+## Related Documents
+
+- [Protocol Laws](00-protocol-laws.md)
+- [Glossary](02-glossary.md)
+- [BondChain Interaction Model](04-bondchain-interaction-model.md)
+- [AI Bonds](04-ai-bonds.md)
+- [Bond and BondChain Lifecycle](07-bond-lifecycle.md)
+- [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
