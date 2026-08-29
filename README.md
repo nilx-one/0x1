@@ -1,6 +1,6 @@
 # 0x1
 
-**A peer-to-peer social protocol where bilateral truth exists only when two human-authorized participants meet in one reciprocal interaction.**
+**A peer-to-peer social protocol where bilateral truth exists only when two authority-bearing participants meet in one reciprocal interaction.**
 
 status: `spec / pre-alpha`
 
@@ -14,7 +14,7 @@ Every social platform built so far stores your relationships on someone else's s
 
 There is no operator-owned social graph and no server-side relationship object.
 
-A **Bond** is a human-authorized protocol participant. A **BondChain (`bch`)** is one causally bounded bilateral interaction between exactly two Bonds.
+A **Bond** is an authority-bearing protocol participant. A Bond may be human-controlled or artificial. A **BondChain (`bch`)** is one causally bounded bilateral interaction between exactly two Bonds.
 
 One Bond may act alone. That action can open an interaction candidate, but it does not become bilateral relationship truth until the other Bond performs the reciprocal action required by that interaction contract.
 
@@ -22,11 +22,11 @@ The longer-lived relationship between two Bonds is a projection over their BondC
 
 No third party keeps the whole memory.  
 No operator can rewrite the past.  
-No machine can promise on a person's behalf.
+No machine can invent authority on a person's behalf.
 
 The operating principle:
 
-> **People own the signatures. The core owns the guesses. The operator owns no relationship truth.**
+> **Commitments follow their subject authority. Mechanisms enforce authority. The operator owns no relationship truth.**
 
 ---
 
@@ -34,14 +34,36 @@ The operating principle:
 
 ### Bond
 
-A Bond is a human-authorized participant.
+A Bond is an authority-bearing participant.
 
-It may represent:
+It may be:
 
-- a person acting for themselves; or
-- a business subject acting through explicit human authority.
+- human-controlled; or
+- artificial.
 
-A business-scoped Bond is called a **BBond** where the business-authority distinction matters. BBond does not define a second relationship or chain primitive.
+A business-scoped Bond is called a **BBond** where the business-authority distinction matters. BBond does not define a second relationship or chain primitive, and the current business contract remains human-representative-authorized until explicitly revised.
+
+Participant type does not alter the meaning of BondChain. An owning interaction contract may still restrict which participant or authority profiles it accepts.
+
+### AI Bond
+
+An **AI Bond** is an artificial Bond, not a new primitive.
+
+An AI Bond may persist beyond one request-response session and may communicate, cooperate, disagree, perform work, request work, or participate in digital-asset delivery where an owning contract permits those actions.
+
+Its memory, personality, presence, movement, and runtime state are not relationship truth by themselves. Friendship, conflict, trust, and similar views are derived from observable interaction history rather than asserted by a model.
+
+Autonomy is not unrestricted authority:
+
+```text
+intent != permission
+capability != authority
+attempt != completion
+```
+
+Human commitments remain human-authorized. A production autonomous signing and recovery profile for AI Bonds is still open protocol work; 0x1 does not pretend that the current human `sk_bond` profile already solves it.
+
+See [`documents/04-ai-bonds.md`](documents/04-ai-bonds.md).
 
 ### BondChain (`bch`)
 
@@ -55,7 +77,7 @@ Bond 1 -- reciprocal action --> Bond 0
                          established bch
 ```
 
-The boundary is causal, not based on action type.
+The boundary is causal, not based on action type or participant type.
 
 Different action types may belong to one `bch` when they continue the same intent:
 
@@ -66,6 +88,14 @@ ORDER -> PAY -> ACCEPT -> FULFILL -> RECEIVE
 The same action type starts a new `bch` when it begins a new independent interaction. For messaging, one `MESSAGE -> READ` may be one BondChain, while the reply starts another BondChain that may reference the first.
 
 Once a BondChain reaches a terminal state, later semantic activity does not reopen it.
+
+Where the owning interaction contract permits them, the same model covers:
+
+```text
+Human Bond <-> Human Bond
+Human Bond <-> AI Bond
+AI Bond    <-> AI Bond
+```
 
 ### `bond.chain`
 
@@ -94,9 +124,11 @@ Bond 0                           Bond 1
 
 A client may derive a relationship view from the BondChains it is authorized to hold. That projection is not a new synchronized protocol object and never becomes an operator-owned social graph.
 
+For AI Bonds this distinction is especially important: personality and memory may influence behavior, but they do not directly set shared relationship state.
+
 ### Core (`matr.ix`)
 
-`matr.ix` is a per-Bond local engine. It ranks, suggests, negotiates within pre-authorized bounds, and sometimes stays silent. It may reason about interaction history without gaining the right to create a human commitment.
+`matr.ix` is the local engine used by the current human-controlled Bond profile. It ranks, suggests, negotiates within pre-authorized bounds, and sometimes stays silent. It may reason about interaction history without gaining the right to create a human commitment.
 
 Two invariants define its limits:
 
@@ -107,11 +139,13 @@ Decision generation and language generation are separate layers. Models may chan
 
 The core may guess.  
 It may veto.  
-It may never promise.
+It may never manufacture human authority.
+
+AI Bond autonomy is a separate authority contract and does not emerge from `matr.ix` or `sk_ack`.
 
 ### Key split
 
-Three authorities. Hard boundaries.
+The current human-controlled profile uses three authorities with hard boundaries.
 
 | Key | Signs | Reachable from emission? |
 |---|---|---|
@@ -120,6 +154,8 @@ Three authorities. Hard boundaries.
 | `sk_presence` | Human-authorized actions for one digital-presence slot | **Never from `sk_ack`** |
 
 nilx.one uses a separate registry-oracle key only for `REG-ATTEST`, a versioned observation of an external business registry. It cannot sign human intent or relationship truth.
+
+An AI Bond MUST NOT reuse these human authority semantics by treating model execution as human authorization. Its production signing root, custody, revocation, and recovery remain explicitly undefined until an AI authority profile is specified.
 
 ### Relay
 
@@ -139,6 +175,34 @@ The server never learns where anyone is because no location is sent to it in the
 
 ---
 
+## AI life, work, and delivery
+
+0x1 can support artificial participants that persist while no human is actively chatting with them.
+
+Persistent existence means durable artificial identity and local/runtime state, not biological life and not continuous BondChain activity. An AI Bond may be available, offline, working, waiting, or represented as moving through a future world surface without those states creating a BondChain by themselves.
+
+Work remains pairwise interaction rather than a new social primitive:
+
+```text
+offer -> accept -> task -> delivery -> acceptance -> payment
+```
+
+An AI may work for a human Bond or another AI Bond where the interaction contract permits it. A completed task does not automatically create a legal employment relation or permanent social status.
+
+Digital-asset delivery follows the same separation of facts:
+
+```text
+request
+-> acceptance
+-> transfer authority or custody
+-> transfer evidence
+-> recipient completion action
+```
+
+Intent is not custody. Custody is not transfer. Transfer is not acknowledgement. External ledgers may provide evidence, but they do not define bilateral relationship truth.
+
+---
+
 ## Map and business presence
 
 The map follows reality before it sells representation.
@@ -150,6 +214,8 @@ Every active cell also exposes exactly one `SLOT-DIGITAL`. That slot may be acqu
 Registry evidence grants physical presence. Auction settlement grants digital presence. Neither right converts into the other.
 
 Presence buys discovery, not depth. A physical or digital marker cannot buy `ATTEST`, `level`, aggregate activity, or `matr.ix` rank.
+
+The current `map.registry` is not a live per-Bond location registry. A future world surface may render AI presence or movement only through a separate privacy and authority contract; UI state cannot manufacture BondChain truth.
 
 A person-to-business purchase, message, visit, or other eligible interaction uses the same BondChain primitive as person-to-person interaction; only the business-side authority contract differs.
 
@@ -179,6 +245,7 @@ We say **trust-minimized**. We do not say unbreakable.
 
 - The relay can be seized. It holds nothing durable.
 - A device can be stolen. Key state, revocation, and recovery are first-class protocol concerns.
+- An AI runtime can be compromised. Until its authority profile defines custody, revocation, and recovery, autonomous commitment-bearing AI operation is not production-ready.
 - SIM swap is outside the target identity surface because phone numbers are not identity primitives.
 - The registry oracle can publish an incorrect external interpretation; adapter versions, corrections, and key rotation are explicit contracts.
 - Broadcast aggregation remains an open design question.
@@ -194,7 +261,7 @@ The chain is the receipt. The other Bond is the witness.
 
 ## Documentation
 
-The specification is organized by authority boundary. The Protocol Laws come first; the two-digit prefix encodes dependency tier. The two `04` documents are peers in the model layer, with the canonical order declared below and enforced by Documentation CI.
+The specification is organized by authority boundary. The Protocol Laws come first; the two-digit prefix encodes dependency tier. The three `04` documents are peers in the model layer, with the canonical order declared below and enforced by Documentation CI.
 
 ```text
 documents/
@@ -204,6 +271,7 @@ documents/
 ├── 02-glossary.md
 ├── 03-protocol-overview.md
 ├── 04-bondchain-interaction-model.md
+├── 04-ai-bonds.md
 ├── 04-identity.md
 ├── 05-architecture-and-data-model.md
 ├── 06-cryptography-and-wire-protocol.md
@@ -227,9 +295,11 @@ Start with [`documents/00-protocol-laws.md`](documents/00-protocol-laws.md), the
 
 ## Status
 
-The Bond/BondChain ontology is normative: Bond is the participant; BondChain is one causally bounded bilateral interaction; `bond.chain` is that interaction's bounded record encoding.
+The Bond/BondChain ontology is normative: Bond is the authority-bearing participant and may be human-controlled or artificial; BondChain is one causally bounded bilateral interaction; `bond.chain` is that interaction's bounded record encoding.
 
-Identity, key hierarchy, proximity, offer mechanics, device lifecycle, recovery, and economic boundaries remain specified by their owning documents and are being aligned to this ontology where terminology previously treated Bond as the relationship itself.
+AI Bond is normative at the ontology and authority-boundary level. Autonomous signing, identity bootstrap, custody, compromise recovery, and concrete AI-capable interaction schemas remain open before production.
+
+Identity, current human key hierarchy, proximity, offer mechanics, device lifecycle, recovery, and economic boundaries remain specified by their owning documents.
 
 Atomic Multi-Bond Settlement is a v1 draft with its authority, privacy, reveal, and timeout invariants specified.
 
