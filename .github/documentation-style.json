@@ -7,7 +7,8 @@
     "documents/01-documentation-protocol.md",
     "documents/02-glossary.md",
     "documents/04-bondchain-interaction-model.md",
-    "documents/04-ai-bonds.md"
+    "documents/04-ai-bonds.md",
+    "documents/10-creator-offers-and-donations.md"
   ],
   "ordered_documents": [
     "documents/00-protocol-laws.md",
@@ -23,6 +24,7 @@
     "documents/08-offers-and-matrix-engine.md",
     "documents/09-atomic-multi-bond-settlement.md",
     "documents/10-economics-and-payments.md",
+    "documents/10-creator-offers-and-donations.md",
     "documents/11-proximity-relay-and-broadcast.md",
     "documents/12-map-architecture.md",
     "documents/13-business-bonds-and-presence.md",
