@@ -1,6 +1,6 @@
 # 0x1 Protocol Documentation
 
-This directory contains the technical specification for the 0x1 identity layer, Bond and BondChain interaction model, business authority layer, geographic presence market, and pairwise settlement behavior.
+This directory contains the technical specification for the 0x1 identity layer, Bond and BondChain interaction model, artificial participants, business authority layer, geographic presence market, and pairwise settlement behavior.
 
 The documentation is organized by authority boundary. Each document owns one architectural concern and links to adjacent contracts. All normative rules derive from the [Protocol Laws](00-protocol-laws.md).
 
@@ -12,7 +12,7 @@ Its canonical repository is [`nilx-one/0x1`](https://github.com/nilx-one/0x1).
 
 ## Reading Order
 
-The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed through `18`. When two documents share one dependency tier, the order in this canonical index and `.github/documentation-style.json` is authoritative.
+The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed through `18`. When documents share one dependency tier, the order in this canonical index and `.github/documentation-style.json` is authoritative.
 
 ## Foundation
 
@@ -21,6 +21,7 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 - [Glossary](02-glossary.md) — canonical repository-wide vocabulary.
 - [Protocol Overview](03-protocol-overview.md) — product thesis, authority model, and system invariants.
 - [BondChain Interaction Model](04-bondchain-interaction-model.md) — canonical ontology for Bond, BondChain (`bch`), reciprocity, causal boundaries, terminal states, and relationship projection.
+- [AI Bonds](04-ai-bonds.md) — artificial participants, autonomy vs authority, persistent state, work, digital-asset delivery boundaries, and future world presence without introducing a new participant primitive.
 - [Identity](04-identity.md) — `pub_dress`, provider boundaries, registry stages, private identity, authenticated introduction, continuity, and recovery limits.
 - [Architecture and Data Model](05-architecture-and-data-model.md) — bounded `bond.chain` encoding, `bond.journal`, public projections, and state ownership.
 - [Cryptography and Wire Protocol](06-cryptography-and-wire-protocol.md) — key hierarchy, record envelopes, encryption, and fork safety.
@@ -28,14 +29,14 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 ## Pairwise Behavior
 
 - [Bond and BondChain Lifecycle](07-bond-lifecycle.md) — interaction formation, reciprocal authorization, signatures, terminal boundaries, and synchronization.
-- [Offers and Matrix Engine](08-offers-and-matrix-engine.md) — OFFER, flex, negotiation, ranking, veto, and exploration.
+- [Offers and Matrix Engine](08-offers-and-matrix-engine.md) — OFFER, flex, negotiation, ranking, veto, and exploration for the current human-controlled engine profile.
 - [Atomic Multi-Bond Settlement](09-atomic-multi-bond-settlement.md) — atomic payment settlement across independent pairwise interaction edges without a global coordinator or materialized transaction graph.
 - [Economics and Payments](10-economics-and-payments.md) — `level`, `bnd`, `exp`, pairwise payments, and digital-presence economics.
 
 ## Discovery and Presence
 
 - [Proximity, Relay, and Broadcast](11-proximity-relay-and-broadcast.md) — constant-rate discovery, relay behavior, map activity, and broadcast access.
-- [Map Architecture](12-map-architecture.md) — cell activation, public projections, rendering, and client privacy.
+- [Map Architecture](12-map-architecture.md) — cell activation, public projections, rendering, and client privacy. The current map is not a live per-Bond location registry.
 - [Business Bonds and Presence](13-business-bonds-and-presence.md) — business-scoped Bond authority, business BondChains, registry-backed physical presence, and auction-backed digital presence.
 - [Digital Presence Auction](14-claim-auction.md) — funded bids, optional defense, premium allocation, automatic transfer, and cooldown.
 
@@ -43,20 +44,22 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 
 - [Devices and Recovery](15-devices-and-recovery.md) — device states, revocation, rekeying, REC-REQ, and CONTINUE.
 - [Security and Platform Notes](16-security-and-platform-notes.md) — threat model, iOS implementation guidance, and post-quantum migration.
-- [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md) — fixed invariants, draft parameters, and unresolved decisions.
+- [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md) — fixed invariants, draft parameters, unresolved decisions, and the still-open autonomous AI authority profile.
 - [Implementation Roadmap](18-implementation-roadmap.md) — staged delivery plan and validation gates.
 
 ## Status
 
 **Version:** v1
 
-**Identity layer:** Stage 1 provider-backed registration is implemented; Stage 2 self-signed identity and transparent registry behavior are specified as the target contract.
+**Identity layer:** Stage 1 provider-backed registration is implemented; Stage 2 self-signed identity and transparent registry behavior are specified as the target contract. Artificial identity bootstrap is not yet a production contract.
 
-**BondChain model:** Bond is the participant; BondChain is one causally bounded bilateral interaction. The model is normative in [BondChain Interaction Model](04-bondchain-interaction-model.md). Downstream storage and lifecycle documents must follow it rather than redefine it.
+**BondChain model:** Bond is the authority-bearing participant and may be human-controlled or artificial; BondChain is one causally bounded bilateral interaction. The model is normative in [BondChain Interaction Model](04-bondchain-interaction-model.md). Downstream storage and lifecycle documents must follow it rather than redefine it.
+
+**AI Bond model:** Normative at the ontology and authority-boundary level. AI Bond does not create a new participant or chain primitive. Autonomous signing, identity bootstrap, custody, compromise recovery, and AI-capable interaction schemas remain open before production.
 
 **Atomic Multi-Bond Settlement:** Draft v1. Core authority, privacy, reveal, and timeout invariants are specified; exact transport timing and external settlement integration remain implementation concerns.
 
-**Map and business layers:** Draft v2. Presence classes and auction allocation are specified; cell activation, registry adapters, business authority, timing, and key lifecycle remain open.
+**Map and business layers:** Draft v2. Presence classes and auction allocation are specified; cell activation, registry adapters, business authority, timing, and key lifecycle remain open. Current `map.registry` does not expose live per-Bond movement.
 
 ## Normative Language
 

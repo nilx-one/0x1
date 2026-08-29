@@ -2,6 +2,8 @@
 
 The [BondChain Interaction Model](04-bondchain-interaction-model.md) owns interaction boundaries. OFFER negotiation may prepare a BondChain candidate, but ephemeral negotiation does not itself become relationship truth.
 
+This document describes the current **human-controlled Bond profile** and its local `matr.ix` engine. It MUST NOT be interpreted as the autonomous authority profile for an [AI Bond](04-ai-bonds.md). An AI Bond may use different implementation machinery, but any commitment-bearing action still requires the authority defined by its owning AI-capable interaction contract.
+
 ## OFFER
 
 An OFFER is encrypted, ephemeral, and never appended to `bond.chain` merely because it was emitted.
@@ -53,11 +55,15 @@ flex = {
 
 Automatic acceptance inside flex is execution of prior human authorization, not autonomous engine consent. Negotiation is limited to two rounds.
 
+AI Bond autonomy MUST NOT be modeled by pretending this human pre-authorization surface grants independent artificial authority.
+
 ## Engine Negotiation
 
 Engines negotiate encrypted windows under `sk_ack`. The result is presented simultaneously to both people as one unattributed proposal. Neither participant sees who conceded.
 
 Concession distance may influence future flex balancing, but it MUST NOT be shown as a judgment about the other person.
+
+This `sk_ack` behavior belongs to the current human-controlled profile. It does not establish an AI Bond authority root.
 
 ## Decision Rules
 
@@ -97,3 +103,12 @@ A monthly drift test MUST verify that free scenarios such as walking, calling, s
 - no transaction-percentage business model;
 - rewards remain retrospective and unpredictable;
 - silent interventions should remain rare, approximately weekly.
+
+These constraints apply to the current human `matr.ix` profile. AI Bond behavior and personality MUST NOT be used to manufacture shared relationship facts; the [AI Bonds](04-ai-bonds.md) contract preserves the same evidence-before-interpretation boundary.
+
+## Related Documents
+
+- [Protocol Laws](00-protocol-laws.md)
+- [BondChain Interaction Model](04-bondchain-interaction-model.md)
+- [AI Bonds](04-ai-bonds.md)
+- [Cryptography and Wire Protocol](06-cryptography-and-wire-protocol.md)

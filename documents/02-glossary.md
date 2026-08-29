@@ -16,7 +16,7 @@ An immutable human-readable identity handle shaped as the literal prefix `0x` fo
 
 ### Identity provider
 
-A mechanism through which a person can currently prove control of an identity record. Providers are access boundaries, not identity truth.
+A mechanism through which an authorized controller can currently prove control of an identity record. The Stage 1 implementation is person/provider-backed; providers are access boundaries, not identity truth.
 
 ### `pk_identity`
 
@@ -30,15 +30,19 @@ A discovery and uniqueness index for identity records. In the target architectur
 
 ### Party
 
-A human-authorized authority role in the protocol. A party may act for a person or, through explicit human authority, for a business subject.
+An authority role used by an owning protocol contract. Current human, business, and settlement contracts may require human authorization; the term itself does not expand the authority that contract grants.
 
 ### Bond
 
-A human-authorized protocol participant. A Bond may represent a person acting for themselves or a business subject acting through explicit human authority. A Bond may initiate an action unilaterally; bilateral relationship truth requires a BondChain.
+An authority-bearing protocol participant. A Bond may be human-controlled or artificial. A Bond may initiate an action unilaterally; bilateral relationship truth requires a BondChain. Participant type does not create a separate chain primitive, and an owning interaction contract may restrict which participant or authority profiles it accepts.
+
+### AI Bond
+
+An artificial Bond whose identity and authority may persist beyond one request-response session. An AI Bond is not a separate participant or chain primitive. It may exercise autonomous authority over its own commitments only where an owning interaction contract explicitly permits artificial participation and defines the required authority profile. See [AI Bonds](04-ai-bonds.md).
 
 ### BBond
 
-A business-scoped Bond: a Bond whose subject is a business and whose actions require valid human representative authority. BBond does not define a separate chain primitive.
+A business-scoped Bond: a Bond whose subject is a business and whose current actions require valid human representative authority under the business contract. BBond does not define a separate chain primitive. AI Bond support does not silently revise business-representation authority.
 
 ### BondChain (`bch`)
 
@@ -50,11 +54,11 @@ The append-only, hash-linked record encoding of one BondChain. It is the synchro
 
 ### Relationship projection
 
-A derived view over the independently terminal BondChains between the same two Bonds. It is not a new shared protocol object, a global social-graph edge, or operator-owned relationship truth.
+A derived view over the independently terminal BondChains between the same two Bonds. It is not a new shared protocol object, a global social-graph edge, or operator-owned relationship truth. Friendship, conflict, trust, cooperation, and similar views remain derived unless an owning contract explicitly defines a narrower shared fact.
 
 ### `bond.journal`
 
-A single-owner local store of observations, priors, and adaptive state. It is not evidence, is not synchronized, and never becomes relationship truth.
+A single-owner local store of observations, priors, and adaptive state. It is not evidence, is not synchronized, and never becomes relationship truth. AI memory or runtime state does not become shared evidence merely because it is stored locally.
 
 ### Record
 
@@ -66,7 +70,7 @@ A proposed action that has not yet become shared truth. Intent may expire, be re
 
 ### Context
 
-A bounded interpretation of related intents, records, or observations. Context helps a party reason locally; it does not create a global object or new authority.
+A bounded interpretation of related intents, records, or observations. Context helps a participant reason locally; it does not create a global object or new authority.
 
 ### Settlement Context
 
@@ -74,7 +78,7 @@ A temporary relationship among independently held payment escrows linked by one 
 
 ### `matr.ix`
 
-A per-Bond local engine that predicts, ranks, negotiates within pre-authorized bounds, and protects its person from overload. It may guess and veto. It cannot create a human commitment.
+A local engine used by the current human-controlled Bond profile to predict, rank, negotiate within pre-authorized bounds, and protect its person from overload. It may guess and veto. It cannot create a human commitment. AI Bond autonomy is governed separately by the [AI Bonds](04-ai-bonds.md) authority boundary and MUST NOT be inferred from `matr.ix` or `sk_ack`.
 
 ### Relay
 
@@ -96,11 +100,11 @@ Permanent, non-transferable recovery assistance credit. It remains outside relat
 
 ### `sk_bond`
 
-Human-gated signing authority for commitment-bearing BondChain records.
+Human-gated signing authority for commitment-bearing BondChain records in the current human-controlled Bond profile. It MUST NOT be reinterpreted as an autonomous AI authority merely because an AI can access or invoke software around it.
 
 ### `sk_ack`
 
-Derived engine authority for acknowledgements, protective actions, and bounded automation. It has no path to independently create a human commitment.
+Derived engine authority for acknowledgements, protective actions, and bounded automation in the current human-controlled Bond profile. It has no path to independently create a human commitment and is not the authority root for an AI Bond.
 
 ### `sk_presence`
 
@@ -152,7 +156,7 @@ One challengeable commercial representation per active cell, allocated through e
 
 ### `map.registry`
 
-Reconstructable public projection combining anonymous activity, registry observations, physical presences, and digital presences without merging their authority sources.
+Reconstructable public projection combining anonymous activity, registry observations, physical presences, and digital presences without merging their authority sources. It is not a live per-Bond location registry.
 
 ## Related Documents
 
@@ -160,6 +164,7 @@ Reconstructable public projection combining anonymous activity, registry observa
 - [Documentation Protocol](01-documentation-protocol.md)
 - [Protocol Overview](03-protocol-overview.md)
 - [BondChain Interaction Model](04-bondchain-interaction-model.md)
+- [AI Bonds](04-ai-bonds.md)
 - [Identity](04-identity.md)
 - [Architecture and Data Model](05-architecture-and-data-model.md)
 - [Cryptography and Wire Protocol](06-cryptography-and-wire-protocol.md)

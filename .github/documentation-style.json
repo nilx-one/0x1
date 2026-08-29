@@ -6,7 +6,8 @@
     "documents/README.md",
     "documents/01-documentation-protocol.md",
     "documents/02-glossary.md",
-    "documents/04-bondchain-interaction-model.md"
+    "documents/04-bondchain-interaction-model.md",
+    "documents/04-ai-bonds.md"
   ],
   "ordered_documents": [
     "documents/00-protocol-laws.md",
@@ -14,6 +15,7 @@
     "documents/02-glossary.md",
     "documents/03-protocol-overview.md",
     "documents/04-bondchain-interaction-model.md",
+    "documents/04-ai-bonds.md",
     "documents/04-identity.md",
     "documents/05-architecture-and-data-model.md",
     "documents/06-cryptography-and-wire-protocol.md",
@@ -48,7 +50,7 @@
     },
     {
       "pattern": "\\bA Bond is (?:a )?(?:pairwise )?(?:cryptographic )?relationship\\b",
-      "replacement": "Bond as a human-authorized protocol participant",
+      "replacement": "Bond as an authority-bearing protocol participant",
       "reason": "BondChain, not Bond, owns one causally bounded bilateral interaction."
     },
     {
