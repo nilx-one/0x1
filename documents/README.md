@@ -1,6 +1,6 @@
 # 0x1 Protocol Documentation
 
-This directory contains the technical specification for the 0x1 identity layer, Bond and BondChain interaction model, artificial participants, business authority layer, geographic presence market, and pairwise settlement behavior.
+This directory contains the technical specification for the 0x1 identity layer, Bond and BondChain interaction model, artificial participants, creator offers and donations, business authority layer, geographic presence market, and pairwise settlement behavior.
 
 The documentation is organized by authority boundary. Each document owns one architectural concern and links to adjacent contracts. All normative rules derive from the [Protocol Laws](00-protocol-laws.md).
 
@@ -31,20 +31,21 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 - [Bond and BondChain Lifecycle](07-bond-lifecycle.md) — interaction formation, reciprocal authorization, signatures, terminal boundaries, and synchronization.
 - [Offers and Matrix Engine](08-offers-and-matrix-engine.md) — OFFER, flex, negotiation, ranking, veto, and exploration for the current human-controlled engine profile.
 - [Atomic Multi-Bond Settlement](09-atomic-multi-bond-settlement.md) — atomic payment settlement across independent pairwise interaction edges without a global coordinator or materialized transaction graph.
-- [Economics and Payments](10-economics-and-payments.md) — `level`, `bnd`, `exp`, pairwise payments, and digital-presence economics.
+- [Economics and Payments](10-economics-and-payments.md) — `level`, `bnd`, `exp`, pairwise payments, creator-sale value movement, donations, and digital-presence economics.
+- [Creator Offers and Donations](10-creator-offers-and-donations.md) — creator as a contextual Bond role, authored offers, direct sales, donations, provider-agnostic settlement, and remote geographic creative presence.
 
 ## Discovery and Presence
 
 - [Proximity, Relay, and Broadcast](11-proximity-relay-and-broadcast.md) — constant-rate discovery, relay behavior, map activity, and broadcast access.
-- [Map Architecture](12-map-architecture.md) — cell activation, public projections, rendering, and client privacy. The current map is not a live per-Bond location registry.
-- [Business Bonds and Presence](13-business-bonds-and-presence.md) — business-scoped Bond authority, business BondChains, registry-backed physical presence, and auction-backed digital presence.
+- [Map Architecture](12-map-architecture.md) — cell activation, current business projections, future creator projection boundary, rendering, and client privacy. The map is not a live per-Bond location registry.
+- [Business Bonds and Presence](13-business-bonds-and-presence.md) — business-scoped Bond authority, creator-vs-business boundary, business BondChains, registry-backed physical presence, and auction-backed digital presence.
 - [Digital Presence Auction](14-claim-auction.md) — funded bids, optional defense, premium allocation, automatic transfer, and cooldown.
 
 ## Operations and Delivery
 
 - [Devices and Recovery](15-devices-and-recovery.md) — device states, revocation, rekeying, REC-REQ, and CONTINUE.
 - [Security and Platform Notes](16-security-and-platform-notes.md) — threat model, iOS implementation guidance, and post-quantum migration.
-- [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md) — fixed invariants, draft parameters, unresolved decisions, and the still-open autonomous AI authority profile.
+- [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md) — fixed invariants, draft parameters, unresolved decisions, creator commerce/map contracts, and autonomous AI authority profile.
 - [Implementation Roadmap](18-implementation-roadmap.md) — staged delivery plan and validation gates.
 
 ## Status
@@ -57,9 +58,11 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 
 **AI Bond model:** Normative at the ontology and authority-boundary level. AI Bond does not create a new participant or chain primitive. Autonomous signing, identity bootstrap, custody, compromise recovery, and AI-capable interaction schemas remain open before production.
 
+**Creator model:** Normative at the role and semantic-boundary level. An ordinary Bond may act as a creator without becoming a BBond; creator offers are unilateral public state; sales and donations remain pairwise; settlement is provider-agnostic; creator map placement cannot claim physical location. Concrete offer, fulfillment, donation, and creator-projection schemas remain open before production.
+
 **Atomic Multi-Bond Settlement:** Draft v1. Core authority, privacy, reveal, and timeout invariants are specified; exact transport timing and external settlement integration remain implementation concerns.
 
-**Map and business layers:** Draft v2. Presence classes and auction allocation are specified; cell activation, registry adapters, business authority, timing, and key lifecycle remain open. Current `map.registry` does not expose live per-Bond movement.
+**Map and business layers:** Draft v2. Current business presence classes and auction allocation are specified; creator projections are defined only as a future distinct projection class. Cell activation, registry adapters, business authority, creator placement, timing, and key lifecycle remain open. Current `map.registry` does not expose live per-Bond movement or creator projections.
 
 ## Normative Language
 
