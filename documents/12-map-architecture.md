@@ -1,27 +1,29 @@
 # Map Architecture
 
 **Status:** draft v2  
-**Companions:** [BondChain Interaction Model](04-bondchain-interaction-model.md), [Business Bonds and Presence](13-business-bonds-and-presence.md), [Digital Presence Auction](14-claim-auction.md)
+**Companions:** [BondChain Interaction Model](04-bondchain-interaction-model.md), [Creator Offers and Donations](10-creator-offers-and-donations.md), [Business Bonds and Presence](13-business-bonds-and-presence.md), [Digital Presence Auction](14-claim-auction.md)
 
 ## Purpose
 
-The map is the geographic substrate for business discovery in 0x1. It answers three technical questions:
+The map is the geographic substrate for discovery in 0x1. The current production contract defines business projections; future versioned projection contracts may add authored creator offers and performances without turning them into physical-location claims.
+
+It answers three technical questions:
 
 1. where activity is happening;
-2. which public presences may be projected in a cell;
+2. which public projections may be exposed in a cell under their owning contracts;
 3. how clients render that state without turning viewport behavior into product telemetry.
 
-The map does not decide whether a business is legitimate, who may represent it, who wins an auction, or whether two Bonds established a BondChain. Those are separate contracts. The map only exposes deterministic geographic state.
+The map does not decide whether a business is legitimate, where a person is physically located, who may represent a subject, who wins an auction, or whether two Bonds established a BondChain. Those are separate contracts. The map only exposes deterministic geographic state authorized by its projection contracts.
 
-## Three Units
+## Three Current Units
 
 | Unit | Meaning | Authority |
 |---|---|---|
 | `cell` | H3 grid cell; the unit of place | Versioned grid profile |
-| `presence` | A public business projection associated with one cell | Registry or auction contract |
+| `presence` | A current public business projection associated with one cell | Registry or auction contract |
 | `point` | Exact latitude and longitude used to render a marker | Presence metadata constrained to the cell |
 
-A cell is not owned. A point is not scarce. Only a presence record can be held or projected.
+A cell is not owned. A point is not scarce. Only a presence record can be held or projected under the current business-presence contracts.
 
 Rendering pressure MUST NOT create or remove rights. If twenty businesses resolve to one cell, the client clusters twenty markers. It does not reduce the number of valid presences because the screen is crowded.
 
@@ -50,9 +52,9 @@ The exact privacy-preserving deduplication protocol remains implementation-block
 
 A cell may be addressable before it is active. Activation governs public projection and the creation of its single digital-presence market. It does not fabricate or revoke an external registry fact.
 
-## Public Projections
+## Current Public Projections
 
-The map carries three independent projections.
+The current `map.registry` contract carries three independent projections.
 
 ### 1. Anonymous activity
 
@@ -75,6 +77,26 @@ The map does not sell, rank, or ration them. Their lifecycle belongs to the busi
 Every active cell exposes exactly one independently auctioned digital presence, `SLOT-DIGITAL`.
 
 The map projects its current holder and marker metadata. The auction determines tenure. The renderer does not.
+
+## Future Creator Projections
+
+A creator offer or performance may be geographically discoverable without claiming that its author is physically present at that location.
+
+The map MUST preserve this distinction:
+
+```text
+Bond physical location
+!= creator offer placement
+!= interaction location
+```
+
+A singer may expose a remote performance at a place while physically elsewhere. A painter, craftsperson, or candle maker may expose an authored offer in a place while fulfillment occurs remotely.
+
+Such a projection is authored discovery state. It MUST NOT be represented as `REG-ATTEST`, physical business presence, or `SLOT-DIGITAL` merely to reuse an existing marker type.
+
+The current `map.registry` schema does not yet contain creator projections. Production support requires a versioned extension or adjacent projection surface that defines authority, lifecycle, placement, visibility, privacy, collision, moderation, and expiry rules before creator state is published.
+
+A creator projection MUST NOT prove attendance, delivery, purchase, physical location, or BondChain formation.
 
 ## `map.registry`
 
@@ -99,6 +121,8 @@ Authoritative sources are separate:
 
 A projection implementation MUST preserve those source boundaries instead of flattening them into one opaque score.
 
+Future creator projection data MUST NOT be inserted into this schema until its authority and lifecycle contract is versioned.
+
 ## Marker Geometry
 
 A marker point MUST resolve inside its cell.
@@ -108,6 +132,8 @@ A marker point MUST resolve inside its cell.
 - Moving a point does not transfer a presence or change its economic state.
 
 When markers overlap, clients MAY prioritize physical markers for presentation. This is a rendering rule only. It MUST NOT affect `matr.ix` suggestion ranking or earned depth.
+
+Future creator marker geometry and collision behavior remain part of the creator-projection contract rather than an implied extension of business marker rights.
 
 ## Visibility
 
@@ -122,6 +148,8 @@ Implementations MUST NOT provide:
 - private viewport-derived ranking inputs.
 
 A prominent marker with no earned depth must read honestly as present, not trusted.
+
+Creator commerce or donation spend MUST NOT buy relationship rank or privileged visibility unless a future explicit advertising surface is separately specified and clearly distinguished from organic discovery.
 
 ## Client Contract
 
@@ -139,9 +167,13 @@ A prominent marker with no earned depth must read honestly as present, not trust
 
 1. A cell is geography, not property.
 2. Rendering capacity never gates presence rights.
-3. Physical and digital presence remain separate projections.
-4. Any number of physical presences may coexist in one cell.
-5. At most one digital presence exists per active cell.
+3. Physical and digital business presence remain separate projections.
+4. Any number of physical business presences may coexist in one cell.
+5. At most one digital business presence exists per active cell under the current contract.
 6. Map activity cannot create a business right or establish a BondChain.
 7. Business spend cannot create activity, depth, or recommendation rank.
 8. The relay transports state but never orders it.
+9. A creator projection MUST NOT imply the creator's physical location.
+10. Creator offer placement and interaction location are distinct facts.
+11. Creator projections MUST NOT silently reuse business physical-presence or digital-presence authority.
+12. The current `map.registry` MUST NOT publish creator projections before a versioned creator-projection contract exists.
