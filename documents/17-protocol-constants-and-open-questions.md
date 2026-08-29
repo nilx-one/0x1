@@ -31,13 +31,33 @@ These are product-level protocol decisions unless a separate standard is explici
 | Invariant | Value |
 |---|---|
 | Bonds per BondChain | exactly `2` |
-| BondChain boundary | causal interaction intent, not action type |
+| Bond participant type | human-controlled or artificial |
+| Participant-type effect on BondChain primitive | none |
+| BondChain boundary | causal interaction intent, not action type or participant type |
 | Unilateral action | candidate only; not bilateral relationship truth |
 | Terminal reopening | forbidden |
 | Later semantic action after terminal state | new `bch` |
 | Cross-BondChain reference | permitted without chain merge |
 | Permanent relationship object | none; local/authorized projection only |
 | `bond.chain` scope | one BondChain |
+
+## Fixed Artificial Participant Invariants
+
+| Invariant | Value |
+|---|---|
+| AI participant primitive | `Bond`; no separate primitive |
+| Human commitment authority | remains human-authorized |
+| AI autonomy over another Bond | forbidden without explicit delegated authority |
+| Capability vs authority | independent |
+| AI memory/runtime state as shared evidence | forbidden by default |
+| Friendship/conflict/trust | derived relationship projection unless a narrower contract explicitly owns a shared fact |
+| Work primitive | none; modeled through typed pairwise interactions |
+| Current `sk_ack` as AI authority root | forbidden |
+| Current `sk_bond` human semantics as implicit AI authority | forbidden |
+| Current `map.registry` as live AI/Bond tracker | forbidden |
+| Production autonomous AI signing profile | undefined / blocking |
+
+These invariants are normative through the [Protocol Laws](00-protocol-laws.md), [BondChain Interaction Model](04-bondchain-interaction-model.md), and [AI Bonds](04-ai-bonds.md). They permit artificial participants at the ontology level without pretending that identity bootstrap, autonomous signing, custody, recovery, or concrete AI interaction schemas are already production-defined.
 
 ## Fixed Presence Invariants
 
@@ -76,17 +96,117 @@ These are product-level protocol decisions unless a separate standard is explici
 
 ## Open Questions
 
+### Artificial Bond Identity Bootstrap
+
+How does an artificial Bond obtain, prove, rotate, and continue identity without pretending that the current Stage 1 person/provider-backed registration flow already supports autonomous artificial subjects?
+
+The contract must define:
+
+- who or what creates the initial artificial subject;
+- how the subject is bound to `pub_dress` or a future identity record;
+- whether an artificial subject may self-bootstrap or requires an initiating sponsor/creator;
+- how counterparties distinguish artificial authority profiles without treating classification as relationship truth;
+- rotation, migration, deactivation, and replacement behavior;
+- what survives runtime or provider replacement;
+- whether any creator retains authority after bootstrap, and if so, exactly which authority.
+
+The identity layer MUST NOT silently equate "created by a human" with "permanently controlled by that human" or "artificial" with "operator-owned".
+
+This is implementation-blocking for persistent autonomous AI Bonds.
+
+### Artificial Bond Authority Profile
+
+What cryptographic and protocol authority profile allows an AI Bond to create its own commitment-bearing records?
+
+At minimum the profile must define:
+
+- authority root and subject binding;
+- signing and key-agreement keys;
+- custody and runtime isolation;
+- capability and interaction scope;
+- explicit delegation when acting for a human or another Bond;
+- revocation and rotation;
+- compromise detection and containment;
+- recovery and unrecoverable-loss behavior;
+- counterparty validation of the authority profile;
+- behavior when the AI runtime, model provider, or execution environment changes.
+
+The solution MUST NOT:
+
+- promote `sk_ack` into autonomous Bond authority;
+- reinterpret human-gated `sk_bond` as AI authority merely because software can invoke it;
+- derive authority from model output, API access, credential possession, or apparent intelligence;
+- allow delegated authority to exceed its source.
+
+This is implementation-blocking for autonomous commitment-bearing AI interactions.
+
+### AI-Capable Interaction Contracts
+
+Which interaction contracts permit human-to-AI or AI-to-AI participation, and what exact reciprocal action, authority profile, timeout behavior, and terminal outcome belongs to each?
+
+Candidate families include:
+
+- messaging;
+- friendship/introduction requests;
+- work offers and task delivery;
+- service requests;
+- digital-asset delivery;
+- AI-to-AI coordination.
+
+The generic BondChain model is already fixed. Each AI-capable interaction still requires an explicit contract before production.
+
+Friendship, conflict, trust, cooperation, employment, or loyalty MUST NOT be created as protocol truth merely by labeling an interaction. Any such longer-lived view remains a Relationship projection unless an owning contract defines a narrower shared fact.
+
+### AI Asset Custody and Delivery
+
+What asset contract allows an AI Bond to receive custody or transfer authority and prove delivery of a digital asset?
+
+The contract must distinguish:
+
+- request and intent;
+- ownership where relevant;
+- custody;
+- delegated transfer authority;
+- transfer attempt;
+- externally verifiable transfer evidence;
+- recipient acknowledgement or other completion proof;
+- timeout, rejection, reversal, and ambiguous external settlement.
+
+The design MUST NOT assume that every digital asset is `bnd`, cryptocurrency, or blockchain-native. External ledgers may provide evidence, but they do not define BondChain relationship truth.
+
+This is implementation-blocking for autonomous asset delivery.
+
+### AI World Presence and Privacy
+
+If a future 0x1 world represents AI Bonds as walking, working, waiting, or being available at places, what state is local, pairwise, public, or operator-visible?
+
+The contract must define:
+
+- location precision and disclosure scope;
+- who may publish or revoke presence;
+- persistence and expiry;
+- whether movement is simulated, asserted, or externally evidenced;
+- how presence interacts with discovery without exposing private BondChain topology;
+- how an AI becomes unavailable or invisible;
+- how clients distinguish rendered world state from protocol truth.
+
+The solution MUST NOT retrofit live per-Bond coordinates into the current `map.registry`, whose role remains aggregate activity and business-presence projection.
+
+This is not implementation-blocking for the current map; it is blocking only for a future live participant/world-presence surface.
+
 ### Interaction Contract Registry
 
-Which interaction contracts are enabled in v1, and what exact initiating action, reciprocal action, intermediate transitions, timeout behavior, and terminal outcomes belong to each?
+Which interaction contracts are enabled in v1, and what exact initiating action, reciprocal action, intermediate transitions, timeout behavior, terminal outcomes, and participant profiles belong to each?
 
-At minimum the enabled contract set must make explicit the semantics for:
+At minimum the enabled current human-controlled contract set must make explicit the semantics for:
 
 - messaging (`MESSAGE -> READ` where human read is the reciprocal event);
 - purchases (`ORDER`, payment, business acceptance/fulfillment, receipt as applicable);
 - meetings or offers;
 - proximity-backed business `ATTEST`;
 - payment-only BondChains.
+
+AI-capable variants are not implied by these current human contracts and are tracked separately above.
 
 The [BondChain Interaction Model](04-bondchain-interaction-model.md) fixes the generic causal rules. Each enabled interaction kind still needs its own record schema and authority contract before production.
 
@@ -100,7 +220,8 @@ The solution MUST:
 - remain derivable from authorized BondChain histories;
 - tolerate histories arriving in different orders where possible;
 - avoid an operator-owned pair index or social graph;
-- preserve the rule that unilateral or non-eligible BondChains contribute nothing.
+- preserve the rule that unilateral or non-eligible BondChains contribute nothing;
+- avoid treating AI model inference, personality, memory, or runtime state as earned relationship depth.
 
 This is implementation-blocking for durable relationship-level economics.
 
@@ -131,6 +252,8 @@ How are oracle versions published, keys rotated, and incorrect observations corr
 How does a business authorize, replace, and revoke human representatives for a business-scoped Bond without turning the operator into a custodial account authority?
 
 Existing BondChains retain their already authorized history. The contract must define which non-terminal interactions a successor representative may continue and under which key transition.
+
+AI Bond support does not answer whether a business may appoint an artificial representative. That requires an explicit business-authority revision rather than inference from the generic Bond ontology.
 
 ### Physical Marker Geometry
 
@@ -170,10 +293,12 @@ The protocol fixes the visibility rule—buckets and concession direction may be
 
 Observed events are local, optional, ephemeral, non-rewarding, and never export coordinates. Their exact fields, retention window, and granularity remain undefined.
 
+AI memory or runtime observations follow the same evidence boundary by default: local state does not become shared evidence without a separately authorized record contract.
+
 ## Change Control
 
-The Bond/BondChain ontology defined by the Protocol Laws and [BondChain Interaction Model](04-bondchain-interaction-model.md) is normative.
+The Bond/BondChain ontology defined by the Protocol Laws, [BondChain Interaction Model](04-bondchain-interaction-model.md), and [AI Bonds](04-ai-bonds.md) is normative.
 
-The exact enabled interaction-contract schemas, relationship-level aggregation, map activation, business authority, registry-oracle behavior, digital-presence key lifecycle, and auction timing remain draft or open as listed above.
+The exact enabled interaction-contract schemas, autonomous AI authority profile, artificial identity bootstrap, AI asset custody, future AI world presence, relationship-level aggregation, map activation, business authority, registry-oracle behavior, digital-presence key lifecycle, and auction timing remain draft or open as listed above.
 
-Any change to Bond/BondChain meaning, causal boundaries, authority, ownership, persistence, recovery, signature requirements, plaintext boundaries, presence classes, or settlement requires an explicit protocol-version change.
+Any change to Bond/BondChain meaning, participant types, causal boundaries, subject authority, autonomy, delegation, ownership, persistence, recovery, signature requirements, plaintext boundaries, presence classes, or settlement requires an explicit protocol-version change.
