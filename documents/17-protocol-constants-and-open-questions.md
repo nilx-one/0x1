@@ -59,6 +59,25 @@ These are product-level protocol decisions unless a separate standard is explici
 
 These invariants are normative through the [Protocol Laws](00-protocol-laws.md), [BondChain Interaction Model](04-bondchain-interaction-model.md), and [AI Bonds](04-ai-bonds.md). They permit artificial participants at the ontology level without pretending that identity bootstrap, autonomous signing, custody, recovery, or concrete AI interaction schemas are already production-defined.
 
+## Fixed Creator Interaction Invariants
+
+| Invariant | Value |
+|---|---|
+| Creator identity type | none; creator is a contextual Bond role |
+| Ordinary Bond selling own authorized output | permitted by ontology; concrete sale contract still required |
+| Creator status implies BBond | forbidden |
+| Creator offer publication | unilateral public state; not BondChain truth |
+| Donation semantics | voluntary pairwise value transfer without required economic consideration |
+| Donation vs payment | distinct semantic interaction types |
+| Donation settlement route | provider-agnostic |
+| 0xda-market required for donation | no |
+| Settlement provider as automatic third Bond | forbidden |
+| Donation/purchase amount effect on `level` or rank | none |
+| Creator projection implies physical location | forbidden |
+| Current `map.registry` creator projection support | undefined / blocking for map publication |
+
+These invariants are owned by [Creator Offers and Donations](10-creator-offers-and-donations.md) and the existing value, map, and business authority contracts.
+
 ## Fixed Presence Invariants
 
 | Invariant | Value |
@@ -95,6 +114,82 @@ These invariants are normative through the [Protocol Laws](00-protocol-laws.md),
 | Concurrent challenges per digital slot | `1` |
 
 ## Open Questions
+
+### Creator Offer Contract
+
+What signed public record represents a creator offer without turning it into a BondChain or business identity?
+
+The contract must define:
+
+- authorizing Bond and signature profile;
+- offer identifier and versioning;
+- product, work, performance, commission, access, or license kind;
+- bounded public metadata and media integrity;
+- price and currency when applicable;
+- availability, stock, edition, capacity, time, and delivery constraints where applicable;
+- update, pause, withdrawal, expiry, and fulfillment behavior;
+- concurrent purchase behavior;
+- visibility and privacy boundaries.
+
+Completed BondChains MUST remain unchanged when an offer later changes or disappears.
+
+This is implementation-blocking for creator commerce.
+
+### Creator Purchase and Fulfillment
+
+What exact pairwise interaction contract owns purchase, creator acceptance, payment, fulfillment, receipt, rejection, refund, cancellation, and dispute semantics?
+
+The contract MUST distinguish settlement evidence from delivery evidence and MUST NOT infer receipt or satisfaction from payment alone unless that is explicitly the completion predicate for the interaction kind.
+
+This is implementation-blocking for creator sales.
+
+### Donation Contract
+
+What exact pairwise interaction contract owns voluntary donation?
+
+The contract must define:
+
+- donation intent and amount;
+- accepted asset and settlement route constraints;
+- receiver acceptance or bounded pre-authorization;
+- settlement evidence;
+- timeout, failure, reversal, and ambiguous settlement;
+- privacy and public-display behavior;
+- whether and when a completed donation contributes any non-monetary interaction outcome independent of amount.
+
+Donation MUST remain semantically distinct from purchase, payment for obligation, friendship, endorsement, and relationship depth.
+
+0xda-market may be one settlement adapter, including a fee-free route, but it MUST NOT become required for the protocol meaning of donation.
+
+This is implementation-blocking for donations.
+
+### Creator Geographic Projection
+
+What public map contract allows a Bond to place an authored offer, work, or performance at a geographic point without claiming that the Bond is physically there?
+
+The contract must define:
+
+- projection authority and signature;
+- cell and point placement rules;
+- lifecycle and expiry;
+- visibility and collision behavior;
+- privacy boundaries;
+- moderation and abuse handling;
+- remote performance time windows;
+- distinction from registry-backed physical presence and `SLOT-DIGITAL`;
+- whether placement requires an active cell or another eligibility predicate.
+
+The solution MUST preserve:
+
+```text
+Bond physical location
+!= creator offer placement
+!= interaction location
+```
+
+The current `map.registry` MUST NOT silently publish creator projections before this contract is versioned.
+
+This is implementation-blocking for creator map presence.
 
 ### Artificial Bond Identity Bootstrap
 
@@ -202,6 +297,7 @@ At minimum the enabled current human-controlled contract set must make explicit 
 
 - messaging (`MESSAGE -> READ` where human read is the reciprocal event);
 - purchases (`ORDER`, payment, business acceptance/fulfillment, receipt as applicable);
+- creator purchases and donations once enabled;
 - meetings or offers;
 - proximity-backed business `ATTEST`;
 - payment-only BondChains.
@@ -221,7 +317,7 @@ The solution MUST:
 - tolerate histories arriving in different orders where possible;
 - avoid an operator-owned pair index or social graph;
 - preserve the rule that unilateral or non-eligible BondChains contribute nothing;
-- avoid treating AI model inference, personality, memory, or runtime state as earned relationship depth.
+- avoid treating AI model inference, personality, memory, runtime state, payment amount, or donation amount as earned relationship depth.
 
 This is implementation-blocking for durable relationship-level economics.
 
@@ -297,8 +393,8 @@ AI memory or runtime observations follow the same evidence boundary by default: 
 
 ## Change Control
 
-The Bond/BondChain ontology defined by the Protocol Laws, [BondChain Interaction Model](04-bondchain-interaction-model.md), and [AI Bonds](04-ai-bonds.md) is normative.
+The Bond/BondChain ontology defined by the Protocol Laws, [BondChain Interaction Model](04-bondchain-interaction-model.md), [AI Bonds](04-ai-bonds.md), and [Creator Offers and Donations](10-creator-offers-and-donations.md) is normative.
 
-The exact enabled interaction-contract schemas, autonomous AI authority profile, artificial identity bootstrap, AI asset custody, future AI world presence, relationship-level aggregation, map activation, business authority, registry-oracle behavior, digital-presence key lifecycle, and auction timing remain draft or open as listed above.
+The exact enabled interaction-contract schemas, creator offer and purchase contracts, donation contract, creator map projection, autonomous AI authority profile, artificial identity bootstrap, AI asset custody, future AI world presence, relationship-level aggregation, map activation, business authority, registry-oracle behavior, digital-presence key lifecycle, and auction timing remain draft or open as listed above.
 
-Any change to Bond/BondChain meaning, participant types, causal boundaries, subject authority, autonomy, delegation, ownership, persistence, recovery, signature requirements, plaintext boundaries, presence classes, or settlement requires an explicit protocol-version change.
+Any change to Bond/BondChain meaning, participant types, causal boundaries, subject authority, autonomy, delegation, ownership, persistence, recovery, signature requirements, plaintext boundaries, presence classes, creator projection classes, or settlement requires an explicit protocol-version change.
