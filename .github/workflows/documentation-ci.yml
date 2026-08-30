@@ -5,6 +5,11 @@ on:
     paths:
       - "README.md"
       - "documents/**"
+      - "GOVERNANCE.md"
+      - "CONTRIBUTING.md"
+      - "CLA.md"
+      - "TRADEMARKS.md"
+      - "CONFORMANCE.md"
       - ".github/documentation-style.json"
       - ".github/workflows/documentation-ci.yml"
       - "scripts/lint_documentation.py"
@@ -15,6 +20,11 @@ on:
     paths:
       - "README.md"
       - "documents/**"
+      - "GOVERNANCE.md"
+      - "CONTRIBUTING.md"
+      - "CLA.md"
+      - "TRADEMARKS.md"
+      - "CONFORMANCE.md"
       - ".github/documentation-style.json"
       - ".github/workflows/documentation-ci.yml"
       - "scripts/lint_documentation.py"

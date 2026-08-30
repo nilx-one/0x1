@@ -1,5 +1,13 @@
 {
-  "roots": ["README.md", "documents"],
+  "roots": [
+    "README.md",
+    "documents",
+    "GOVERNANCE.md",
+    "CONTRIBUTING.md",
+    "CLA.md",
+    "TRADEMARKS.md",
+    "CONFORMANCE.md"
+  ],
   "excluded_paths": ["documents/17-protocol-constants-and-open-questions.md"],
   "foundation_document": "documents/00-protocol-laws.md",
   "foundation_consumers": [
