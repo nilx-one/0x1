@@ -106,6 +106,7 @@ A document links to adjacent contracts instead of repeating them.
 - Unresolved values belong in [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md).
 - Portable execution, binding, client, and renderer boundaries belong in [0x1 Core and Client Architecture](18-core-and-client-architecture.md).
 - Implementation staging belongs in [Implementation Roadmap](18-implementation-roadmap.md).
+- Versioned Core envelopes, compatibility, deterministic fixture encoding, and binding failure semantics belong in [0x1 Core Client Contract v0](19-core-client-contract.md).
 
 ## Automated Enforcement
 
@@ -157,3 +158,4 @@ A revision MUST identify the former contract, the new contract, and the affected
 - [Architecture and Data Model](05-architecture-and-data-model.md)
 - [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
 - [0x1 Core and Client Architecture](18-core-and-client-architecture.md)
+- [0x1 Core Client Contract v0](19-core-client-contract.md)

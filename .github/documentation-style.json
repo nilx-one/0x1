@@ -16,7 +16,8 @@
     "documents/02-glossary.md",
     "documents/04-bondchain-interaction-model.md",
     "documents/04-ai-bonds.md",
-    "documents/10-creator-offers-and-donations.md"
+    "documents/10-creator-offers-and-donations.md",
+    "documents/19-core-client-contract.md"
   ],
   "ordered_documents": [
     "documents/00-protocol-laws.md",
@@ -41,8 +42,29 @@
     "documents/16-security-and-platform-notes.md",
     "documents/17-protocol-constants-and-open-questions.md",
     "documents/18-core-and-client-architecture.md",
-    "documents/18-implementation-roadmap.md"
+    "documents/18-implementation-roadmap.md",
+    "documents/19-core-client-contract.md"
   ],
+  "core_contract": {
+    "document": "documents/19-core-client-contract.md",
+    "consumers": [
+      "README.md",
+      "documents/02-glossary.md",
+      "documents/18-core-and-client-architecture.md",
+      "documents/18-implementation-roadmap.md"
+    ],
+    "contract_version": "0.1.0",
+    "fixture_corpus": "contracts/core/v0/fixture-corpus.json",
+    "fixture_corpus_version": "0.1.0",
+    "fixture_digest": "contracts/core/v0/fixture-corpus.sha256",
+    "fixture_digest_domain": "0x1:core-fixture-corpus:v0",
+    "production_registry_names": [
+      "commands",
+      "events",
+      "effects",
+      "projections"
+    ]
+  },
   "deprecated_terms": [
     {
       "pattern": "(?<!global )\\bhub(s)?\\b",

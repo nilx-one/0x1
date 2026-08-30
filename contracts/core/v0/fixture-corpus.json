@@ -1,0 +1,571 @@
+{
+  "contract_version": "0.1.0",
+  "fixture_corpus_version": "0.1.0",
+  "production_registries": {
+    "commands": [],
+    "events": [],
+    "effects": [],
+    "projections": []
+  },
+  "cases": [
+    {
+      "case_id": "open_candidate",
+      "input": {
+        "contract_version": "0.1.0",
+        "operation_id": "op_00000000000000000000000000000001",
+        "expected_state_revision": null,
+        "command": {
+          "kind": "fixture.open",
+          "bond_0_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+          "bond_1_id": "bond_0000000000000000000000000000000000000000000000000000000000000002",
+          "previous_bch_id": null,
+          "expires_at_unix_ms": "2000",
+          "cancellable": true
+        },
+        "state": null,
+        "verified_context": {
+          "now_unix_ms": "1000",
+          "generated_bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+          "authorizations": [
+            {
+              "bond_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+              "scope": "fixture.initiate"
+            }
+          ],
+          "entropy": [],
+          "verifications": []
+        }
+      },
+      "expected": {
+        "ok": {
+          "contract_version": "0.1.0",
+          "operation_id": "op_00000000000000000000000000000001",
+          "state_revision": "1",
+          "events": [
+            {
+              "contract_version": "0.1.0",
+              "operation_id": "op_00000000000000000000000000000001",
+              "sequence": "0",
+              "event": {
+                "kind": "fixture.state_replaced",
+                "state": {
+                  "state_revision": "1",
+                  "bond_chain": {
+                    "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+                    "bond_0_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+                    "bond_1_id": "bond_0000000000000000000000000000000000000000000000000000000000000002",
+                    "previous_bch_id": null,
+                    "establishment": "candidate",
+                    "lifecycle": {
+                      "kind": "active"
+                    },
+                    "expires_at_unix_ms": "2000",
+                    "cancellable": true,
+                    "history": [
+                      {
+                        "contract_version": "0.1.0",
+                        "record_kind": "fixture.opened",
+                        "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+                        "sequence": "0",
+                        "previous_record_hash": null,
+                        "actor_bond_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+                        "observed_at_unix_ms": "1000",
+                        "body": {
+                          "bond_0_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+                          "bond_1_id": "bond_0000000000000000000000000000000000000000000000000000000000000002",
+                          "previous_bch_id": null,
+                          "expires_at_unix_ms": "2000",
+                          "cancellable": true
+                        },
+                        "record_hash": "sha256_3bce5e808f4af30b7b53824fe7b807e483f59d6a5621f0436409b0a4f9f8ba56"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "effect_requests": [
+            {
+              "contract_version": "0.1.0",
+              "operation_id": "op_00000000000000000000000000000001",
+              "sequence": "0",
+              "effect": {
+                "kind": "fixture.persist_record",
+                "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+                "record_hash": "sha256_3bce5e808f4af30b7b53824fe7b807e483f59d6a5621f0436409b0a4f9f8ba56"
+              }
+            },
+            {
+              "contract_version": "0.1.0",
+              "operation_id": "op_00000000000000000000000000000001",
+              "sequence": "1",
+              "effect": {
+                "kind": "fixture.transport_record",
+                "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+                "record_hash": "sha256_3bce5e808f4af30b7b53824fe7b807e483f59d6a5621f0436409b0a4f9f8ba56"
+              }
+            }
+          ],
+          "client_projection": {
+            "contract_version": "0.1.0",
+            "operation_id": "op_00000000000000000000000000000001",
+            "state_revision": "1",
+            "projection": {
+              "kind": "fixture.bond_chain",
+              "bond_chain": {
+                "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+                "bond_0_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+                "bond_1_id": "bond_0000000000000000000000000000000000000000000000000000000000000002",
+                "previous_bch_id": null,
+                "establishment": "candidate",
+                "lifecycle": {
+                  "kind": "active"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "accept_and_complete",
+      "input": {
+        "contract_version": "0.1.0",
+        "operation_id": "op_00000000000000000000000000000002",
+        "expected_state_revision": "1",
+        "command": {
+          "kind": "fixture.accept"
+        },
+        "state": {
+          "state_revision": "1",
+          "bond_chain": {
+            "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+            "bond_0_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+            "bond_1_id": "bond_0000000000000000000000000000000000000000000000000000000000000002",
+            "previous_bch_id": null,
+            "establishment": "candidate",
+            "lifecycle": {
+              "kind": "active"
+            },
+            "expires_at_unix_ms": "2000",
+            "cancellable": true,
+            "history": [
+              {
+                "contract_version": "0.1.0",
+                "record_kind": "fixture.opened",
+                "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+                "sequence": "0",
+                "previous_record_hash": null,
+                "actor_bond_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+                "observed_at_unix_ms": "1000",
+                "body": {
+                  "bond_0_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+                  "bond_1_id": "bond_0000000000000000000000000000000000000000000000000000000000000002",
+                  "previous_bch_id": null,
+                  "expires_at_unix_ms": "2000",
+                  "cancellable": true
+                },
+                "record_hash": "sha256_3bce5e808f4af30b7b53824fe7b807e483f59d6a5621f0436409b0a4f9f8ba56"
+              }
+            ]
+          }
+        },
+        "verified_context": {
+          "now_unix_ms": "1100",
+          "generated_bch_id": null,
+          "authorizations": [
+            {
+              "bond_id": "bond_0000000000000000000000000000000000000000000000000000000000000002",
+              "scope": "fixture.reciprocate"
+            }
+          ],
+          "entropy": [],
+          "verifications": []
+        }
+      },
+      "expected": {
+        "ok": {
+          "contract_version": "0.1.0",
+          "operation_id": "op_00000000000000000000000000000002",
+          "state_revision": "2",
+          "events": [
+            {
+              "contract_version": "0.1.0",
+              "operation_id": "op_00000000000000000000000000000002",
+              "sequence": "0",
+              "event": {
+                "kind": "fixture.state_replaced",
+                "state": {
+                  "state_revision": "2",
+                  "bond_chain": {
+                    "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+                    "bond_0_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+                    "bond_1_id": "bond_0000000000000000000000000000000000000000000000000000000000000002",
+                    "previous_bch_id": null,
+                    "establishment": "established",
+                    "lifecycle": {
+                      "kind": "terminal",
+                      "outcome": "completed"
+                    },
+                    "expires_at_unix_ms": "2000",
+                    "cancellable": true,
+                    "history": [
+                      {
+                        "contract_version": "0.1.0",
+                        "record_kind": "fixture.opened",
+                        "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+                        "sequence": "0",
+                        "previous_record_hash": null,
+                        "actor_bond_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+                        "observed_at_unix_ms": "1000",
+                        "body": {
+                          "bond_0_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+                          "bond_1_id": "bond_0000000000000000000000000000000000000000000000000000000000000002",
+                          "previous_bch_id": null,
+                          "expires_at_unix_ms": "2000",
+                          "cancellable": true
+                        },
+                        "record_hash": "sha256_3bce5e808f4af30b7b53824fe7b807e483f59d6a5621f0436409b0a4f9f8ba56"
+                      },
+                      {
+                        "contract_version": "0.1.0",
+                        "record_kind": "fixture.accepted",
+                        "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+                        "sequence": "1",
+                        "previous_record_hash": "sha256_3bce5e808f4af30b7b53824fe7b807e483f59d6a5621f0436409b0a4f9f8ba56",
+                        "actor_bond_id": "bond_0000000000000000000000000000000000000000000000000000000000000002",
+                        "observed_at_unix_ms": "1100",
+                        "body": {},
+                        "record_hash": "sha256_57d134da8d5ade3f05345933555761b01a8c60dbe1175141d84c1734c0ea387d"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "effect_requests": [
+            {
+              "contract_version": "0.1.0",
+              "operation_id": "op_00000000000000000000000000000002",
+              "sequence": "0",
+              "effect": {
+                "kind": "fixture.persist_record",
+                "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+                "record_hash": "sha256_57d134da8d5ade3f05345933555761b01a8c60dbe1175141d84c1734c0ea387d"
+              }
+            },
+            {
+              "contract_version": "0.1.0",
+              "operation_id": "op_00000000000000000000000000000002",
+              "sequence": "1",
+              "effect": {
+                "kind": "fixture.transport_record",
+                "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+                "record_hash": "sha256_57d134da8d5ade3f05345933555761b01a8c60dbe1175141d84c1734c0ea387d"
+              }
+            }
+          ],
+          "client_projection": {
+            "contract_version": "0.1.0",
+            "operation_id": "op_00000000000000000000000000000002",
+            "state_revision": "2",
+            "projection": {
+              "kind": "fixture.bond_chain",
+              "bond_chain": {
+                "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+                "bond_0_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+                "bond_1_id": "bond_0000000000000000000000000000000000000000000000000000000000000002",
+                "previous_bch_id": null,
+                "establishment": "established",
+                "lifecycle": {
+                  "kind": "terminal",
+                  "outcome": "completed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "reject_semantic_append_after_terminal",
+      "input": {
+        "contract_version": "0.1.0",
+        "operation_id": "op_00000000000000000000000000000003",
+        "expected_state_revision": "2",
+        "command": {
+          "kind": "fixture.cancel"
+        },
+        "state": {
+          "state_revision": "2",
+          "bond_chain": {
+            "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+            "bond_0_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+            "bond_1_id": "bond_0000000000000000000000000000000000000000000000000000000000000002",
+            "previous_bch_id": null,
+            "establishment": "established",
+            "lifecycle": {
+              "kind": "terminal",
+              "outcome": "completed"
+            },
+            "expires_at_unix_ms": "2000",
+            "cancellable": true,
+            "history": [
+              {
+                "contract_version": "0.1.0",
+                "record_kind": "fixture.opened",
+                "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+                "sequence": "0",
+                "previous_record_hash": null,
+                "actor_bond_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+                "observed_at_unix_ms": "1000",
+                "body": {
+                  "bond_0_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+                  "bond_1_id": "bond_0000000000000000000000000000000000000000000000000000000000000002",
+                  "previous_bch_id": null,
+                  "expires_at_unix_ms": "2000",
+                  "cancellable": true
+                },
+                "record_hash": "sha256_3bce5e808f4af30b7b53824fe7b807e483f59d6a5621f0436409b0a4f9f8ba56"
+              },
+              {
+                "contract_version": "0.1.0",
+                "record_kind": "fixture.accepted",
+                "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+                "sequence": "1",
+                "previous_record_hash": "sha256_3bce5e808f4af30b7b53824fe7b807e483f59d6a5621f0436409b0a4f9f8ba56",
+                "actor_bond_id": "bond_0000000000000000000000000000000000000000000000000000000000000002",
+                "observed_at_unix_ms": "1100",
+                "body": {},
+                "record_hash": "sha256_57d134da8d5ade3f05345933555761b01a8c60dbe1175141d84c1734c0ea387d"
+              }
+            ]
+          }
+        },
+        "verified_context": {
+          "now_unix_ms": "1200",
+          "generated_bch_id": null,
+          "authorizations": [
+            {
+              "bond_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+              "scope": "fixture.initiate"
+            }
+          ],
+          "entropy": [],
+          "verifications": []
+        }
+      },
+      "expected": {
+        "error": {
+          "contract_version": "0.1.0",
+          "operation_id": "op_00000000000000000000000000000003",
+          "code": "terminal_bond_chain",
+          "message": "Terminal BondChain state cannot accept a semantic transition.",
+          "details": {
+            "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+            "outcome": "completed"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "reject_divergent_history",
+      "input": {
+        "contract_version": "0.1.0",
+        "operation_id": "op_00000000000000000000000000000004",
+        "expected_state_revision": "1",
+        "command": {
+          "kind": "fixture.synchronize",
+          "candidate_history": [
+            {
+              "contract_version": "0.1.0",
+              "record_kind": "fixture.opened",
+              "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+              "sequence": "0",
+              "previous_record_hash": null,
+              "actor_bond_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+              "observed_at_unix_ms": "1001",
+              "body": {
+                "bond_0_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+                "bond_1_id": "bond_0000000000000000000000000000000000000000000000000000000000000002",
+                "previous_bch_id": null,
+                "expires_at_unix_ms": "2000",
+                "cancellable": true
+              },
+              "record_hash": "sha256_1a9a5fc182292521e31a4c9d33e3b7069512e5834c346b5146a6777b4229c435"
+            }
+          ]
+        },
+        "state": {
+          "state_revision": "1",
+          "bond_chain": {
+            "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+            "bond_0_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+            "bond_1_id": "bond_0000000000000000000000000000000000000000000000000000000000000002",
+            "previous_bch_id": null,
+            "establishment": "candidate",
+            "lifecycle": {
+              "kind": "active"
+            },
+            "expires_at_unix_ms": "2000",
+            "cancellable": true,
+            "history": [
+              {
+                "contract_version": "0.1.0",
+                "record_kind": "fixture.opened",
+                "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+                "sequence": "0",
+                "previous_record_hash": null,
+                "actor_bond_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+                "observed_at_unix_ms": "1000",
+                "body": {
+                  "bond_0_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+                  "bond_1_id": "bond_0000000000000000000000000000000000000000000000000000000000000002",
+                  "previous_bch_id": null,
+                  "expires_at_unix_ms": "2000",
+                  "cancellable": true
+                },
+                "record_hash": "sha256_3bce5e808f4af30b7b53824fe7b807e483f59d6a5621f0436409b0a4f9f8ba56"
+              }
+            ]
+          }
+        },
+        "verified_context": {
+          "now_unix_ms": "1200",
+          "generated_bch_id": null,
+          "authorizations": [],
+          "entropy": [],
+          "verifications": []
+        }
+      },
+      "expected": {
+        "error": {
+          "contract_version": "0.1.0",
+          "operation_id": "op_00000000000000000000000000000004",
+          "code": "history_divergence",
+          "message": "Candidate history diverges from accepted local history.",
+          "details": {
+            "bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+            "local_head": "sha256_3bce5e808f4af30b7b53824fe7b807e483f59d6a5621f0436409b0a4f9f8ba56",
+            "candidate_head": "sha256_1a9a5fc182292521e31a4c9d33e3b7069512e5834c346b5146a6777b4229c435"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "reject_identical_participants",
+      "input": {
+        "contract_version": "0.1.0",
+        "operation_id": "op_00000000000000000000000000000005",
+        "expected_state_revision": null,
+        "command": {
+          "kind": "fixture.open",
+          "bond_0_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+          "bond_1_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+          "previous_bch_id": null,
+          "expires_at_unix_ms": "2000",
+          "cancellable": true
+        },
+        "state": null,
+        "verified_context": {
+          "now_unix_ms": "1000",
+          "generated_bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+          "authorizations": [
+            {
+              "bond_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+              "scope": "fixture.initiate"
+            }
+          ],
+          "entropy": [],
+          "verifications": []
+        }
+      },
+      "expected": {
+        "error": {
+          "contract_version": "0.1.0",
+          "operation_id": "op_00000000000000000000000000000005",
+          "code": "invalid_participants",
+          "message": "A BondChain requires exactly two distinct Bonds.",
+          "details": {
+            "bond_0_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+            "bond_1_id": "bond_0000000000000000000000000000000000000000000000000000000000000001"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "reject_unsupported_contract_version",
+      "input": {
+        "contract_version": "0.2.0",
+        "operation_id": "op_00000000000000000000000000000006",
+        "expected_state_revision": null,
+        "command": {
+          "kind": "fixture.open",
+          "bond_0_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+          "bond_1_id": "bond_0000000000000000000000000000000000000000000000000000000000000002",
+          "previous_bch_id": null,
+          "expires_at_unix_ms": "2000",
+          "cancellable": true
+        },
+        "state": null,
+        "verified_context": {
+          "now_unix_ms": "1000",
+          "generated_bch_id": "bch_000000000000000000000000000000000000000000000000000000000000000a",
+          "authorizations": [
+            {
+              "bond_id": "bond_0000000000000000000000000000000000000000000000000000000000000001",
+              "scope": "fixture.initiate"
+            }
+          ],
+          "entropy": [],
+          "verifications": []
+        }
+      },
+      "expected": {
+        "error": {
+          "contract_version": "0.1.0",
+          "operation_id": "op_00000000000000000000000000000006",
+          "code": "unsupported_contract_version",
+          "message": "Core contract version is unsupported.",
+          "details": {
+            "requested_version": "0.2.0",
+            "supported_version": "0.1.0"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "reject_unknown_command_variant",
+      "input": {
+        "contract_version": "0.1.0",
+        "operation_id": "op_00000000000000000000000000000007",
+        "expected_state_revision": null,
+        "command": {
+          "kind": "fixture.unknown"
+        },
+        "state": null,
+        "verified_context": {
+          "now_unix_ms": "1000",
+          "generated_bch_id": null,
+          "authorizations": [],
+          "entropy": [],
+          "verifications": []
+        }
+      },
+      "expected": {
+        "error": {
+          "contract_version": "0.1.0",
+          "operation_id": "op_00000000000000000000000000000007",
+          "code": "unknown_variant",
+          "message": "A closed contract variant is unknown.",
+          "details": {
+            "surface": "command",
+            "variant": "fixture.unknown"
+          }
+        }
+      }
+    }
+  ]
+}

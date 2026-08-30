@@ -97,6 +97,8 @@ An AI authority profile MAY choose different custody primitives, but it MUST pre
 
 ## Record Envelope
 
+The test-only fixture history record and its SHA-256/JCS hash are defined by [0x1 Core Client Contract v0](19-core-client-contract.md) solely to prove Phase 0 determinism and append-only behavior. That fixture is not this production signed and encrypted envelope. Phase 0 MUST NOT infer production signature, encryption, or autonomous authority semantics from the fixture format.
+
 Only validation structure is plaintext:
 
 ```text
@@ -145,3 +147,4 @@ The protocol does not define merge conflict resolution because conflicting share
 - [AI Bonds](04-ai-bonds.md)
 - [Bond and BondChain Lifecycle](07-bond-lifecycle.md)
 - [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
+- [0x1 Core Client Contract v0](19-core-client-contract.md)

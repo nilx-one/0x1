@@ -293,7 +293,8 @@ documents/
 ├── 16-security-and-platform-notes.md
 ├── 17-protocol-constants-and-open-questions.md
 ├── 18-core-and-client-architecture.md
-└── 18-implementation-roadmap.md
+├── 18-implementation-roadmap.md
+└── 19-core-client-contract.md
 ```
 
 Start with [`documents/00-protocol-laws.md`](documents/00-protocol-laws.md), then follow the canonical catalog in [`documents/README.md`](documents/README.md).
@@ -306,7 +307,7 @@ The Bond/BondChain ontology is normative: Bond is the authority-bearing particip
 
 AI Bond is normative at the ontology and authority-boundary level. Autonomous signing, identity bootstrap, custody, compromise recovery, and concrete AI-capable interaction schemas remain open before production.
 
-Identity, current human key hierarchy, proximity, offer mechanics, device lifecycle, recovery, and economic boundaries remain specified by their owning documents. 0x1 Core is the shared Rust implementation boundary; Web and native iOS consume it through platform-specific bindings without reproducing those rules.
+Identity, current human key hierarchy, proximity, offer mechanics, device lifecycle, recovery, and economic boundaries remain specified by their owning documents. 0x1 Core is the shared Rust implementation boundary; Web and native iOS consume it through platform-specific bindings without reproducing those rules. The [Core client contract](documents/19-core-client-contract.md) is normative at `0.1.0`, with empty production interaction registries and a synthetic cross-runtime fixture corpus.
 
 Atomic Multi-Bond Settlement is a v1 draft with its authority, privacy, reveal, and timeout invariants specified.
 
