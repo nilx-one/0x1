@@ -40,3 +40,21 @@ jobs:
 
       - name: Run tests
         run: cargo test --manifest-path identity-bot/Cargo.toml --all-features
+
+  deploy-validation:
+    name: Validate identity service package
+    needs: full-ci
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build runtime image
+        run: docker build --file identity-bot/Dockerfile --tag 0x1-identity:ci .
+
+      - name: Validate runtime Compose contract
+        env:
+          IDENTITY_IMAGE: 0x1-identity:ci
+          RELEASE_SHA: ${{ github.sha }}
+          TELOXIDE_TOKEN: ci-only-placeholder
+        run: docker compose --file identity-bot/deploy/compose.yaml config --quiet

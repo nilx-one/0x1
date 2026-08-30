@@ -32,17 +32,18 @@ External references:
 A `pub_dress` is a human-readable handle:
 
 ```text
-pub_dress = "0x" slug
+pub_dress = "0x" discriminator slug
 ```
 
-- `0x` is the fixed literal prefix and is not part of `slug`.
-- `slug` contains 2–32 Unicode scalar values.
-- Each scalar in `slug` MUST be an ASCII lowercase letter (`a`–`z`), an ASCII digit (`0`–`9`), or exactly one of these symbols: `- / : ; ( ) ₴ & @ " . , ? ! ' [ ] { } # % ^ * + = _ \ | ~ < > € $ £ •`.
-- Spaces, uppercase letters, other writing systems, emoji, control characters, combining marks, invisible characters, typographic quote variants, and every other scalar are invalid.
+- `0x` is the fixed literal prefix and is not part of either selectable component.
+- `discriminator` is exactly one lowercase hexadecimal digit (`0`–`9` or `a`–`f`) selected explicitly by the person registering the address.
+- `slug` contains 2–32 Unicode scalar values and is case-sensitive.
+- Each scalar in `slug` MUST be an ASCII letter (`A`–`Z` or `a`–`z`), an ASCII digit (`0`–`9`), or exactly one of these symbols: `- / : ; ( ) ₴ & @ " . , ? ! ' [ ] { } # % ^ * + = _ \ | ~ < > € $ £ •`.
+- Spaces, other writing systems, emoji, control characters, combining marks, invisible characters, typographic quote variants, and every other scalar are invalid.
 
-Validation operates on the exact scalar sequence. An implementation MUST NOT trim, case-fold, transliterate, or replace a character before validating or comparing a `pub_dress`. The complete handle therefore contains 4–34 Unicode scalar values.
+Validation operates on the exact scalar sequence. An implementation MUST NOT trim, case-fold, lowercase, uppercase, transliterate, or replace a character before validating or comparing a `pub_dress`. The complete handle therefore contains 5–35 Unicode scalar values. `0x0Sky` and `0x0sky` are distinct addresses.
 
-The prefix belongs to the address notation, while the complete slug belongs to the handle. `0x0sky` and `0x7sky` remain independent identities because `0sky` and `7sky` are different slugs; no character inside either slug is an allocation slot.
+The prefix belongs to the address notation. The discriminator and slug are separate registration inputs that form one immutable handle. `0x0sky` and `0x7sky` remain independent identities because their explicitly selected discriminators differ.
 
 A `pub_dress` is immutable. It may be superseded by a new identity, but it is never renamed in place. Existing signed BondChain histories continue to reference the original handle-key bindings they authenticated.
 
@@ -50,7 +51,7 @@ Registration is the insert. There is no reservation queue or cooldown. A collisi
 
 When a `pub_dress` is carried as one URI path segment, the sender MUST percent-encode the UTF-8 bytes required by the URI syntax, including literal `/`, `?`, `#`, and `%` slug characters. The receiver MUST percent-decode that path segment exactly once and then validate the resulting scalar sequence against this grammar. A transport encoding never changes the stored or compared `pub_dress`.
 
-This grammar replaces the former `0x{d}{username}` contract and its sixteen-slot allocation rule. Every handle valid under that former grammar remains syntactically valid because its assigned digit and username now form one slug. Migration MUST preserve each existing complete handle and provider binding without rename or reassignment. The revision changes handle validation, collision detection, and URI transport; it does not change the cryptographic identity or continuity boundaries.
+This grammar replaces the interim complete-slug registration contract. Migration MUST preserve every existing complete handle and provider binding without rename or reassignment, including a historical handle that is not valid for a new registration under the revised grammar. The revision changes new-handle validation and registration input; it does not change existing identity continuity or cryptographic authority boundaries.
 
 ## Identity providers
 
@@ -97,6 +98,12 @@ Authority then belongs to the holder of `sk_identity`. The signed record remains
 The registrar becomes an index: a lookup cache and uniqueness surface rebuildable from signed identity records. Losing the index MUST NOT destroy identity truth.
 
 The registry never creates identity. It indexes identity already authorized by its holder.
+
+### Public terminology boundary
+
+`bch` is an internal protocol and implementation term. It MAY appear in Core contracts, authenticated records, implementation diagnostics, and protocol documentation where the internal object must be identified precisely.
+
+Public product copy and person-facing API projections MUST NOT expose `bch`, `bch_id`, or the `bch_` identifier form. They describe the relevant observable concept as an interaction, interaction history, or relationship history without changing the internal record or its authority semantics.
 
 ## Uniqueness
 
@@ -169,7 +176,7 @@ External labels may change. Institutions may disagree. Context may collapse and 
 
 ## Stage 1 reference implementation
 
-The Stage 1 reference surface is [`identity-bot/`](../identity-bot/), implemented in Rust with teloxide and SQLite.
+The Stage 1 reference surface is [`identity-bot/`](../identity-bot/), implemented in Rust with teloxide, Axum, and SQLite.
 
 It contains:
 
@@ -177,6 +184,8 @@ It contains:
 - `/start` for registration;
 - `/whoami` for the protocol-shaped identity record;
 - `/recover` for the current recovery boundary;
+- authenticated Telegram Mini App identity read and registration endpoints;
+- server-side HMAC verification of `Telegram.WebApp.initData` with bounded freshness;
 - transactional insert-as-reservation over the complete `pub_dress`;
 - a non-enumerating collision response that does not disclose the existing binding.
 
@@ -185,7 +194,7 @@ The bot attests one temporary Stage 1 fact: a human-created `pub_dress ↔ tg_id
 ## Invariants
 
 1. `pub_dress` is immutable; existing signed BondChain histories never follow a rename.
-2. `pub_dress` uses the literal `0x` prefix and an exact 2–32-character slug from the canonical allowlist.
+2. A newly registered `pub_dress` uses the literal `0x` prefix, one person-selected lowercase hexadecimal discriminator, and an exact case-sensitive 2–32-character slug from the canonical allowlist.
 3. An identity has at least one active provider while provider-backed access remains in use.
 4. An authenticated BondChain fixes the handle-key bindings accepted by its participating Bonds for that interaction.
 5. Pairwise private authority is history-bound and MUST NOT expose a shared global private identifier across BondChains.
