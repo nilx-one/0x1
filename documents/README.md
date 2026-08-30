@@ -12,7 +12,7 @@ Its canonical repository is [`nilx-one/0x1`](https://github.com/nilx-one/0x1).
 
 ## Reading Order
 
-The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed through `18`. When documents share one dependency tier, the order in this canonical index and `.github/documentation-style.json` is authoritative.
+The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed through `19`. When documents share one dependency tier, the order in this canonical index and `.github/documentation-style.json` is authoritative.
 
 ## Foundation
 
@@ -49,6 +49,7 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 - [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md) — fixed invariants, draft parameters, unresolved decisions, creator commerce/map contracts, and autonomous AI authority profile.
 - [0x1 Core and Client Architecture](18-core-and-client-architecture.md) — shared Rust product engine, WebAssembly and UniFFI boundaries, peer Web/iOS clients, MapLibre, and GPU fallback contracts.
 - [Implementation Roadmap](18-implementation-roadmap.md) — staged delivery plan and validation gates.
+- [0x1 Core Client Contract v0](19-core-client-contract.md) — exact Phase 0 envelopes, identifiers, compatibility, failures, canonical fixture bytes, and cross-runtime handshake.
 
 ## Status
 
@@ -67,6 +68,8 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 **Map and business layers:** Draft v2. Current business presence classes and auction allocation are specified; creator projections are defined only as a future distinct projection class. Cell activation, registry adapters, business authority, creator placement, timing, and key lifecycle remain open. Current `map.registry` does not expose live per-Bond movement or creator projections.
 
 **Core and clients:** Proposed implementation baseline. 0x1 Core owns behavior shared across runtimes and is implemented in Rust. Web and native iOS are first-class peer clients using WebAssembly and UniFFI respectively. MapLibre remains the geographic renderer; custom Web graphics use WebGPU with WebGL2 fallback and no Canvas 2D path.
+
+**Core client contract:** Normative pre-stable `0.1.0` boundary. Production interaction registries are empty. A synthetic fixture corpus defines deterministic native Rust, WebAssembly, and UniFFI parity without activating production messaging, consent, friendship, purchase, or AI interaction semantics.
 
 ## Normative Language
 

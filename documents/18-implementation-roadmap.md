@@ -4,6 +4,8 @@ The roadmap implements the model in dependency order. The [BondChain Interaction
 
 All behavior shared across server, Web, native iOS, and future devices is implemented in [0x1 Core](18-core-and-client-architecture.md). Web and native iOS begin from the same Core baseline as first-class peer clients. TypeScript and Swift adapters MUST NOT become independent implementations of protocol, Relationship, gamification, economic, map-state, or synchronization rules.
 
+The versioned Phase 0 boundary is owned by [0x1 Core Client Contract v0](19-core-client-contract.md).
+
 ## Phase 0 — BondChain Kernel
 
 Implement:
@@ -20,7 +22,9 @@ Implement:
 - versioned Core command, event, error, and projection contracts;
 - equivalent native Rust, WebAssembly, and Swift binding fixtures.
 
-**Entry gate:** the first enabled interaction contracts have explicit initiating, reciprocal, and terminal actions.
+**Entry gate:** the Core client contract, deterministic fixture corpus, identifier shapes, canonical bytes, fixture hash, compatibility rule, and typed failures are normative and CI-enforced.
+
+The Phase 0 production interaction registries remain empty. A test-only fixture interaction proves kernel invariants without presenting unfinished messaging, consent, friendship, purchase, or AI semantics as production behavior.
 
 **Exit gate:** tests prove that two independent interactions between the same Bonds cannot be accidentally concatenated and that a unilateral action cannot become bilateral truth without its required reciprocal action.
 
@@ -33,6 +37,8 @@ Establish the plaintext boundary before higher-level features.
 **Exit gate:** an independent review confirms that conflicting histories for one `bch_id` cannot be merged, rollback causes deterministic key divergence, and separate BondChains remain cryptographically distinct.
 
 ## Phase 2 — Messaging and First Reciprocal Contract
+
+**Entry gate:** the first production messaging contract has explicit initiating, reciprocal, expiry, authority, and terminal semantics.
 
 Implement the smallest product-complete interaction contract first:
 

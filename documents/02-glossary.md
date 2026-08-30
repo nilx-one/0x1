@@ -32,6 +32,18 @@ A discovery and uniqueness index for identity records. In the target architectur
 
 The portable product engine implemented in Rust and shared by server, WebAssembly, native mobile, and future device runtimes. It is the canonical executable implementation of shared 0x1 behavior, including interaction transitions, Relationship projections, progression, gamification, spatial semantics, synchronization, and client projections. The Protocol Laws remain normative, and execution inside 0x1 Core grants no authority that an owning contract does not define. See [0x1 Core and Client Architecture](18-core-and-client-architecture.md).
 
+### Core client contract
+
+The versioned, deterministic representation boundary exposed by 0x1 Core to native Rust, WebAssembly, UniFFI, TypeScript, and Swift consumers. It defines envelopes, compatibility, typed failure, canonical fixture bytes, and thin-binding behavior without creating protocol authority or activating an interaction. See [0x1 Core Client Contract v0](19-core-client-contract.md).
+
+### Effect request
+
+A typed request from 0x1 Core to a platform adapter to attempt persistence, transport, signing, or another external action. An effect request is not evidence that the action occurred. Any resulting fact enters state only through the verified event or authorized record required by its owning contract.
+
+### Client projection
+
+A deterministic, platform-neutral view derived from accepted Core state for presentation by a client. A client projection is not a new event, protocol record, or authority source.
+
 ### Party
 
 An authority role used by an owning protocol contract. Current human, business, and settlement contracts may require human authorization; the term itself does not expand the authority that contract grants.
@@ -189,4 +201,5 @@ Reconstructable public projection combining anonymous activity, registry observa
 - [Architecture and Data Model](05-architecture-and-data-model.md)
 - [Economics and Payments](10-economics-and-payments.md)
 - [0x1 Core and Client Architecture](18-core-and-client-architecture.md)
+- [0x1 Core Client Contract v0](19-core-client-contract.md)
 - [Creator Offers and Donations](10-creator-offers-and-donations.md)

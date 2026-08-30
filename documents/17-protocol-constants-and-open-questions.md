@@ -59,6 +59,24 @@ These are product-level protocol decisions unless a separate standard is explici
 
 These invariants are normative through the [Protocol Laws](00-protocol-laws.md), [BondChain Interaction Model](04-bondchain-interaction-model.md), and [AI Bonds](04-ai-bonds.md). They permit artificial participants at the ontology level without pretending that identity bootstrap, autonomous signing, custody, recovery, or concrete AI interaction schemas are already production-defined.
 
+## Fixed Core Phase 0 Invariants
+
+| Invariant | Value |
+|---|---|
+| Core contract version | `0.1.0` |
+| Fixture corpus version | `0.1.0` |
+| Production interaction registries | empty |
+| Bond identifier | `bond_` plus 64 lowercase hexadecimal digits |
+| BondChain identifier | `bch_` plus 64 lowercase hexadecimal digits |
+| Establishment and terminality | orthogonal dimensions |
+| JSON numeric tokens | forbidden at the binding boundary |
+| Canonical bytes | RFC 8785 JCS over closed typed JSON |
+| Fixture record digest | domain-separated SHA-256 |
+| History synchronization | exact-prefix fast-forward only |
+| Unknown input member or variant | fail closed |
+
+These invariants are owned by [0x1 Core Client Contract v0](19-core-client-contract.md). They stabilize a portable test and binding boundary without enabling a production interaction or production cryptographic record profile.
+
 ## Fixed Creator Interaction Invariants
 
 | Invariant | Value |
@@ -114,6 +132,25 @@ These invariants are owned by [Creator Offers and Donations](10-creator-offers-a
 | Concurrent challenges per digital slot | `1` |
 
 ## Open Questions
+
+### Production BondChain Record Encoding
+
+What exact signed and encrypted `bond.chain` record schema replaces the Phase 0 test-only fixture record for production interactions?
+
+The contract must define:
+
+- the complete closed plaintext validation envelope;
+- encrypted payload framing and associated data;
+- signature input bytes and authorization multiplicity;
+- record hash input bytes and domain separation;
+- first-record and epoch-transition rules;
+- version negotiation and unknown-field behavior;
+- canonical encoding across native Rust, WebAssembly, and UniFFI;
+- migration behavior when the production wire contract changes.
+
+The fixture hash in [0x1 Core Client Contract v0](19-core-client-contract.md) proves deterministic Phase 0 history behavior only. It MUST NOT be promoted into a production cryptographic record format by implementation convention.
+
+This is implementation-blocking for Phase 1 production records, not for the Phase 0 fixture kernel.
 
 ### Creator Offer Contract
 
@@ -303,6 +340,8 @@ At minimum the enabled current human-controlled contract set must make explicit 
 - payment-only BondChains.
 
 AI-capable variants are not implied by these current human contracts and are tracked separately above.
+
+The Core `0.1.0` production registry is intentionally empty. Its test-only fixture contract proves kernel invariants but does not resolve or activate any item in this open question.
 
 The [BondChain Interaction Model](04-bondchain-interaction-model.md) fixes the generic causal rules. Each enabled interaction kind still needs its own record schema and authority contract before production.
 

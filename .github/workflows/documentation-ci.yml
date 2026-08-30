@@ -1,9 +1,12 @@
+# © 2026 aiaiaiai · aiaiaiai.org
+
 name: Documentation CI
 
 on:
   pull_request:
     paths:
       - "README.md"
+      - "contracts/core/**"
       - "documents/**"
       - "GOVERNANCE.md"
       - "CONTRIBUTING.md"
@@ -19,6 +22,7 @@ on:
       - master
     paths:
       - "README.md"
+      - "contracts/core/**"
       - "documents/**"
       - "GOVERNANCE.md"
       - "CONTRIBUTING.md"

@@ -1,6 +1,9 @@
+# © 2026 aiaiaiai · aiaiaiai.org
+
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 import tempfile
 import unittest
@@ -137,6 +140,128 @@ class DocumentationLinterTests(unittest.TestCase):
             }
             findings = LINTER.check_catalog(root, policy)
             self.assertEqual([finding.code for finding in findings], ["DOC014"])
+
+    def test_contract_json_rejects_numeric_tokens(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "fixture.json"
+            path.write_text('{"revision":1}\n', encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "JSON numeric token is forbidden"):
+                LINTER.load_contract_json(path)
+
+    def test_contract_json_rejects_duplicate_members(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "fixture.json"
+            path.write_text('{"version":"0.1.0","version":"0.1.0"}\n', encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "duplicate JSON member"):
+                LINTER.load_contract_json(path)
+
+    def test_fixture_record_discovery_descends_into_arrays(self) -> None:
+        record = {
+            "contract_version": "0.1.0",
+            "record_kind": "fixture.opened",
+            "bch_id": "bch_example",
+            "sequence": "0",
+            "previous_record_hash": None,
+            "actor_bond_id": "bond_example",
+            "observed_at_unix_ms": "0",
+            "body": {},
+            "record_hash": "sha256_example",
+        }
+        self.assertEqual(list(LINTER.fixture_records({"history": [record]})), [record])
+
+    def test_core_contract_digest_mismatch_is_reported(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            documents = root / "documents"
+            contracts = root / "contracts/core/v0"
+            documents.mkdir()
+            contracts.mkdir(parents=True)
+            contract = documents / "19-core-client-contract.md"
+            contract.write_text(
+                "# Contract\n\n[Protocol Laws](00-protocol-laws.md)\n",
+                encoding="utf-8",
+            )
+            consumer = documents / "consumer.md"
+            consumer.write_text(
+                "# Consumer\n\n[Contract](19-core-client-contract.md)\n",
+                encoding="utf-8",
+            )
+            corpus = {
+                "contract_version": "0.1.0",
+                "fixture_corpus_version": "0.1.0",
+                "production_registries": {
+                    "commands": [],
+                    "events": [],
+                    "effects": [],
+                    "projections": [],
+                },
+                "cases": [
+                    {
+                        "case_id": "example",
+                        "input": {"command": {"kind": "fixture.open"}},
+                        "expected": {"error": {}},
+                    }
+                ],
+            }
+            (contracts / "fixture-corpus.json").write_text(json.dumps(corpus), encoding="utf-8")
+            (contracts / "fixture-corpus.sha256").write_text("sha256_invalid\n", encoding="utf-8")
+            policy = {
+                "core_contract": {
+                    "document": "documents/19-core-client-contract.md",
+                    "consumers": ["documents/consumer.md"],
+                    "contract_version": "0.1.0",
+                    "fixture_corpus": "contracts/core/v0/fixture-corpus.json",
+                    "fixture_corpus_version": "0.1.0",
+                    "fixture_digest": "contracts/core/v0/fixture-corpus.sha256",
+                    "fixture_digest_domain": "0x1:core-fixture-corpus:v0",
+                    "production_registry_names": ["commands", "events", "effects", "projections"],
+                }
+            }
+            findings = LINTER.check_core_contract(root, policy)
+            self.assertIn("CORE018", [finding.code for finding in findings])
+
+    def test_core_contract_rejects_non_empty_production_registry(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            documents = root / "documents"
+            contracts = root / "contracts/core/v0"
+            documents.mkdir()
+            contracts.mkdir(parents=True)
+            (documents / "19-core-client-contract.md").write_text("# Contract\n", encoding="utf-8")
+            corpus = {
+                "contract_version": "0.1.0",
+                "fixture_corpus_version": "0.1.0",
+                "production_registries": {
+                    "commands": ["message.send"],
+                    "events": [],
+                    "effects": [],
+                    "projections": [],
+                },
+                "cases": [
+                    {
+                        "case_id": "example",
+                        "input": {"command": {"kind": "fixture.open"}},
+                        "expected": {"error": {}},
+                    }
+                ],
+            }
+            (contracts / "fixture-corpus.json").write_text(json.dumps(corpus), encoding="utf-8")
+            digest = LINTER.prefixed_sha256("0x1:core-fixture-corpus:v0", corpus)
+            (contracts / "fixture-corpus.sha256").write_text(f"{digest}\n", encoding="utf-8")
+            policy = {
+                "core_contract": {
+                    "document": "documents/19-core-client-contract.md",
+                    "consumers": [],
+                    "contract_version": "0.1.0",
+                    "fixture_corpus": "contracts/core/v0/fixture-corpus.json",
+                    "fixture_corpus_version": "0.1.0",
+                    "fixture_digest": "contracts/core/v0/fixture-corpus.sha256",
+                    "fixture_digest_domain": "0x1:core-fixture-corpus:v0",
+                    "production_registry_names": ["commands", "events", "effects", "projections"],
+                }
+            }
+            findings = LINTER.check_core_contract(root, policy)
+            self.assertIn("CORE010", [finding.code for finding in findings])
 
 
 if __name__ == "__main__":

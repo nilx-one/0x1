@@ -79,6 +79,8 @@ Time, randomness, storage, transport, key access, and device capabilities enter 
 
 An effect is a request to a platform adapter. It is not evidence that the requested action occurred. A resulting fact enters Core state only through the event or signed record required by its owning contract.
 
+The exact `0.1.0` envelope, compatibility, canonicalization, identifier, typed failure, handshake, and test-only fixture rules are defined by [0x1 Core Client Contract v0](19-core-client-contract.md). The Phase 0 production interaction registries remain empty until owning interaction contracts are specified.
+
 ### Authority Across Runtimes
 
 The same Core behavior may execute in several runtimes:
@@ -174,6 +176,8 @@ Geographic rendering and custom world rendering MUST remain projections. Neither
 
 ### Compatibility Verification
 
+Clients MUST complete the Core contract handshake before decoding a transition result. Handshake success proves representation compatibility only; it is not authentication, Core readiness for every feature, or authority to create state.
+
 Every Core change that affects a client-facing contract MUST verify:
 
 - native Rust behavior;
@@ -218,3 +222,4 @@ Web and native iOS delivery SHOULD begin from the same Core baseline and proceed
 - [Devices and Recovery](15-devices-and-recovery.md)
 - [Security and Platform Notes](16-security-and-platform-notes.md)
 - [Implementation Roadmap](18-implementation-roadmap.md)
+- [0x1 Core Client Contract v0](19-core-client-contract.md)
