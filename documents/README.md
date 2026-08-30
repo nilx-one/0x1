@@ -22,6 +22,7 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 - [Protocol Overview](03-protocol-overview.md) — product thesis, authority model, and system invariants.
 - [BondChain Interaction Model](04-bondchain-interaction-model.md) — canonical ontology for Bond, BondChain (`bch`), reciprocity, causal boundaries, terminal states, and relationship projection.
 - [AI Bonds](04-ai-bonds.md) — artificial participants, autonomy vs authority, persistent state, work, digital-asset delivery boundaries, and future world presence without introducing a new participant primitive.
+- [Artificial Bonds Direction](artificial-bonds/README.md) — non-normative product and research direction for persistent artificial participants, replaceable intelligence, observable participation, and authorised representation.
 - [Identity](04-identity.md) — `pub_dress`, provider boundaries, registry stages, private identity, authenticated introduction, continuity, and recovery limits.
 - [Architecture and Data Model](05-architecture-and-data-model.md) — bounded `bond.chain` encoding, `bond.journal`, public projections, and state ownership.
 - [Cryptography and Wire Protocol](06-cryptography-and-wire-protocol.md) — key hierarchy, record envelopes, encryption, and fork safety.
