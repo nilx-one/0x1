@@ -1,6 +1,6 @@
 # © 2026 aiaiaiai · aiaiaiai.org
 
-FROM rust:1.90-bookworm AS build
+FROM rust:1.98-bookworm AS build
 
 WORKDIR /source
 COPY identity-bot/Cargo.toml identity-bot/Cargo.lock ./
