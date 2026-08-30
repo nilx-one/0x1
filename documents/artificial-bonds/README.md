@@ -78,12 +78,10 @@ This direction does not require:
 
 `NPC`, performer, assistant, worker, guide, or avatar may be application roles. They do not become fundamental protocol participant types merely because a product presents a Bond that way.
 
-## Follow-up Documents
+## Direction Documents
 
-This direction will be refined through small, deliberately technology-neutral documents:
-
-- `identity-and-agency.md` — continuity, controller boundaries, autonomy, delegated authority, and authorised representation;
-- `runtime-and-relay.md` — replaceable computation, observation boundaries, event-driven existence, and relay direction without selecting a concrete runtime stack.
+- [Identity and Agency](identity-and-agency.md) — continuity, controller boundaries, autonomy, delegated authority, and authorised representation.
+- [Runtime and Relay](runtime-and-relay.md) — replaceable computation, observation boundaries, event-driven existence, and relay direction without selecting a concrete runtime stack.
 
 ---
 
