@@ -40,7 +40,7 @@ human Bond:            0x{d}{slug}
 owned AI avatar Bond:  x{d}{slug}
 ```
 
-The two forms share the same discriminator alphabet, slug grammar, exact comparison semantics, and global availability surface. Their prefix and discriminator semantics differ.
+The two forms share the same discriminator alphabet, slug grammar, exact comparison semantics, global availability surface, and slug-rotation semantics. Their prefix and discriminator source differ.
 
 ### Shared slug grammar
 
@@ -48,7 +48,7 @@ For both forms:
 
 - `d` is exactly one lowercase hexadecimal digit (`0`–`9` or `a`–`f`).
 - `slug` contains 2–32 Unicode scalar values and is case-sensitive.
-- Each scalar in `slug` MUST be an ASCII letter (`A`–`Z` or `a`–`z`), an ASCII digit (`0`–`9`), or exactly one of these symbols: `- / : ; ( ) ₴ & @ " . , ? ! ' [ ] { } # % ^ * + = _ \ | ~ < > € $ £ •`.
+- Each scalar in `slug` MUST be an ASCII letter (`A`–`Z` or `a`–`z`), an ASCII digit (`0`–`9`), or exactly one of these symbols: `- / : ; ( ) ₴ & @ " . , ? ! ' [ ] { } # % ^ * + = _ \\ | ~ < > € $ £ •`.
 - Spaces, other writing systems, emoji, control characters, combining marks, invisible characters, typographic quote variants, and every other scalar are invalid.
 
 Validation operates on the exact scalar sequence. An implementation MUST NOT trim, case-fold, lowercase, uppercase, transliterate, or replace a character before validating or comparing a `pub_dress`.
@@ -64,13 +64,31 @@ pub_dress = "0x" discriminator slug
 ```
 
 - `0x` is the fixed literal prefix and is not part of either selectable component.
-- `discriminator` is selected explicitly by the person registering the address.
-- `slug` is selected explicitly by that person.
+- `discriminator` is selected explicitly by the person at registration and is immutable for that Bond.
+- `slug` is selected explicitly by that person and is editable.
 - the complete human handle contains 5–35 Unicode scalar values.
 
-The discriminator and slug are separate registration inputs that form one address. `0x0sky` and `0x7sky` remain independent addresses because their explicitly selected discriminators differ.
+The discriminator and slug are separate address components. `0x0sky` and `0x7sky` remain independent addresses because their discriminators differ.
 
-At the current human Stage 1 product, a human `pub_dress` is not editable after registration. A different human public address is not silently treated as a rename of the same identity.
+A human Bond MAY change only its slug while preserving the same Bond identity and discriminator. The resulting complete address MUST be globally available before it becomes current.
+
+```text
+same human Bond identity
+current pub_dress: 0x0sky
+        |
+        | holder selects available new slug
+        v
+current pub_dress: 0x0sasha
+```
+
+For the same Bond:
+
+```text
+0x0sky -> 0x0sasha  valid if globally available
+0x0sky -> 0x1sky    invalid: discriminator changed
+```
+
+Slug editing is modeled as rotation of the Bond's **current public address**, not mutation of authenticated history.
 
 ### Owned AI avatar `pub_dress`
 
@@ -91,15 +109,15 @@ x1skai  -> invalid for this owner
 Rules:
 
 1. `x` is the fixed owned-AI-avatar prefix.
-2. `owner_discriminator` MUST equal the discriminator of the owning human Bond's current human `pub_dress` at avatar creation.
+2. `owner_discriminator` MUST equal the immutable discriminator of the owning human Bond.
 3. The owner-bound discriminator is not editable for that owned avatar under the current model.
 4. The owner chooses the avatar `slug`.
 5. The complete `x{d}{slug}` MUST be globally available before it can become the avatar's current public address.
 6. No AI address is reserved by resemblance. Owning `0x0sky` does not reserve `x0sky`, `x0skai`, or any other `x0...` address.
-7. If the desired address is already occupied, registration fails for that address and the owner must choose another available `x0...` address. The system MUST NOT change the owner-bound discriminator to bypass the collision.
+7. If the desired address is already occupied, registration or rotation fails for that address and the owner must choose another available `x0...` address. The system MUST NOT change the owner-bound discriminator to bypass the collision.
 8. The AI Bond profile MUST contain an explicit reference to its owner. The `x{d}` prefix is a visible ownership constraint, not the only source of ownership truth.
 
-The owned avatar's slug is editable at product level, but editing MUST preserve protocol continuity. It is modeled as rotation of the avatar's **current public address**, not mutation of authenticated history:
+The owned avatar's slug is editable while preserving the same AI Bond identity. Editing is modeled as rotation of the avatar's **current public address**, not mutation of authenticated history:
 
 ```text
 same AI Bond identity
@@ -110,31 +128,32 @@ current pub_dress: x0skai
 current pub_dress: x0rai
 ```
 
-Every already-authenticated record continues to reference the address/key binding that was actually used when that history was authorized. An implementation MUST NOT rewrite historical BondChain records from `x0skai` to `x0rai`.
+Every already-authenticated record continues to reference the address/key binding that was actually used when that history was authorized. An implementation MUST NOT rewrite historical BondChain records after either a human or AI-avatar slug rotation.
 
-The lifecycle of the previous AI address after rotation — immediate release, alias, redirect window, or permanent tombstone — is not defined yet. Until that contract is fixed, implementations MUST NOT invent incompatible behavior and present it as protocol truth.
+The lifecycle of a previous address after rotation — immediate release, alias, redirect window, or permanent tombstone — is not defined yet. Until that contract is fixed, implementations MUST NOT invent incompatible behavior and present it as protocol truth.
 
-Owner transfer is also not defined. Because the discriminator is owner-bound, transferring an owned AI avatar requires an explicit future identity-continuity rule rather than implicit reassignment.
+Owner transfer is also not defined. Because the avatar discriminator is owner-bound, transferring an owned AI avatar requires an explicit future identity-continuity rule rather than implicit reassignment.
 
 ### Address binding and continuity
 
-A published address binding is immutable as historical evidence. A current-address pointer MAY change only where an owning identity contract explicitly permits rotation.
+A published address binding is immutable as historical evidence. The current-address pointer MAY change through slug rotation while the Bond identity and discriminator remain stable.
 
 This distinction is intentional:
 
 ```text
 historical address binding = immutable fact
-current public address      = discoverability pointer that may rotate when explicitly allowed
+current public address      = discoverability pointer with mutable slug
 Bond identity               = continuity beyond either display string
+discriminator               = immutable address component for the Bond
 ```
 
-Human Stage 1 registration currently exposes no public-address rotation. Owned AI avatars explicitly allow owner-initiated slug rotation while preserving the same underlying AI Bond identity.
+Both human Bonds and owned AI avatars allow slug rotation while preserving the same underlying Bond identity. Neither allows discriminator rotation under the current model.
 
 ### Registration and collision
 
-Registration is the insert. There is no reservation queue or cooldown.
+Registration or slug rotation claims the requested current address atomically. There is no reservation queue or cooldown.
 
-A collision occurs only when the complete requested `pub_dress` already exists on the relevant global uniqueness surface and is resolved by the primary identity/address registry contract rather than by a separate allocation process.
+A collision occurs when the complete requested `pub_dress` already exists on the relevant global uniqueness surface and is resolved by the primary identity/address registry contract rather than by a separate allocation process.
 
 The namespaces remain exact strings:
 
@@ -152,7 +171,7 @@ A transport encoding never changes the stored or compared `pub_dress`.
 
 ### Migration boundary
 
-The human grammar above replaces the interim complete-slug registration contract. Migration MUST preserve every existing complete human handle and provider binding without rename or reassignment, including a historical handle that is not valid for a new registration under the revised grammar.
+The human grammar above replaces the interim complete-slug registration contract. Migration MUST preserve every existing complete human handle and provider binding as historical evidence without rewriting prior authenticated history, including a historical handle that is not valid for a new registration under the revised grammar.
 
 Adding the `x{d}{slug}` owned-AI-avatar form does not reinterpret existing human `0x...` records or silently create avatar records. An owned AI avatar is created only through its own explicit owner-authorized creation flow.
 
@@ -249,7 +268,7 @@ The resulting authority is pairwise and history-bound. No global private credent
 
 Inside each BondChain, a participating Bond is authenticated by the authority able to extend precisely that history while the lifecycle permits extension.
 
-A later avatar slug edit MUST NOT retarget old pairwise history. The old history remains bound to the address/key state accepted when that interaction occurred, while identity continuity may prove that the current public address belongs to the same AI Bond.
+A later slug edit MUST NOT retarget old pairwise history. The old history remains bound to the address/key state accepted when that interaction occurred, while identity continuity may prove that the current public address belongs to the same Bond.
 
 > What identifies you is not what you show, but what only you can do: continue history you were authorized to create.
 
@@ -306,26 +325,27 @@ It provides:
 
 The adapter attests one temporary Stage 1 fact: a human-created `pub_dress ↔ tg_id` binding.
 
-It does **not** yet implement the owned-AI-avatar `x{d}{slug}` namespace, owner references, avatar slug rotation, or autonomous AI authority. Implementations MUST NOT treat this documentation change as evidence that those runtime paths already exist.
+It does **not** yet implement human slug rotation, the owned-AI-avatar `x{d}{slug}` namespace, owner references, avatar slug rotation, or autonomous AI authority. Implementations MUST NOT treat this documentation change as evidence that those runtime paths already exist.
 
 ## Invariants
 
 1. A historical `pub_dress` binding is immutable; existing signed BondChain histories never follow a later current-address change.
 2. A newly registered human `pub_dress` uses the literal `0x` prefix, one person-selected lowercase hexadecimal discriminator, and an exact case-sensitive 2–32-character slug from the canonical allowlist.
-3. A newly registered owned-AI-avatar `pub_dress` uses the literal `x` prefix, the owning human Bond's lowercase hexadecimal discriminator, and an exact case-sensitive 2–32-character slug from the same canonical allowlist.
-4. An owned AI avatar's owner-bound discriminator is not editable under the current model.
-5. An owned AI avatar address is granted only if the complete requested address is globally available; no related address is automatically reserved from the owner's human address.
-6. An owned AI avatar profile contains an explicit human-owner reference; ownership MUST NOT be inferred only from address text.
-7. Owner-authorized avatar slug editing rotates the current public address for the same AI Bond identity and MUST NOT rewrite authenticated history.
-8. Human Stage 1 registration does not currently expose `pub_dress` rotation.
-9. A human identity has at least one active provider while provider-backed access remains in use.
-10. An authenticated BondChain fixes the handle-key bindings accepted by its participating Bonds for that interaction.
-11. Pairwise private authority is history-bound and MUST NOT expose a shared global private identifier across BondChains.
-12. Attaching a native device key is human-authorized and MUST NOT be reachable from `sk_ack`.
-13. Stage 2 registry state MUST be rebuildable from self-signed identity records.
-14. Registry equivocation MUST be detectable through transparency proofs and tree-head comparison.
-15. External classifications, ownership labels, or later public-handle changes cannot create, revoke, or rewrite identity inside authenticated BondChain history.
-16. Identity is the authority to continue authenticated history.
+3. A human Bond's discriminator is immutable under the current model.
+4. Holder-authorized human slug editing rotates the current public address for the same human Bond identity, requires the requested address to be globally available, and MUST NOT rewrite authenticated history.
+5. A newly registered owned-AI-avatar `pub_dress` uses the literal `x` prefix, the owning human Bond's lowercase hexadecimal discriminator, and an exact case-sensitive 2–32-character slug from the same canonical allowlist.
+6. An owned AI avatar's owner-bound discriminator is not editable under the current model.
+7. An owned AI avatar address is granted only if the complete requested address is globally available; no related address is automatically reserved from the owner's human address.
+8. An owned AI avatar profile contains an explicit human-owner reference; ownership MUST NOT be inferred only from address text.
+9. Owner-authorized avatar slug editing rotates the current public address for the same AI Bond identity and MUST NOT rewrite authenticated history.
+10. A human identity has at least one active provider while provider-backed access remains in use.
+11. An authenticated BondChain fixes the handle-key bindings accepted by its participating Bonds for that interaction.
+12. Pairwise private authority is history-bound and MUST NOT expose a shared global private identifier across BondChains.
+13. Attaching a native device key is human-authorized and MUST NOT be reachable from `sk_ack`.
+14. Stage 2 registry state MUST be rebuildable from self-signed identity records.
+15. Registry equivocation MUST be detectable through transparency proofs and tree-head comparison.
+16. External classifications, ownership labels, or later public-handle changes cannot create, revoke, or rewrite identity inside authenticated BondChain history.
+17. Identity is the authority to continue authenticated history.
 
 ## Related Documents
 
