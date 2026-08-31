@@ -1,7 +1,9 @@
 // © 2026 aiaiaiai · aiaiaiai.org
 
-pub mod pub_dress;
+pub mod api;
 pub mod repository;
+pub mod telegram_init_data;
 
-pub use pub_dress::{PubDress, PubDressError};
+pub use ox1_contracts::{PubDress, PubDressError};
 pub use repository::{IdentityRecord, IdentityRepository, RegistrationOutcome, RepositoryError};
+pub use telegram_init_data::{TelegramInitDataError, TelegramInitDataVerifier};

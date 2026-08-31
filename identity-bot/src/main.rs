@@ -1,8 +1,10 @@
 // © 2026 aiaiaiai · aiaiaiai.org
 
-use std::{collections::HashSet, env, str::FromStr, sync::Arc};
+use std::{collections::HashSet, env, net::SocketAddr, str::FromStr, sync::Arc};
 
-use identity_bot::{IdentityRepository, PubDress, RegistrationOutcome};
+use identity_bot::{
+    IdentityRepository, PubDress, RegistrationOutcome, TelegramInitDataVerifier, api,
+};
 use teloxide::{prelude::*, types::Message};
 use tokio::sync::RwLock;
 use tracing::{error, info};
@@ -21,23 +23,44 @@ async fn main() {
         )
         .init();
 
+    let bot_token = env::var("TELOXIDE_TOKEN").expect("TELOXIDE_TOKEN must be configured");
     let database_url =
         env::var("DATABASE_URL").unwrap_or_else(|_| "sqlite://identity.db".to_owned());
+    let http_bind = env::var("HTTP_BIND")
+        .unwrap_or_else(|_| "0.0.0.0:8080".to_owned())
+        .parse::<SocketAddr>()
+        .expect("HTTP_BIND must be a socket address");
+    let init_data_max_age_seconds = env::var("TELEGRAM_INIT_DATA_MAX_AGE_SECONDS")
+        .map_or(Ok(300_u64), |value| value.parse::<u64>())
+        .expect("TELEGRAM_INIT_DATA_MAX_AGE_SECONDS must be an unsigned integer");
     let repository = IdentityRepository::connect(&database_url)
         .await
         .expect("identity database must initialize");
-    let bot = Bot::from_env();
+    let bot = Bot::new(bot_token.clone());
+    let api = api::router(
+        repository.clone(),
+        TelegramInitDataVerifier::new(bot_token, init_data_max_age_seconds),
+    );
+    let listener = tokio::net::TcpListener::bind(http_bind)
+        .await
+        .expect("identity HTTP listener must bind");
 
-    info!("starting Stage 1 identity bot");
-    Dispatcher::builder(bot, Update::filter_message().endpoint(handle_message))
-        .dependencies(dptree::deps![
-            Arc::new(repository),
-            PendingRegistrations::default()
-        ])
-        .enable_ctrlc_handler()
-        .build()
-        .dispatch()
-        .await;
+    info!(%http_bind, "starting Stage 1 identity service");
+    let mut dispatcher =
+        Dispatcher::builder(bot, Update::filter_message().endpoint(handle_message))
+            .dependencies(dptree::deps![
+                Arc::new(repository),
+                PendingRegistrations::default()
+            ])
+            .enable_ctrlc_handler()
+            .build();
+
+    tokio::select! {
+        () = dispatcher.dispatch() => {}
+        result = axum::serve(listener, api) => {
+            result.expect("identity HTTP server must remain available");
+        }
+    }
 }
 
 async fn handle_message(
@@ -141,7 +164,7 @@ async fn start_registration(
             pending.write().await.insert(telegram_user_id);
             bot.send_message(
                 message.chat.id,
-                "Send the pub_dress you want to register, including the literal 0x prefix. Registration is final: a pub_dress cannot be renamed in place.",
+                "Send the pub_dress you want to register: the literal 0x prefix, one lowercase hexadecimal discriminator, then a case-sensitive 2–32-character slug. Registration is final: a pub_dress cannot be renamed in place.",
             )
             .await?;
         }
@@ -168,7 +191,7 @@ async fn complete_registration(
     let Ok(pub_dress) = PubDress::from_str(candidate) else {
         bot.send_message(
             message.chat.id,
-            "That value is not a canonical pub_dress. Use the literal 0x prefix followed by 2–32 allowed characters, without spaces or uppercase letters.",
+            "That value is not a canonical pub_dress. Use the literal 0x prefix, one lowercase hexadecimal discriminator, and a case-sensitive 2–32-character slug without spaces.",
         )
         .await?;
         return Ok(());
