@@ -176,12 +176,12 @@ External labels may change. Institutions may disagree. Context may collapse and 
 
 ## Stage 1 reference implementation
 
-The Stage 1 reference surface is [`identity-bot/`](../identity-bot/), implemented in Rust with teloxide, Axum, and SQLite.
+The current Stage 1 reference adapter lives in [`nilx-one/web/services/identity`](https://github.com/nilx-one/web/tree/master/services/identity). It implements this protocol boundary but is not part of the canonical specification repository.
 
-It contains:
+It provides:
 
-- `identities (pub_dress PRIMARY KEY, tg_id UNIQUE)`;
-- `/start` for registration;
+- `identities (pub_dress PRIMARY KEY, tg_id UNIQUE)` persistence;
+- `/start` registration transport;
 - `/whoami` for the protocol-shaped identity record;
 - `/recover` for the current recovery boundary;
 - authenticated Telegram Mini App identity read and registration endpoints;
@@ -189,7 +189,7 @@ It contains:
 - transactional insert-as-reservation over the complete `pub_dress`;
 - a non-enumerating collision response that does not disclose the existing binding.
 
-The bot attests one temporary Stage 1 fact: a human-created `pub_dress ↔ tg_id` binding.
+The adapter attests one temporary Stage 1 fact: a human-created `pub_dress ↔ tg_id` binding.
 
 ## Invariants
 

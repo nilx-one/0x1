@@ -4,35 +4,9 @@ name: Documentation CI
 
 on:
   pull_request:
-    paths:
-      - "README.md"
-      - "contracts/core/**"
-      - "documents/**"
-      - "GOVERNANCE.md"
-      - "CONTRIBUTING.md"
-      - "CLA.md"
-      - "TRADEMARKS.md"
-      - "CONFORMANCE.md"
-      - ".github/documentation-style.json"
-      - ".github/workflows/documentation-ci.yml"
-      - "scripts/lint_documentation.py"
-      - "tests/test_documentation_linter.py"
   push:
     branches:
       - master
-    paths:
-      - "README.md"
-      - "contracts/core/**"
-      - "documents/**"
-      - "GOVERNANCE.md"
-      - "CONTRIBUTING.md"
-      - "CLA.md"
-      - "TRADEMARKS.md"
-      - "CONFORMANCE.md"
-      - ".github/documentation-style.json"
-      - ".github/workflows/documentation-ci.yml"
-      - "scripts/lint_documentation.py"
-      - "tests/test_documentation_linter.py"
   workflow_dispatch:
 
 permissions:
@@ -51,6 +25,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Validate protocol-only repository boundary
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          unexpected=()
+          while IFS= read -r entry; do
+            case "$entry" in
+              .git|.github|contracts|documents|scripts|tests|.gitignore|.gitattributes|*.md)
+                ;;
+              *)
+                unexpected+=("$entry")
+                ;;
+            esac
+          done < <(find . -mindepth 1 -maxdepth 1 -printf '%f\n' | sort)
+
+          if ((${#unexpected[@]})); then
+            printf 'Protocol repository contains implementation-owned top-level entries:\n' >&2
+            printf '  %s\n' "${unexpected[@]}" >&2
+            exit 1
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
