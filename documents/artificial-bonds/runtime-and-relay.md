@@ -86,22 +86,15 @@ A runtime saying internally that it intends to contact another Bond is not a com
 
 ## Learning Boundary
 
-Runtime activity may later contribute to training or evaluation systems, but model-generated behavior and protocol-verified outcomes must remain distinguishable.
+Runtime activity may later contribute to training or evaluation systems, but training input and protocol evidence must remain separate.
 
-A useful learning record may connect:
+The training direction uses bond-agnostic local activity abstractions such as route traversal, point-of-interest dwell, or spatial transit. A training candidate should be derived at the local observation boundary before protocol storage rather than by reading an established `bond.chain` after the fact.
 
-```text
-state
--> intent
--> chosen action
--> observable interaction
--> counterpart action
--> outcome
-```
+`bond.journal` also remains a private local store, not a corpus upload source.
 
-The runtime's internal explanation is optional implementation data. The observable interaction history is the stronger source of protocol evidence.
+A separate future evaluation system may need to compare model behavior with authorized protocol outcomes. That requires its own authorization, privacy, retention, provenance, and quality contract and is not implied by the training-signal path.
 
-Any future training pipeline must define consent, privacy, retention, provenance, quality, and poisoning boundaries before treating observed activity as training material.
+The concrete privacy boundary, schema direction, malicious-client limits, and unresolved activation gates are described in [Training Signal Boundary](training-signal.md).
 
 ## Failure and Degradation
 
