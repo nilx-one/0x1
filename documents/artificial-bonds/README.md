@@ -56,11 +56,13 @@ An unauthorised imitation remains a separate identity and must not be presented 
 
 ## Learning Direction
 
-A future 0x1 intelligence may learn from structured experience produced by artificial participation without 0x1 operating every model involved.
+A future 0x1 intelligence may learn from bond-agnostic local activity without turning pairwise relationship evidence into a training corpus.
 
-Useful experience may include the relationship between state, intent, observable action, interaction, counterpart action, and outcome. Any future learning pipeline must preserve the distinction between model output and verified protocol facts.
+The intended training input is a deliberately lossy, schema-constrained abstraction produced at the local observation boundary. `bond.chain` is not a training input, and `bond.journal` remains a private local store rather than an upload source.
 
-This is a research and product direction, not a requirement of the initial implementation.
+A separate future evaluation system may need to compare behavior with authorized protocol outcomes, but that would require its own privacy, authorization, and provenance contract. It is not implied by the training-signal path.
+
+The [Training Signal Boundary](training-signal.md) describes this direction and its unresolved production gates. This remains research and product direction, not a requirement of the initial implementation.
 
 ## Non-Goals
 
@@ -82,6 +84,7 @@ This direction does not require:
 
 - [Identity and Agency](identity-and-agency.md) — continuity, controller boundaries, autonomy, delegated authority, and authorised representation.
 - [Runtime and Relay](runtime-and-relay.md) — replaceable computation, observation boundaries, event-driven existence, and relay direction without selecting a concrete runtime stack.
+- [Training Signal Boundary](training-signal.md) — bond-agnostic behavioral signals, closed schemas, server validation, correlation limits, and production privacy gates without training on pairwise relationship evidence.
 
 ---
 
