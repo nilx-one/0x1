@@ -207,7 +207,7 @@ A Web implementation MAY temporarily use Three.js, Babylon.js, or another scene 
 
 Therefore Three.js is not a canonical or permanent 0x1 dependency. A later migration from Three.js, a WebGL-oriented scene library, or an initial renderer to a direct WebGPU-capable renderer MUST be possible without changing protocol truth or the shared world model.
 
-`MapRenderer` and `World3DRenderer` MAY share synchronized camera transforms and frame timing through an explicit client-side coordination contract. Camera synchronization MUST NOT collapse the two ownership boundaries into one renderer or make either renderer authoritative for world state.
+`MapRenderer` and `World3DRenderer` MAY share synchronized camera transforms and frame timing through a client-side coordination boundary. The exact coordination contract, including ownership, update direction, frame lifecycle, and versioning, is not yet defined and remains an explicit implementation architecture open item. This open item is tracked in [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md#renderer-camera-coordination). Until that contract is specified, no renderer may treat camera synchronization as authority over shared world state.
 
 WebGPU availability MUST be detected by capability and adapter acquisition rather than user-agent identity. Adapter absence, insufficient limits, or device loss MUST fall back to WebGL2. If neither WebGPU nor WebGL2 is available, the client MUST expose an explicit unsupported-graphics state for the affected surface. Canvas 2D MUST NOT be used as a rendering fallback.
 
@@ -264,5 +264,6 @@ Web and native iOS delivery SHOULD begin from the same Core baseline and proceed
 - [Map Architecture](12-map-architecture.md)
 - [Devices and Recovery](15-devices-and-recovery.md)
 - [Security and Platform Notes](16-security-and-platform-notes.md)
+- [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
 - [Implementation Roadmap](18-implementation-roadmap.md)
 - [0x1 Core Client Contract v0](19-core-client-contract.md)
