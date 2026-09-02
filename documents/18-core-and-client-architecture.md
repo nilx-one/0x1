@@ -19,6 +19,7 @@ The [Protocol Laws](00-protocol-laws.md) remain the normative root. **0x1 Core**
 5. **Determinism precedes optimization.** Shared state transitions MUST produce equivalent results across native Rust, WebAssembly, and supported foreign-language bindings.
 6. **Bindings remain thin.** TypeScript and Swift adapters translate platform input and output; they MUST NOT reimplement product rules.
 7. **Rendering degrades explicitly.** Custom Web graphics use WebGPU when available and WebGL2 as the required fallback. The product defines no Canvas 2D rendering path.
+8. **Renderer contracts precede backend choice.** `MapRenderer` and `World3DRenderer` are architectural ports. Concrete engines and GPU libraries remain replaceable implementation details and MUST NOT leak into protocol semantics.
 
 ## Model
 
@@ -107,8 +108,8 @@ Gamification is subordinate to protocol truth. A reward may derive from an eligi
 |---|---|
 | Web UI | React, strict TypeScript, accessibility, routing, and host adapters |
 | Native iOS UI | SwiftUI, navigation, accessibility, and Apple platform integration |
-| Geographic rendering | MapLibre GL JS on Web and MapLibre Native on iOS |
-| Custom GPU rendering | `wgpu` over WebGPU or WebGL2 on Web and Metal on iOS |
+| Geographic rendering | `MapRenderer`; baseline implementations are MapLibre GL JS on Web and MapLibre Native on iOS |
+| Custom world rendering | `World3DRenderer`; backend-specific geometry, materials, lighting, animation, effects, and visual LOD |
 | Transport | HTTP, WebSocket, and messenger bridges behind ports |
 | Persistence | PostgreSQL, browser storage, and protected iOS storage behind ownership-specific adapters |
 | Device capabilities | Keychain, Secure Enclave, App Attest, notifications, haptics, sensors, and host authentication |
@@ -155,24 +156,62 @@ The Web baseline continues to use `wasm-bindgen`. JavaScript bindings generated 
 
 ### Map and Graphics
 
-MapLibre remains the geographic renderer:
+0x1 separates the geographic substrate from the custom three-dimensional world through two rendering ports:
+
+```text
+                 versioned Core projections
+                          |
+                 shared world/camera state
+                          |
+             +------------+------------+
+             |                         |
+             v                         v
+       MapRenderer              World3DRenderer
+             |                         |
+       geographic map             3D world scene
+```
+
+`MapRenderer` owns presentation of the geographic substrate, including projection, tiles, terrain, roads, buildings, labels, map gestures, map camera realization, and versioned map styles. It MAY expose runtime style controls such as palette, color, visibility, or other presentation changes, but those controls remain visual state and MUST NOT change map authority or world truth.
+
+MapLibre is the baseline `MapRenderer` implementation:
 
 - Web uses MapLibre GL JS;
 - native iOS uses MapLibre Native;
 - both consume one versioned MapLibre Style Specification;
 - 0x1 Core supplies shared map state, visibility decisions, clustering inputs, and versioned projection data;
-- MapLibre camera, gestures, tiles, labels, and platform rendering remain client responsibilities.
+- MapLibre camera, gestures, tiles, labels, styling, and platform rendering remain client responsibilities.
 
-Custom high-density world rendering MAY use a shared Rust `wgpu` module. Its backend contract is:
+MapLibre is an implementation dependency of the official clients, not a protocol primitive. Replacing MapLibre with another implementation that satisfies the same `MapRenderer` contract MUST NOT require a protocol change.
+
+`World3DRenderer` owns presentation of custom world objects that are not part of the geographic renderer's authority, including:
+
+- Bond character models;
+- business and authored object models;
+- other world geometry;
+- materials and textures;
+- lighting and shadows;
+- skeletal and procedural animation;
+- visual effects;
+- visual level of detail.
+
+`World3DRenderer` consumes world state and client projections. It MUST NOT own Bond identity, business presence rights, physical location truth, Interaction completion, BondChain state, Relationship derivation, or any other protocol fact.
+
+The official clients MAY implement `World3DRenderer` with a shared Rust `wgpu` module or another backend adapter. Its baseline backend capability contract is:
 
 ```text
 Web: WebGPU -> WebGL2
 iOS: Metal
 ```
 
+A Web implementation MAY temporarily use Three.js, Babylon.js, or another scene library behind the `World3DRenderer` port when that is the smallest correct implementation. Such a library MUST remain an implementation detail: protocol documents, Core contracts, world-state records, and domain bindings MUST NOT depend on its scene graph, object types, materials, animation model, or lifecycle.
+
+Therefore Three.js is not a canonical or permanent 0x1 dependency. A later migration from Three.js, a WebGL-oriented scene library, or an initial renderer to a direct WebGPU-capable renderer MUST be possible without changing protocol truth or the shared world model.
+
+`MapRenderer` and `World3DRenderer` MAY share synchronized camera transforms and frame timing through a client-side coordination boundary. The exact coordination contract, including ownership, update direction, frame lifecycle, and versioning, is not yet defined and remains an explicit implementation architecture open item. This open item is tracked in [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md#renderer-camera-coordination). Until that contract is specified, no renderer may treat camera synchronization as authority over shared world state.
+
 WebGPU availability MUST be detected by capability and adapter acquisition rather than user-agent identity. Adapter absence, insufficient limits, or device loss MUST fall back to WebGL2. If neither WebGPU nor WebGL2 is available, the client MUST expose an explicit unsupported-graphics state for the affected surface. Canvas 2D MUST NOT be used as a rendering fallback.
 
-Geographic rendering and custom world rendering MUST remain projections. Neither MapLibre nor GPU code may establish a BondChain, change Relationship truth, grant presence rights, or issue rewards.
+Geographic rendering and custom world rendering MUST remain projections. Neither `MapRenderer`, `World3DRenderer`, MapLibre, nor GPU code may establish a BondChain, change Relationship truth, grant presence rights, or issue rewards.
 
 ### Compatibility Verification
 
@@ -196,6 +235,7 @@ Web and native iOS delivery SHOULD begin from the same Core baseline and proceed
 - If platform storage cannot preserve an ownership or privacy requirement, that feature MUST remain unavailable on the platform.
 - If WebGPU initialization or execution fails, the affected renderer MUST recover through WebGL2 or present the explicit unsupported state.
 - If MapLibre rendering differs between clients, the discrepancy MUST remain a rendering defect and MUST NOT be corrected by changing protocol or Relationship state.
+- If a concrete renderer cannot satisfy the `MapRenderer` or `World3DRenderer` contract without leaking backend-specific semantics into Core or protocol state, the renderer adapter MUST change or the implementation MUST be replaced.
 
 ## Invariants
 
@@ -206,9 +246,12 @@ Web and native iOS delivery SHOULD begin from the same Core baseline and proceed
 5. TypeScript and Swift bindings contain no independent relationship, gamification, economic, or protocol semantics.
 6. Server location does not make a fact authoritative outside its owning contract.
 7. Client prediction cannot create reciprocity, shared rewards, or Relationship truth.
-8. MapLibre owns geographic rendering, not map-state authority.
-9. Custom Web graphics use WebGPU with WebGL2 fallback and no Canvas 2D path.
-10. Shared behavior is releaseable only when native Rust, WebAssembly, and Swift contract fixtures agree.
+8. `MapRenderer` owns geographic presentation, not map-state authority.
+9. `World3DRenderer` owns custom 3D presentation, not world or protocol truth.
+10. MapLibre is the baseline official `MapRenderer` implementation and remains replaceable behind that contract.
+11. Three.js, Babylon.js, `wgpu`, and other concrete rendering libraries MUST remain implementation details rather than protocol dependencies.
+12. Custom Web graphics use WebGPU with WebGL2 fallback and no Canvas 2D path.
+13. Shared behavior is releaseable only when native Rust, WebAssembly, and Swift contract fixtures agree.
 
 ## Related Documents
 
@@ -221,5 +264,6 @@ Web and native iOS delivery SHOULD begin from the same Core baseline and proceed
 - [Map Architecture](12-map-architecture.md)
 - [Devices and Recovery](15-devices-and-recovery.md)
 - [Security and Platform Notes](16-security-and-platform-notes.md)
+- [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
 - [Implementation Roadmap](18-implementation-roadmap.md)
 - [0x1 Core Client Contract v0](19-core-client-contract.md)

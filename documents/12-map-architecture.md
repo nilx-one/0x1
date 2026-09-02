@@ -159,6 +159,7 @@ Creator commerce or donation spend MUST NOT buy relationship rank or privileged 
 - 0x1 Core owns shared map-state interpretation, visibility rules, clustering inputs, spatial queries, and versioned client projections.
 - Web consumes Core map projections through WebAssembly and `wasm-bindgen`; native iOS consumes them through UniFFI-generated Swift bindings.
 - MapLibre objects, platform views, GPU handles, and per-frame rendering calls do not cross either domain binding boundary.
+- The `MapRenderer` / `World3DRenderer` split is defined by [0x1 Core and Client Architecture](18-core-and-client-architecture.md); the exact camera-transform and frame-timing coordination shape remains an explicit open item in [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md#renderer-camera-coordination).
 - Basemap data uses self-hosted Protomaps packages.
 - H3 boundaries render as client-side GeoJSON.
 - Regional map state is delivered through signed, versioned bundles.
@@ -189,4 +190,5 @@ Creator commerce or donation spend MUST NOT buy relationship rank or privileged 
 
 - [Protocol Laws](00-protocol-laws.md)
 - [Architecture and Data Model](05-architecture-and-data-model.md)
+- [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
 - [0x1 Core and Client Architecture](18-core-and-client-architecture.md)

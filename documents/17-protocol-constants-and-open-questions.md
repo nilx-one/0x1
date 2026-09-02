@@ -410,6 +410,25 @@ Should every digital slot use one cooldown or a deterministic function of settle
 
 A business may have both physical and digital products in one cell. The protocol permits both rights; the client still needs a deterministic rule for whether to render two markers or one combined business surface.
 
+### Renderer Camera Coordination
+
+What exact client-side coordination contract synchronizes `MapRenderer` and `World3DRenderer` camera transforms and frame timing without collapsing their ownership boundaries?
+
+The contract must define:
+
+- ownership of camera state;
+- update direction and arbitration for map gestures, world navigation, and programmatic camera movement;
+- coordinate and projection transform boundaries;
+- frame lifecycle and timing source;
+- resize, device-loss, backend-fallback, and renderer-recovery behavior;
+- versioning and compatibility across client implementations;
+- failure behavior when one renderer is unavailable or degraded;
+- whether interpolation or prediction remains presentation-only.
+
+Until the coordination contract is specified, neither renderer may treat camera synchronization, frame timing, or transform ownership as authority over shared world state. The settled architectural boundary remains the one defined by [0x1 Core and Client Architecture](18-core-and-client-architecture.md): `MapRenderer` and `World3DRenderer` are separate presentation ports over versioned Core projections.
+
+This is not protocol-blocking for the current map or for either renderer in isolation. It is implementation-blocking for any composed map-plus-custom-3D surface that requires synchronized camera and frame behavior.
+
 ### Broadcast Routing
 
 Should a broadcast reach every eligible client in an H3 resolution 7 cell, or only clients within `N` edges of the sender's local relationship projection?
@@ -434,6 +453,6 @@ AI memory or runtime observations follow the same evidence boundary by default: 
 
 The Bond/BondChain ontology defined by the Protocol Laws, [BondChain Interaction Model](04-bondchain-interaction-model.md), [AI Bonds](04-ai-bonds.md), and [Creator Offers and Donations](10-creator-offers-and-donations.md) is normative.
 
-The exact enabled interaction-contract schemas, creator offer and purchase contracts, donation contract, creator map projection, autonomous AI authority profile, artificial identity bootstrap, AI asset custody, future AI world presence, relationship-level aggregation, map activation, business authority, registry-oracle behavior, digital-presence key lifecycle, and auction timing remain draft or open as listed above.
+The exact enabled interaction-contract schemas, creator offer and purchase contracts, donation contract, creator map projection, autonomous AI authority profile, artificial identity bootstrap, AI asset custody, future AI world presence, relationship-level aggregation, map activation, business authority, registry-oracle behavior, digital-presence key lifecycle, renderer camera coordination, and auction timing remain draft or open as listed above.
 
 Any change to Bond/BondChain meaning, participant types, causal boundaries, subject authority, autonomy, delegation, ownership, persistence, recovery, signature requirements, plaintext boundaries, presence classes, creator projection classes, or settlement requires an explicit protocol-version change.
