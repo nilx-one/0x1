@@ -412,22 +412,17 @@ A business may have both physical and digital products in one cell. The protocol
 
 ### Renderer Camera Coordination
 
-What exact client-side coordination contract synchronizes `MapRenderer` and `World3DRenderer` camera transforms and frame timing without collapsing their ownership boundaries?
+**Status:** stub; unresolved implementation architecture.
 
-The contract must define:
+**Scope:** client-side synchronization between `MapRenderer` and `World3DRenderer` for camera transforms and frame timing.
 
-- ownership of camera state;
-- update direction and arbitration for map gestures, world navigation, and programmatic camera movement;
-- coordinate and projection transform boundaries;
-- frame lifecycle and timing source;
-- resize, device-loss, backend-fallback, and renderer-recovery behavior;
-- versioning and compatibility across client implementations;
-- failure behavior when one renderer is unavailable or degraded;
-- whether interpolation or prediction remains presentation-only.
+**Open:** ownership, update direction, transform shape, frame lifecycle, recovery/fallback behavior, and versioning. These mechanics are intentionally not specified here.
 
-Until the coordination contract is specified, neither renderer may treat camera synchronization, frame timing, or transform ownership as authority over shared world state. The settled architectural boundary remains the one defined by [0x1 Core and Client Architecture](18-core-and-client-architecture.md): `MapRenderer` and `World3DRenderer` are separate presentation ports over versioned Core projections.
+**Boundary:** synchronization is presentation-only and MUST NOT make either renderer authoritative for shared world state. `MapRenderer` and `World3DRenderer` remain separate presentation ports over versioned Core projections as defined by [0x1 Core and Client Architecture](18-core-and-client-architecture.md).
 
-This is not protocol-blocking for the current map or for either renderer in isolation. It is implementation-blocking for any composed map-plus-custom-3D surface that requires synchronized camera and frame behavior.
+**Blocks:** only composed map-plus-custom-3D rendering that requires synchronized camera/frame behavior; not the current map or either renderer in isolation.
+
+When this work becomes implementation-active, this stub MUST be replaced by or linked to a dedicated versioned implementation contract rather than expanded ad hoc across client code.
 
 ### Broadcast Routing
 
