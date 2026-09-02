@@ -12,11 +12,23 @@ The authority to continue authenticated history. External classifications may de
 
 ### `pub_dress`
 
-An immutable human-readable identity handle shaped as the literal prefix `0x` followed by a 2–32-character slug from the exact character set defined by the [Identity](04-identity.md) contract. It is a discovery pointer, not the cryptographic foundation of identity.
+The current human-readable public address pointer bound to a Bond identity. A human address has form `0x{d}{slug}` and an owned-AI-avatar address has form `x{d}{slug}` under the exact grammar in [Identity](04-identity.md). The discriminator is immutable under the current model; the slug may rotate when the owning identity contract authorizes it and the requested complete address is globally available. Historical authenticated address bindings remain immutable. `pub_dress` is a discovery pointer, not the cryptographic foundation of identity.
 
 ### Identity provider
 
-A mechanism through which an authorized controller can currently prove control of an identity record. The Stage 1 implementation is person/provider-backed; providers are access boundaries, not identity truth.
+An external system that assigns a stable account subject which may be authorized as an access mechanism for a human Bond, such as Telegram, Discord, or Apple. A provider is not the Bond, an authentication method, or the client host.
+
+### Provider binding
+
+A durable authorized association between one human Bond and one external provider account, represented by a provider type and that provider's opaque stable subject. A Bond may bind several different provider types, but at most one account for each provider type. The same `(provider, subject)` MUST NOT be bound to more than one Bond.
+
+### Authentication method
+
+The verification path used for one authentication event. Examples include native `pub_dress` plus password, Telegram OIDC, verified Telegram Mini App `initData`, Discord OAuth, or a verified Discord Embedded App flow. Different authentication methods may resolve to the same provider binding and therefore the same Bond. An authentication method is not durable identity by itself.
+
+### Host
+
+The runtime environment containing a client, such as a browser, Telegram Mini App, Discord Embedded App, or a native application. Host context may supply authentication material through an adapter, but a host is not an identity provider binding and does not create a Bond.
 
 ### `pk_identity`
 
