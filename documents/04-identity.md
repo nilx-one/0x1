@@ -175,38 +175,132 @@ The human grammar above replaces the interim complete-slug registration contract
 
 Adding the `x{d}{slug}` owned-AI-avatar form does not reinterpret existing human `0x...` records or silently create avatar records. An owned AI avatar is created only through its own explicit owner-authorized creation flow.
 
-## Identity providers
+## External provider bindings and authentication
 
-A human identity record maps a public handle to the mechanisms through which its holder can currently prove control:
+A human Bond may prove access through native credentials, external provider accounts, or both. These mechanisms converge on the same Bond identity; they do not create parallel Bonds.
+
+An external provider binding is represented by a provider type and that provider's opaque stable account subject. The identity-level projection is a map keyed by provider type:
 
 ```json
 {
   "pub_dress": "0x0sky",
-  "identity_providers": ["tg:123456789"]
+  "providers": {
+    "telegram": { "subject": "123456789" },
+    "discord": { "subject": "456" },
+    "apple": { "subject": "001234.abcd" }
+  }
 }
 ```
 
-Providers are equal-rank entries. A provider MAY be detached only while at least one provider remains.
+The example demonstrates the shape, not the set of providers currently activated by every client.
 
-In the current human Stage 1 implementation, Telegram is the only provider. Device multiplicity remains delegated to Telegram sessions and Telegram 2FA because 0x1 cannot independently attest those devices yet.
+### Provider-binding rules
 
-Native device keys (`dev:<pubkey>`) arrive with [0x1 Core](18-core-and-client-architecture.md). Once device authority is cryptographically represented, attaching a device becomes a human-authorized consent-class action under its owning contract. `sk_ack` MUST NOT attach one.
+1. A human Bond MAY have bindings to several different external provider types at the same time.
+2. One Bond MUST have at most one binding for each provider type. A second Telegram, Discord, Apple, or other account of the same provider type cannot be attached concurrently to that Bond.
+3. One external account MUST bind to at most one Bond: `(provider, subject)` identifies zero or one Bond.
+4. `subject` is an opaque string owned by the provider adapter. Core identity semantics MUST NOT assume that it is numeric, globally meaningful outside that provider, equal to a username, equal to an email address, or suitable for display.
+5. The provider map is a semantic keyed map. A normalized persistence table MAY encode the same contract as rows, but it MUST enforce both uniqueness directions above.
+6. Native `pub_dress + password` authentication is a native credential and MUST NOT be encoded as a synthetic provider binding.
+7. Provider access tokens, refresh tokens, ID tokens, OAuth authorization codes, Telegram `initData`, session cookies, password hashes, recovery secrets, and equivalent authentication material MUST NOT appear in the Bond's provider map or public profile projection.
+8. External providers are access bindings, not identity roots. Connecting or disconnecting one does not change the Bond identity, discriminator, current `pub_dress`, owned AI Bonds, or authenticated BondChain history.
 
-Owned AI avatars do not become Telegram users merely because their owner used Telegram to create them. The human owner's provider proves the owner's authorization to perform the current avatar-management action; it MUST NOT be misrepresented as autonomous AI identity authority.
+Operational metadata such as a verified `linked_at` timestamp MAY be stored outside the canonical binding when useful. Such metadata is not identity authority.
+
+### Authentication methods
+
+A provider binding says **which external account is connected**. An authentication method says **how control of an account or native credential was proved for one authentication event**.
+
+Examples:
+
+| Authentication method | Resolves to |
+|---|---|
+| native `pub_dress + password` | the native Bond credential; no external provider binding |
+| Telegram OIDC / Login | `telegram:<subject>` |
+| verified Telegram Mini App `initData` | `telegram:<subject>` |
+| Discord OAuth | `discord:<subject>` |
+| verified Discord Embedded App flow | `discord:<subject>` |
+| Sign in with Apple | `apple:<subject>` |
+
+Two authentication methods for the same provider MUST converge on the same provider subject before resolving the provider binding. A Telegram browser login and a Telegram Mini App session therefore do not create two Telegram identities. The same rule applies to Discord browser OAuth and Discord embedded-host authentication.
+
+A successful authentication event resolves an authenticated principal to one Bond. The method used for that event MAY be retained as session/audit metadata where permitted, but it MUST NOT be persisted as another provider binding merely because the transport differed.
+
+### Host boundary
+
+The provider, authentication method, and client host are separate concepts:
+
+```text
+provider       = external account authority, e.g. Telegram or Discord
+auth method    = proof path used for this authentication event
+host           = runtime containing the client, e.g. browser, Telegram, Discord
+```
+
+Telegram and Discord can each be both an external identity provider and a host environment. Those roles remain distinct. A Telegram Mini App is a host for the Web client; verified Mini App data is one Telegram authentication method. A Discord Embedded App is likewise a host; its verified authorization flow is one Discord authentication method.
+
+A host MUST NOT create a provider binding merely because the client is running inside it. The provider account must be cryptographically or protocol-authenticated by the provider-specific adapter, and account linking must satisfy the human authorization rule below.
+
+### Linking and unlinking
+
+Connecting a new provider to an existing Bond is a human-authorized account-management operation. It requires proof of the currently authenticated Bond and proof of control of the new external provider account. It is not a pairwise Interaction and MUST NOT create a BondChain or Relationship fact.
+
+A provider attach MUST fail if either:
+
+- that Bond already has an account for the same provider type; or
+- the verified `(provider, subject)` is already bound to another Bond.
+
+Disconnecting a provider is also human-authorized. An implementation MUST NOT allow an unlink operation to leave the Bond with no currently usable authentication authority unless the same authorized transition establishes a replacement or an explicitly defined recovery state. Consequently, a Bond with an active native credential may have zero external provider bindings.
+
+Owned AI avatars do not become Telegram, Discord, Apple, or other external-provider users merely because their owner used such a provider to create or manage them. The human owner's authenticated authority proves the owner's authorization for the current avatar-management action; it MUST NOT be misrepresented as autonomous AI identity authority.
 
 A production autonomous signing profile for AI Bonds remains separately undefined in [AI Bonds](04-ai-bonds.md) and [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md).
+
+### Own-profile projection
+
+The authenticated human profile SHOULD expose external bindings through a person-facing **Connected accounts** section rather than the internal term `providers`.
+
+Conceptually:
+
+```text
+Profile
+├── pub_dress: 0x0sky
+└── Connected accounts
+    ├── Telegram   connected
+    ├── Discord    connected
+    └── Apple      not connected
+```
+
+Rules:
+
+1. The own-profile projection MAY list supported provider types and whether each is connected.
+2. Raw provider `subject` values MUST NOT be displayed by default and MUST NOT be exposed in a public profile projection merely because the account is connected.
+3. A provider display name, username, avatar, or similar presentation metadata MAY be shown only when it comes from a currently verified provider response or an explicitly authorized cached projection. Such presentation metadata is not identity authority.
+4. Connect and disconnect controls request authorized account-management operations. UI state, optimistic rendering, or host presence cannot create or remove the underlying binding.
+5. The provider list is not BondChain state and MUST NOT be interpreted as relationship evidence.
+
+A future privacy contract MAY allow a person to publish selected provider presence. Until such a contract exists, external binding visibility is private to the authenticated Bond by default.
+
+Native credentials MAY be represented separately in account/security UI. They are not listed as an external provider merely to make the presentation uniform.
 
 ## Registry boundary
 
 Identity records have two architectural stages.
 
-### Stage 1: provider-backed human registration
+### Stage 1: credential/provider-backed human registration
 
-Before native identity keys exist, the registrar stores the human `pub_dress ↔ identity_providers` binding created by the person.
+Before native identity keys exist, the registrar stores the current human `pub_dress`, configured native credential state, and external provider bindings required by the active access mechanisms.
 
-At this stage the database is temporarily authoritative. This is a known implementation boundary, not the target trust model.
+A normalized implementation may represent the provider map as rows such as:
 
-The current owned-AI-avatar product adds an owner-authorized public-address and owner-reference requirement at the specification level, but its production cryptographic AI authority profile is not defined by the current Telegram-backed human adapter.
+```text
+(provider, subject, bond-or-current-address-reference)
+```
+
+The storage layout does not weaken the semantic constraints: one Bond has at most one account per provider type, and one `(provider, subject)` belongs to at most one Bond.
+
+At this stage the database is temporarily authoritative for the configured access bindings. This is a known implementation boundary, not the target trust model.
+
+The current owned-AI-avatar product adds an owner-authorized public-address and owner-reference requirement at the specification level, but its production cryptographic AI authority profile is not defined by a human credential/provider adapter.
 
 ### Stage 2: self-signed identity
 
@@ -215,7 +309,10 @@ Once identity keys exist, an identity record becomes self-signed:
 ```json
 {
   "pub_dress": "0x0sky",
-  "identity_providers": ["tg:123456789"],
+  "providers": {
+    "telegram": { "subject": "123456789" },
+    "discord": { "subject": "456" }
+  },
   "pk_identity": "…",
   "sig": "…"
 }
@@ -288,7 +385,9 @@ How the AI Bond itself obtains production signing, key-agreement, custody, recov
 
 There is no operator seed escrow or phone-number identity primitive.
 
-During human Stage 1, access follows the configured identity providers. With Telegram as the only provider, Telegram sessions and 2FA remain part of that temporary access boundary.
+During human Stage 1, access follows the currently configured native credential and/or external provider bindings. Losing access to one provider does not redefine the Bond if another valid authentication authority remains. Recovery of a Telegram, Discord, Apple, or other external account remains the responsibility of that provider; 0x1 MUST NOT silently convert provider recovery into a new Bond.
+
+An external provider MAY be disconnected only under the linking/unlinking safety rule above. Native-credential recovery is a separate access mechanism and does not become an external provider binding.
 
 During Stage 2, recovery proceeds through signed identity material and counterpart Bonds that can legitimately return BondChain histories they are authorized to hold. No counterparty restores the whole person, and no global custodian exists.
 
@@ -310,22 +409,29 @@ External labels and public handles may change where their owning identity contra
 
 ## Stage 1 reference implementation
 
-The current Stage 1 reference adapter lives in [`nilx-one/web/services/identity`](https://github.com/nilx-one/web/tree/master/services/identity). It implements the current **human** provider-backed boundary but is not part of the canonical specification repository.
+The current Stage 1 reference adapter lives in [`nilx-one/web/services/identity`](https://github.com/nilx-one/web/tree/master/services/identity). It implements the current **human** credential/provider-backed boundary but is not part of the canonical specification repository.
 
-It provides:
+Its current storage already separates:
 
-- `identities (pub_dress PRIMARY KEY, tg_id UNIQUE)` persistence;
-- `/start` registration transport;
-- `/whoami` for the protocol-shaped identity record;
-- `/recover` for the current recovery boundary;
-- authenticated Telegram Mini App identity read and registration endpoints;
-- server-side HMAC verification of `Telegram.WebApp.initData` with bounded freshness;
-- transactional insert-as-reservation over the complete human `pub_dress`;
-- a non-enumerating collision response that does not disclose the existing binding.
+- `identities`, which hold current human public addresses;
+- `identity_providers`, which namespace provider accounts as `(provider, provider_subject)` and reference an identity;
+- `native_credentials`, which hold native password/recovery verifier state separately from external providers;
+- `native_sessions`, which hold revocable native Web sessions.
 
-The adapter attests one temporary Stage 1 fact: a human-created `pub_dress ↔ tg_id` binding.
+The provider adapters include Telegram Mini App verification and Discord OAuth/Embedded App support. Native Web authentication is independent of those provider adapters.
 
-It does **not** yet implement human slug rotation, the owned-AI-avatar `x{d}{slug}` namespace, owner references, avatar slug rotation, or autonomous AI authority. Implementations MUST NOT treat this documentation change as evidence that those runtime paths already exist.
+The existing normalized provider-account shape is compatible with multiple provider types per Bond, but an implementation conforming to this document MUST additionally enforce the one-account-per-provider-type-per-Bond invariant wherever the current storage does not already enforce it. The required database constraint is conceptually:
+
+```text
+UNIQUE(bond_identity_reference, provider)
+UNIQUE(provider, provider_subject)
+```
+
+A current-address reference MAY be used as the temporary Stage 1 Bond reference only while the implementation preserves identity continuity across authorized slug rotation. Target architecture uses the stable Bond/identity authority rather than a mutable display pointer as the durable foreign-key concept.
+
+The adapter's authentication artifacts — password hashes, recovery material, sessions, Telegram `initData`, Discord access tokens, OAuth codes, and provider secrets — remain outside the canonical provider map.
+
+Implementations MUST NOT treat specification support for Telegram, Discord, Apple, or future providers as evidence that every provider is already activated in every production client. Activation, provider credentials, routing, and host publication remain implementation/deployment concerns.
 
 ## Invariants
 
@@ -338,14 +444,20 @@ It does **not** yet implement human slug rotation, the owned-AI-avatar `x{d}{slu
 7. An owned AI avatar address is granted only if the complete requested address is globally available; no related address is automatically reserved from the owner's human address.
 8. An owned AI avatar profile contains an explicit human-owner reference; ownership MUST NOT be inferred only from address text.
 9. Owner-authorized avatar slug editing rotates the current public address for the same AI Bond identity and MUST NOT rewrite authenticated history.
-10. A human identity has at least one active provider while provider-backed access remains in use.
-11. An authenticated BondChain fixes the handle-key bindings accepted by its participating Bonds for that interaction.
-12. Pairwise private authority is history-bound and MUST NOT expose a shared global private identifier across BondChains.
-13. Attaching a native device key is human-authorized and MUST NOT be reachable from `sk_ack`.
-14. Stage 2 registry state MUST be rebuildable from self-signed identity records.
-15. Registry equivocation MUST be detectable through transparency proofs and tree-head comparison.
-16. External classifications, ownership labels, or later public-handle changes cannot create, revoke, or rewrite identity inside authenticated BondChain history.
-17. Identity is the authority to continue authenticated history.
+10. A human Bond may have several external provider types but at most one account for each provider type.
+11. A `(provider, subject)` external account binding belongs to at most one Bond.
+12. Native credentials are not synthetic provider bindings.
+13. Authentication method, provider binding, and client host are distinct concepts; changing the method or host MUST NOT create another Bond or duplicate provider binding.
+14. Linking or unlinking an external provider is human-authorized account management, not a bilateral Interaction, and MUST NOT create BondChain or Relationship truth.
+15. Unlinking MUST NOT leave a Bond without usable authentication authority unless the same authorized transition establishes a replacement or an explicitly defined recovery state.
+16. Raw provider subjects and authentication secrets MUST NOT be exposed through the default public profile projection.
+17. An authenticated BondChain fixes the handle-key bindings accepted by its participating Bonds for that interaction.
+18. Pairwise private authority is history-bound and MUST NOT expose a shared global private identifier across BondChains.
+19. Attaching a native device key is human-authorized and MUST NOT be reachable from `sk_ack`.
+20. Stage 2 registry state MUST be rebuildable from self-signed identity records.
+21. Registry equivocation MUST be detectable through transparency proofs and tree-head comparison.
+22. External classifications, provider bindings, ownership labels, authentication methods, hosts, or later public-handle changes cannot create, revoke, or rewrite identity inside authenticated BondChain history.
+23. Identity is the authority to continue authenticated history.
 
 ## Related Documents
 
