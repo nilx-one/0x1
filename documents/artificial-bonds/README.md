@@ -80,10 +80,19 @@ This direction does not require:
 
 `NPC`, performer, assistant, worker, guide, or avatar may be application roles. They do not become fundamental protocol participant types merely because a product presents a Bond that way.
 
+## Documentation Policy Scope
+
+This directory is inside the `documents` documentation-linter root and is therefore checked recursively by `scripts/lint_documentation.py` under `.github/documentation-style.json`.
+
+The current linter applies the repository's general Markdown structure, link, terminology, and related documentation-policy checks to these files. It does not currently define a separate schema that requires a `Status` field or a `Related Documents` section for directional documents; those are repository editorial conventions unless and until the linter policy explicitly promotes them to machine-enforced requirements.
+
+The canonical numbered-document sequence remains limited to the top-level `documents/*.md` files listed in `.github/documentation-style.json`; directional files in this directory do not become numbered normative contracts merely because they are linted.
+
 ## Direction Documents
 
 - [Identity and Agency](identity-and-agency.md) — continuity, controller boundaries, autonomy, delegated authority, and authorised representation.
 - [Runtime and Relay](runtime-and-relay.md) — replaceable computation, observation boundaries, event-driven existence, and relay direction without selecting a concrete runtime stack.
+- [Device Runtime and Control](device-runtime-and-control.md) — per-host AI runtime availability, spectate/control presentation, default authorization gating, Bond profile direction, and the boundary between Avaia identity and concrete model availability.
 - [Training Signal Boundary](training-signal.md) — bond-agnostic behavioral signals, closed schemas, server validation, correlation limits, and production privacy gates without training on pairwise relationship evidence.
 
 ---
