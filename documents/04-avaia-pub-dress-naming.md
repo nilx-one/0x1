@@ -33,7 +33,7 @@ Avaia.pub_dress = x{n}{avaia_slug}
 
 `n` is the owning Bond's immutable lowercase hexadecimal discriminator.
 
-A Bond slug MAY contain one character. The canonical Bond slug length floor is therefore 1 rather than 2. Where `04-identity.md` still states a 2-character minimum, this amendment supersedes that minimum for the naming contract and the identity document must be consolidated accordingly.
+The existing Bond slug minimum remains two characters. This naming amendment does not change that identity grammar.
 
 For an Avaia owned by `0x0sky`, the address discriminator is therefore `0`:
 
@@ -93,6 +93,8 @@ suggested_avaia_slug = suggested_stem + "ai"
 suggested_avaia_pub_dress = "x" + n + suggested_avaia_slug
 ```
 
+Because a valid Bond slug already contains at least two characters, a terminal naming-rule vowel is removed whenever present. The `> 1` guard states the derivation boundary explicitly and prevents an empty stem if the underlying identity grammar changes in the future.
+
 For this naming rule, the lowercase ASCII terminal-vowel set is:
 
 ```text
@@ -108,7 +110,7 @@ Bond          default Avaia suggestion
 0x0sky   ->   x0skai
 0x0mira  ->   x0mirai
 0x0ze    ->   x0zai
-0x0e     ->   x0eai
+0x0sk    ->   x0skai
 ```
 
 The `sky` case is normative:
@@ -123,11 +125,16 @@ sky
 0x0sky -> x0skai
 ```
 
-The shortening rule applies whenever the Bond slug contains more than one character and ends in a naming-rule vowel. A one-character Bond slug is preserved so derivation never produces an empty stem:
+The two-character case is also normative:
 
 ```text
-ze -> zai
-e  -> eai
+ze
+-> remove terminal e
+-> z
+-> append mandatory ai
+-> zai
+
+0x0ze -> x0zai
 ```
 
 ## Explicit user choice
@@ -206,22 +213,21 @@ Historical authenticated records continue to preserve the address/key binding th
 ## Invariants
 
 1. `Bond.pub_dress` and `Avaia.pub_dress` are public addresses, not the underlying identity objects.
-2. A Bond slug MAY contain a single character; the canonical minimum Bond slug length is 1.
+2. The Bond slug minimum remains two characters under the current identity grammar.
 3. An Avaia belonging to a Bond MUST retain an explicit owner reference to that Bond.
 4. `Avaia.pub_dress` uses the `x{n}{avaia_slug}` form, where `n` equals the owning Bond's immutable hexadecimal discriminator.
 5. Every current `avaia_slug` MUST end with the literal lowercase ASCII suffix `ai`.
 6. The default Avaia suggestion derives from the current Bond slug and always appends `ai`.
 7. When a Bond slug has more than one character and ends in `a`, `e`, `i`, `o`, `u`, or `y`, the default suggestion removes that final character before appending `ai`.
-8. Consequently, `0x0sky` defaults to `x0skai`, not `x0skyai`, and `0x0ze` defaults to `x0zai`.
-9. A one-character Bond slug is never shortened to an empty stem; for example, `0x0e` defaults to `x0eai`.
-10. A valid explicitly selected Avaia slug MAY differ from the generated stem but MUST still end in `ai`.
-11. Bond slug rotation MUST NOT silently mutate the Avaia address; clients SHOULD ask whether to rotate the Avaia address to the newly generated suggestion.
-12. Keeping the previous Avaia address after Bond slug rotation MUST preserve ownership through the explicit owner reference.
-13. Address derivation is a naming convenience and MUST NOT be used as ownership proof.
+8. Consequently, `0x0sky` defaults to `x0skai`, not `x0skyai`, and `0x0ze` defaults to `x0zai`, not `x0zeai`.
+9. A valid explicitly selected Avaia slug MAY differ from the generated stem but MUST still end in `ai`.
+10. Bond slug rotation MUST NOT silently mutate the Avaia address; clients SHOULD ask whether to rotate the Avaia address to the newly generated suggestion.
+11. Keeping the previous Avaia address after Bond slug rotation MUST preserve ownership through the explicit owner reference.
+12. Address derivation is a naming convenience and MUST NOT be used as ownership proof.
 
 ## Integration note
 
-`documents/04-identity.md` currently contains older identity grammar requiring a 2-character slug minimum and owned-AI-avatar examples that allow arbitrary AI-avatar slugs. Those rules are superseded by this amendment where they conflict. The canonical identity document should be consolidated so the rules above become inline identity rules rather than remaining duplicated across documents.
+`documents/04-identity.md` currently contains owned-AI-avatar examples that allow arbitrary AI-avatar slugs. Those examples are superseded by this amendment where they conflict. Its existing two-character Bond slug minimum remains valid. The canonical identity document should be consolidated so the Avaia naming rules above become inline identity rules rather than remaining duplicated across documents.
 
 ---
 
