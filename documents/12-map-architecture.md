@@ -151,6 +151,37 @@ A prominent marker with no earned depth must read honestly as present, not trust
 
 Creator commerce or donation spend MUST NOT buy relationship rank or privileged visibility unless a future explicit advertising surface is separately specified and clearly distinguished from organic discovery.
 
+## Visual Language
+
+The first-party 0x1 map uses a `mineral-light` presentation language. Geography is a quiet spatial substrate; Bonds, Interactions, and other live 0x1 projections are expected to carry the strongest visual energy.
+
+The baseline palette is:
+
+| Role | Baseline value | Intended use |
+|---|---|---|
+| mineral background | `#f7f8f6` | dominant map surface |
+| raised surface | `#eef0ef` | subtle elevation and secondary surfaces |
+| surface shadow | `#c8cdcc` | relief, separation, and soft depth |
+| geography graphite | `#545b5c` | neutral roads, boundaries, labels, and geographic structure |
+| primary accent | `#00d8f2` | cyan presentation light |
+| counterpart accent | `#ff7a1a` | contrasting orange presentation light |
+
+The palette is a first-party client presentation contract, not protocol truth. In particular:
+
+- cyan MUST NOT mean `Bond_0`;
+- orange MUST NOT mean `Bond_1`;
+- either accent MUST NOT imply consent, reciprocity, completion, trust, Relationship state, authority, or ownership;
+- assigning cyan and orange to two visible participants is a local presentation decision for the current view or Interaction;
+- a renderer MAY swap, attenuate, animate, or omit those accents without changing the underlying state.
+
+The accents SHOULD behave as light rather than broad decorative fill: a compact saturated core may produce a wider translucent halo or reflected light on nearby neutral surfaces. Such reflection is visual only and MUST NOT be interpreted as proximity, interaction completion, or Relationship evidence unless those facts arrive through their owning projection contracts.
+
+Geographic detail SHOULD remain predominantly near-white, grey, and graphite. Water does not need to be conventionally blue, and roads do not acquire the cyan accent merely because cyan is the primary first-party accent. Color is reserved so live 0x1 state remains legible above the basemap.
+
+Visual density SHOULD increase with useful spatial scale. At distant zoom levels the map may be strongly monochromatic; approaching human scale may reveal more local geometry and stronger live-projection lighting. Zoom-dependent styling MUST NOT fabricate activity, density, presence, or Relationship state.
+
+Self-hosted Protomaps/PMTiles provide geographic data. The versioned MapLibre style defines presentation. Replacing or evolving the visual language therefore MUST NOT require changing geographic facts in the basemap archive.
+
 ## Client Contract
 
 - Web and messenger-hosted rendering use MapLibre GL JS.
@@ -185,6 +216,8 @@ Creator commerce or donation spend MUST NOT buy relationship rank or privileged 
 12. Creator offer placement and interaction location are distinct facts.
 13. Creator projections MUST NOT silently reuse business physical-presence or digital-presence authority.
 14. The current `map.registry` MUST NOT publish creator projections before a versioned creator-projection contract exists.
+15. Cyan and orange are presentation roles and MUST NOT encode Bond identity, reciprocity, consent, or Relationship truth.
+16. Basemap styling MUST NOT fabricate geographic or interaction state.
 
 ## Related Documents
 
