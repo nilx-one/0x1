@@ -117,16 +117,17 @@ The product must not turn a manually assigned `closest_bond_id` into relationshi
 
 ## Invariants
 
-1. An AI Bond remains the same Bond across hosts with different runtime capability.
-2. Host runtime availability is per host/device, not global AI Bond identity state.
-3. `SPECTATE` is control mode, not camera visibility.
-4. Authorization is distinct from capability and availability.
-5. The UI surfaces `AI • authorized` by default only after the current host runtime is `available`.
-6. Authorization does not imply unlimited autonomy or BondChain completion.
-7. Runtime state does not create BondChain.
-8. Profile metadata does not manufacture reciprocal Relationship truth.
-9. `Closest Bond` is derived from Relationship over interaction history rather than manually authoritative state.
-10. `nilx-one/ai` may implement intelligence runtime behavior but must not become the authority for protocol truth.
+- **DRC1.** An AI Bond remains the same Bond across hosts with different runtime capability.
+- **DRC2.** Host runtime availability is per host/device, not global AI Bond identity state.
+- **DRC3.** `SPECTATE` is control mode, not camera visibility.
+- **DRC4.** Authorization is distinct from capability and availability.
+- **DRC5.** The UI surfaces `AI • authorized` by default only after the current host runtime is `available`.
+- **DRC6.** Authorization does not imply unlimited autonomy or BondChain completion.
+- **DRC7.** Runtime state does not create BondChain.
+- **DRC8.** Profile metadata does not manufacture reciprocal Relationship truth.
+- **DRC9.** `Closest Bond` is derived from Relationship over interaction history rather than manually authoritative state.
+- **DRC10.** `nilx-one/ai` may implement intelligence runtime behavior but must not become the authority for protocol truth.
+- **DRC11.** Provider bindings remain access bindings, not identity roots.
 
 ## Related Documents
 
