@@ -84,6 +84,7 @@ This direction does not require:
 
 - [Identity and Agency](identity-and-agency.md) — continuity, controller boundaries, autonomy, delegated authority, and authorised representation.
 - [Runtime and Relay](runtime-and-relay.md) — replaceable computation, observation boundaries, event-driven existence, and relay direction without selecting a concrete runtime stack.
+- [Device Runtime and Control](device-runtime-and-control.md) — per-host AI runtime availability, spectate/control presentation, default authorization gating, Bond profile direction, and the boundary between Avaia identity and concrete model availability.
 - [Training Signal Boundary](training-signal.md) — bond-agnostic behavioral signals, closed schemas, server validation, correlation limits, and production privacy gates without training on pairwise relationship evidence.
 
 ---
