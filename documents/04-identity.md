@@ -238,6 +238,8 @@ host           = runtime containing the client, e.g. browser, Telegram, Discord
 
 Telegram and Discord can each be both an external identity provider and a host environment. Those roles remain distinct. A Telegram Mini App is a host for the Web client; verified Mini App data is one Telegram authentication method. A Discord Embedded App is likewise a host; its verified authorization flow is one Discord authentication method.
 
+Which of a Bond's authenticated clients may act is governed by the single-active-client rule in [Devices and Recovery](15-devices-and-recovery.md). Opening the client in another host never activates it by itself.
+
 A host MUST NOT create a provider binding merely because the client is running inside it. The provider account must be cryptographically or protocol-authenticated by the provider-specific adapter, and account linking must satisfy the human authorization rule below.
 
 ### Linking and unlinking

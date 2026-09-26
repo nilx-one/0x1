@@ -21,6 +21,7 @@
 | Recovery code TTL | minutes |
 | REC-REQ limit | one per counterpart per day |
 | Live-device objection window | approximately one day |
+| Activation request TTL | minutes |
 | Broadcast key rotation | hourly |
 | Silent intervention cadence | approximately weekly |
 | Proximity check | `1 <-> 9` cells |
