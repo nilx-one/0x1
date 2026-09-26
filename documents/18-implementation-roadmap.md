@@ -70,7 +70,7 @@ OFFER/ACCEPT implementations MUST declare whether ACCEPT establishes the BondCha
 
 ## Phase 5 — Device Lifecycle and Recovery
 
-Implement active/dormant/dead key states, synchronous device handoff, `DEVICE-REVOKE`, REC-REQ, six-digit out-of-band verification, independent BondChain-history validation, and CONTINUE only for non-terminal histories whose contracts permit it.
+Implement active/dormant/dead key states, synchronous device handoff, `DEVICE-REVOKE`, REC-REQ with required `bch_id` genesis verification, six-digit out-of-band verification, the live-device objection window for an `active` `old_device_pk`, independent BondChain-history validation, and CONTINUE only for non-terminal histories whose contracts permit it.
 
 A single ceremony MAY restore multiple histories from one counterpart, but MUST validate them independently and MUST NOT concatenate them into a permanent relationship chain.
 
