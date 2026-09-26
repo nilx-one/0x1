@@ -30,6 +30,25 @@ Any non-terminal BondChain that permits continued interaction under a new key ep
 
 Defensive rekey requests may fan out through the relay only for histories whose lifecycle permits extension. Remote engines may acknowledge a verified protective rekey under `sk_ack` where explicitly authorized; offline counterpart Bonds catch up when they next synchronize that specific non-terminal `bch`.
 
+## Live-Device Objection Window
+
+A `DEVICE-REVOKE` reached through `REC-REQ` (an assisted recovery, not the synchronous own-device handoff above) MUST NOT finalize while `old_device_pk`'s key state is `active`.
+
+```text
+old_device_pk state == active
+  -> hold DEVICE-REVOKE as pending
+  -> deliver a challenge to old_device_pk
+  -> wait up to the objection window
+       explicit objection  -> cancel the pending REC-REQ
+       window elapses      -> finalize DEVICE-REVOKE
+old_device_pk state == dormant or dead
+  -> finalize DEVICE-REVOKE without a window
+```
+
+The challenge MUST NOT reveal the requester's identity or `pk_new` on the lock screen, matching the notification constraint already required for `REC-REQ` itself. Silence for the full window is treated as no objection, not as consent; it is what a genuinely lost device also produces.
+
+This window defends the case an out-of-band code cannot: a counterpart who was honestly deceived still confirms a real requester, but that requester need not be the identity's rightful owner. Holding a still-`active` device's authority for the window gives the rightful owner, if they still hold that device, the only chance to say no. It does not defend against a requester who has also taken physical or session control of `old_device_pk` itself; that is a strictly stronger compromise no device-authority scheme can distinguish from a legitimate transfer.
+
 ## Recovery Philosophy
 
 Recovery uses another human-authorized participant as the only non-cryptographic trust factor. There is no seed phrase, escrow service, phone-number identity primitive, or operator-owned relationship archive.
@@ -43,12 +62,14 @@ A recovery request identifies the target authority without inventing a permanent
 ```text
 REC-REQ = {
   counterpart_hint,
-  optional_bch_id_hint,
+  bch_id,
   pk_new
 }
 ```
 
-Authentication occurs out of band. A six-digit code derived from `pk_new` has a short TTL and must be read through a live channel or verified in person. The assisting person confirms only after matching the exact code.
+`bch_id` is required, not a hint. A name alone MUST NOT authorize a recovery request. The assisting Bond MUST locate that exact `bch_id` in its own already-held `bond.chain` and verify that the identity now presented for recovery matches the handle-key binding fixed at that BondChain's genesis (`INIT`/`CONSENT`) before doing anything else. A requester who never held a genuine `bch` with this assisting Bond has no `bch_id` to name; this check fails closed rather than falling back to `counterpart_hint`.
+
+Only once that local verification succeeds does authentication move out of band. A six-digit code derived from `pk_new` has a short TTL and must be read through a live channel or verified in person. The assisting person confirms only after matching the exact code. The code proves `pk_new` was not substituted in transit; it does not by itself prove a genuine prior relationship, which is why the `bch_id` verification above MUST come first.
 
 `sk_ack` auto-approval is forbidden because no cryptographic proof yet binds the requester to the former participant.
 
@@ -113,3 +134,5 @@ Deltas are fixed where CONTINUE remains eligible: `Delta level = 0`, recovering 
 6. A counterparty can return only histories it legitimately participated in and still holds.
 7. `sk_ack` cannot authenticate an unknown recovery requester.
 8. Recovery rewards do not increase relationship depth.
+9. `REC-REQ` MUST carry a `bch_id` the assisting Bond independently holds and verifies against that BondChain's genesis before out-of-band code confirmation; `counterpart_hint` alone MUST NOT authorize a request.
+10. A `DEVICE-REVOKE` reached through `REC-REQ` MUST NOT finalize against an `active` `old_device_pk` before the live-device objection window elapses without objection.
