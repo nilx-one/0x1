@@ -30,6 +30,10 @@ The verification path used for one authentication event. Examples include native
 
 The runtime environment containing a client, such as a browser, Telegram Mini App, Discord Embedded App, or a native application. Host context may supply authentication material through an adapter, but a host is not an identity provider binding and does not create a Bond.
 
+### Active client
+
+The one authenticated client of a Bond, in one host on one device, that may act for that Bond at a given time. Other authenticated clients of the same Bond may stay signed in as inactive. Activation passes only through the routes defined in [Devices and Recovery](15-devices-and-recovery.md).
+
 ### `pk_identity`
 
 The public key that anchors a self-signed identity record once native identity keys exist. A BondChain genesis fixes the accepted handle-key binding for that interaction.
