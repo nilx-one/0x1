@@ -133,6 +133,18 @@ These invariants are owned by [Creator Offers and Donations](10-creator-offers-a
 | Defense-payment recipient | `100%` 0x1 |
 | Concurrent challenges per digital slot | `1` |
 
+## Draft Spoken-Line Parameters
+
+| Parameter | Draft value |
+|---|---|
+| Spoken text length | `1..=280` Unicode scalar values (fixed) |
+| Earshot radius range | `1..=5000` m (fixed) |
+| Default earshot radius | TBD per deployment; first deployment uses `500` m |
+| Audible window | TBD per deployment; first deployment uses `10` minutes |
+| `live` location freshness bound | TBD per deployment; first deployment uses `30` minutes |
+| `spoken_at` clock-skew allowance | TBD per deployment; first deployment uses `60` s |
+| Host-copy recipient bound | TBD per deployment; first deployment uses `100` |
+
 ## Open Questions
 
 ### Production BondChain Record Encoding
@@ -347,6 +359,21 @@ The Core `0.1.0` production registry is intentionally empty. Its test-only fixtu
 
 The [BondChain Interaction Model](04-bondchain-interaction-model.md) fixes the generic causal rules. Each enabled interaction kind still needs its own record schema and authority contract before production.
 
+### Spoken Line Identity and Delivery
+
+[Spoken Lines and Earshot](12-spoken-lines-and-earshot.md) fixes that one utterance has one opaque `id`, but not how a producer derives it from an utterance's origin. Until a derivation is fixed, no implementation may present its own as the protocol rule, and Core MUST NOT compute `id`.
+
+Also open:
+
+- whether and how a speaker may retract a line inside its audible window;
+- whether a producer may learn an aggregate count of listeners reached, and under what minimum-count protection;
+- whether a listener may mute a speaker or all spoken lines, and whether that is local state only;
+- rate limits per speaker;
+- whether artificial Bonds may speak, which requires an AI-capable authority profile first;
+- whether spoken lines should later fold into a broadcast class of [Proximity, Relay, and Broadcast](11-proximity-relay-and-broadcast.md).
+
+Any answer that widens the permitted speakers, the radius range, or what hearing discloses is a revision of the spoken-line contract, not a deployment setting.
+
 ### Relationship Projection and `level`
 
 How should clients deterministically aggregate eligible `level_delta` contributions across independently terminal BondChains between the same two Bonds without creating a new synchronized permanent relationship log?
@@ -450,6 +477,6 @@ AI memory or runtime observations follow the same evidence boundary by default: 
 
 The Bond/BondChain ontology defined by the Protocol Laws, [BondChain Interaction Model](04-bondchain-interaction-model.md), [AI Bonds](04-ai-bonds.md), and [Creator Offers and Donations](10-creator-offers-and-donations.md) is normative.
 
-The exact enabled interaction-contract schemas, creator offer and purchase contracts, donation contract, creator map projection, autonomous AI authority profile, artificial identity bootstrap, AI asset custody, future AI world presence, relationship-level aggregation, map activation, business authority, registry-oracle behavior, digital-presence key lifecycle, renderer camera coordination, and auction timing remain draft or open as listed above.
+The exact enabled interaction-contract schemas, creator offer and purchase contracts, donation contract, creator map projection, autonomous AI authority profile, artificial identity bootstrap, AI asset custody, future AI world presence, spoken-line identity and delivery, relationship-level aggregation, map activation, business authority, registry-oracle behavior, digital-presence key lifecycle, renderer camera coordination, and auction timing remain draft or open as listed above.
 
 Any change to Bond/BondChain meaning, participant types, causal boundaries, subject authority, autonomy, delegation, ownership, persistence, recovery, signature requirements, plaintext boundaries, presence classes, creator projection classes, or settlement requires an explicit protocol-version change.
