@@ -206,6 +206,16 @@ A future authored public projection that exposes a creator offer, work, or perfo
 
 Reconstructable public projection combining anonymous activity, registry observations, physical presences, and digital presences without merging their authority sources. It is not a live per-Bond location registry. The current contract does not yet include creator projections.
 
+## Spoken Line Terms
+
+### Spoken line
+
+One short, immutable line a permitted Bond says aloud, heard only by Bonds within earshot while it is audible. It is unilateral: it never creates an Interaction, BondChain, consent, Relationship, or presence evidence, and it carries no coordinate. See [Spoken Lines and Earshot](12-spoken-lines-and-earshot.md).
+
+### Earshot
+
+The inclusive, symmetric predicate that a listener's current location is within a bounded radius of a speaker's, decided by one deterministic integer distance rule. Hearing discloses that predicate and nothing more precise. See [Spoken Lines and Earshot](12-spoken-lines-and-earshot.md).
+
 ## Related Documents
 
 - [Protocol Laws](00-protocol-laws.md)
@@ -216,6 +226,7 @@ Reconstructable public projection combining anonymous activity, registry observa
 - [Identity](04-identity.md)
 - [Architecture and Data Model](05-architecture-and-data-model.md)
 - [Economics and Payments](10-economics-and-payments.md)
+- [Spoken Lines and Earshot](12-spoken-lines-and-earshot.md)
 - [0x1 Core and Client Architecture](18-core-and-client-architecture.md)
 - [0x1 Core Client Contract v0](19-core-client-contract.md)
 - [Creator Offers and Donations](10-creator-offers-and-donations.md)

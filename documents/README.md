@@ -41,6 +41,7 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 - [Proximity, Relay, and Broadcast](11-proximity-relay-and-broadcast.md) — constant-rate discovery, relay behavior, map activity, and broadcast access.
 - [Map Architecture](12-map-architecture.md) — cell activation, current business projections, future creator projection boundary, rendering, and client privacy. The public `map.registry` is not a live per-Bond location registry.
 - [Bond Location State](12-bond-location-state.md) — owner-submitted Bond coordinate, `live`/`manual` provenance, application authorization roles, Telegram input, privacy boundary, and derived H3 cells.
+- [Spoken Lines and Earshot](12-spoken-lines-and-earshot.md) — unilateral spoken lines, speaking capability and producer authorization, deterministic integer earshot, and the bounded nearby disclosure hearing creates.
 - [Business Bonds and Presence](13-business-bonds-and-presence.md) — business-scoped Bond authority, creator-vs-business boundary, business BondChains, registry-backed physical presence, and auction-backed digital presence.
 - [Digital Presence Auction](14-claim-auction.md) — funded bids, optional defense, premium allocation, automatic transfer, and cooldown.
 
@@ -68,6 +69,8 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 **Atomic Multi-Bond Settlement:** Draft v1. Core authority, privacy, reveal, and timeout invariants are specified; exact transport timing and external settlement integration remain implementation concerns.
 
 **Bond location:** Draft v1. A Bond may carry owner-submitted operational `location` state with an active WGS84 coordinate, `live` or `manual` provenance, and an accepted timestamp. It is not public `map.registry` state or bilateral truth by itself.
+
+**Spoken lines:** Draft v1. A permitted human-controlled Bond may speak a short immutable line that Bonds within earshot hear. Earshot is one deterministic integer predicate bounded to `1..=5000` m. A line is not an Interaction, Relationship, or presence evidence, and hearing discloses only that the speaker is within earshot. Line-identity derivation, audible window, freshness bound, default radius, and retraction remain open.
 
 **Map and business layers:** Draft v2. Current business presence classes and auction allocation are specified; creator projections are defined only as a future distinct projection class. Cell activation, registry adapters, business authority, creator placement, timing, and key lifecycle remain open. Current `map.registry` does not expose live per-Bond movement or creator projections.
 
