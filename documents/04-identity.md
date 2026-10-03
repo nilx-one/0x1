@@ -435,6 +435,10 @@ The adapter's authentication artifacts — password hashes, recovery material, s
 
 Implementations MUST NOT treat specification support for Telegram, Discord, Apple, or future providers as evidence that every provider is already activated in every production client. Activation, provider credentials, routing, and host publication remain implementation/deployment concerns.
 
+### Ecosystem identity
+
+Across the aiaiaiai ecosystem, this Stage 1 reference adapter is the single identity authority shared by 0x1, Prism, and their clients. The ecosystem design ([ECO-0001: Shared identity and connected providers](https://github.com/aiaiaiai-org/.github/blob/main/ecosystem/identity/DESIGN.md)) places a stable subject reference under the mutable current-address pointer described above, gives products signed tokens instead of shared storage, and stages the migration. It consumes this document and does not redefine `pub_dress`, provider bindings, or Stage 2 identity. Its full text and machine-readable version are maintained only there.
+
 ## Invariants
 
 1. A historical `pub_dress` binding is immutable; existing signed BondChain histories never follow a later current-address change.
