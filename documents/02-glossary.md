@@ -72,6 +72,14 @@ An authority-bearing protocol participant. A Bond may be human-controlled or art
 
 An artificial Bond whose identity and authority may persist beyond one request-response session. An AI Bond is not a separate participant or chain primitive. It may exercise autonomous authority over its own commitments only where an owning interaction contract explicitly permits artificial participation and defines the required authority profile. See [AI Bonds](04-ai-bonds.md).
 
+### Avaia
+
+An owned AI Bond created for a human Bond under the current Avaia identity and naming contract. Avaia is a product role for an AI Bond, not a new participant primitive. Its learned personalization and personal evolution are scoped by [Avaia Evolution](04-avaia-evolution.md).
+
+### Avaia personal identity
+
+The long-lived, derived behavioral and personality state of an Avaia that may emerge from permitted experience over time. It is not protocol Identity, signing authority, BondChain evidence, or a Relationship projection. It may influence future behavior while remaining revisable derived state. See [Avaia Evolution](04-avaia-evolution.md).
+
 ### BBond
 
 A business-scoped Bond: a Bond whose subject is a business and whose current actions require valid human representative authority under the business contract. BBond does not define a separate chain primitive. AI Bond support does not silently revise business-representation authority.
@@ -223,6 +231,7 @@ The inclusive, symmetric predicate that a listener's current location is within 
 - [Protocol Overview](03-protocol-overview.md)
 - [BondChain Interaction Model](04-bondchain-interaction-model.md)
 - [AI Bonds](04-ai-bonds.md)
+- [Avaia Evolution](04-avaia-evolution.md)
 - [Identity](04-identity.md)
 - [Architecture and Data Model](05-architecture-and-data-model.md)
 - [Economics and Payments](10-economics-and-payments.md)

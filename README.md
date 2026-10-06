@@ -65,6 +65,22 @@ Human commitments remain human-authorized. A production autonomous signing and r
 
 See [`documents/04-ai-bonds.md`](documents/04-ai-bonds.md).
 
+### Avaia evolution
+
+An **Avaia** is the owned AI Bond associated with a human Bond under the current identity contract. Its long-term personalization is not defined as a chat-history problem: permitted choices, refusals, repeated behavior, context, outcomes, explicit feedback, and interaction history may become learning signals over time.
+
+0x1 distinguishes learning about the owner from the Avaia developing its own tendencies:
+
+```text
+owner preference model != Avaia preference
+Avaia personal identity != Bond identity
+Avaia personal identity != Relationship
+```
+
+Preferences and behavioral patterns may accumulate into stable tendencies and, eventually, higher-order personal traits. Those traits remain derived and revisable. They may influence future behavior but cannot create consent, reciprocity, authority, or rewrite a BondChain fact.
+
+Model family, model size, quantization, cache state, and inference backend are runtime representation. They do not create another Avaia. The semantic model and its privacy boundary are defined in [`documents/04-avaia-evolution.md`](documents/04-avaia-evolution.md).
+
 ### BondChain (`bch`)
 
 A BondChain is one causally bounded bilateral interaction between exactly two Bonds.
@@ -278,6 +294,7 @@ documents/
 ├── 03-protocol-overview.md
 ├── 04-bondchain-interaction-model.md
 ├── 04-ai-bonds.md
+├── 04-avaia-evolution.md
 ├── 04-identity.md
 ├── 05-architecture-and-data-model.md
 ├── 06-cryptography-and-wire-protocol.md
