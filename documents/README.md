@@ -22,6 +22,7 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 - [Protocol Overview](03-protocol-overview.md) — product thesis, authority model, and system invariants.
 - [BondChain Interaction Model](04-bondchain-interaction-model.md) — canonical ontology for Bond, BondChain (`bch`), reciprocity, causal boundaries, terminal states, and relationship projection.
 - [AI Bonds](04-ai-bonds.md) — artificial participants, autonomy vs authority, persistent state, work, digital-asset delivery boundaries, and future world presence without introducing a new participant primitive.
+- [Avaia Evolution](04-avaia-evolution.md) — behavior-first personalization, owner-vs-Avaia preference separation, learned traits, personal identity evolution, and the boundary that prevents inference from becoming BondChain truth.
 - [Artificial Bonds Direction](artificial-bonds/README.md) — non-normative product and research direction for persistent artificial participants, replaceable intelligence, observable participation, and authorised representation.
 - [Identity](04-identity.md) — `pub_dress`, provider boundaries, registry stages, private identity, authenticated introduction, continuity, and recovery limits.
 - [Avaia `pub_dress` Naming](04-avaia-pub-dress-naming.md) — mandatory terminal `ai`, deterministic default derivation such as `0x0sky -> x0skai`, explicit ownership reference, and Avaia address rotation behavior.
@@ -63,6 +64,8 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 **BondChain model:** Bond is the authority-bearing participant and may be human-controlled or artificial; BondChain is one causally bounded bilateral interaction. The model is normative in [BondChain Interaction Model](04-bondchain-interaction-model.md). Downstream storage and lifecycle documents must follow it rather than redefine it.
 
 **AI Bond model:** Normative at the ontology and authority-boundary level. AI Bond does not create a new participant or chain primitive. Autonomous signing, identity bootstrap, custody, compromise recovery, and AI-capable interaction schemas remain open before production.
+
+**Avaia evolution model:** Normative at the semantic-boundary level. Avaia personalization is behavior-first rather than chat-first; owner-conditioned preferences remain distinct from Avaia self-development; learned traits and personal identity are derived, revisable state and never BondChain authority. Learning algorithms and cross-device learned-state continuity remain implementation/protocol work.
 
 **Creator model:** Normative at the role and semantic-boundary level. An ordinary Bond may act as a creator without becoming a BBond; creator offers are unilateral public state; sales and donations remain pairwise; settlement is provider-agnostic; creator map placement cannot claim physical location. Concrete offer, fulfillment, donation, and creator-projection schemas remain open before production.
 
