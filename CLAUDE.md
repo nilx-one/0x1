@@ -14,8 +14,8 @@ deploys. For anything else, ignore this section.
   missing capability, or a step that needs account-owner privileges.
 - Reversible actions (branches, commits, pull requests, comments) proceed
   without asking again.
-- Ask first, every time, before: deploy, delete, transfer a repository, a
-  destructive data operation, or anything irreversible outside the repository.
+- Ask first, every time, before: merge, deploy, delete, transfer a repository,
+  a destructive data operation, or anything irreversible outside the repository.
 
 ### One task, one pull request
 
@@ -63,11 +63,12 @@ Each stage has one job and does not redo another's:
   pre-activation smoke contracts. Reuse CI results and artifacts. It does not
   rerun CI, tests, analysis or contract checks, rebuild an identical artifact,
   or activate a release.
-- **Merge** is automatic and needs no user authorization once the requested
-  task is complete, its scope is satisfied, CI is green, deploy validation is
-  green or not applicable, and no known blocker invalidates it. Afterwards,
-  record the merged state, refresh the base, and carry on with the sequence
-  without waiting for confirmation. Merging is not deploying.
+- **Merge** needs explicit user authorization. Once authorization exists, the
+  requested task is complete, its scope is satisfied, CI is green, deploy
+  validation is green or not applicable, and no known blocker invalidates it,
+  merge and record the merged state. Afterwards, refresh the base and carry on
+  with the sequence without asking again for the same authorized merge.
+  Merging is not deploying.
 - **Deploy** is manual, comes after merge, and needs explicit user
   authorization every time. It consumes the verified artifact, makes the
   environment transition, activates the release, and checks minimal health. It
