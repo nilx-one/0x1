@@ -95,13 +95,6 @@ Existing Web [OSM landmark mapping](https://github.com/nilx-one/web/blob/master/
 - Model/asset URLs are server-authorized same-origin paths; clients enforce a content size and asset format policy. An API response MUST NOT authorize arbitrary script or third-party asset fetching.
 - Offline mode uses the validated map/archive and any existing checked public cache. A missing model, missing facts, service timeout, or unavailable local LLM MUST NOT fabricate a landmark or claim an Artifact.
 
-## First delivery slices
-
-1. **Core/catalog types:** versioned `LandmarkKind` and `MonumentKind`, typed summaries, catalog identity and provenance with deterministic compatibility tests. Preserve the existing `ArtifactId` and pickup logic.
-2. **Server catalog:** read-only lookup, persisted localized descriptions and source metadata, bounded validation, an explicit `kyiv.motherland` seed, and a versioned reference to the existing Motherland GLB. No new DB endpoint for a Bond's observations.
-3. **Web adapter:** match existing pinned/archive identifiers deterministically, load and cache optional enrichment, retain geometry and offline fallback, render the optional model. Do not enable unverified #311 archive rows.
-4. **Avaia narration:** introduce a separate guarded narration input (not the current private decision menu), retrieve sourced facts on study, pass only bounded verified context to WebLLM and use factual templates when offline/no model. Later Prism integration is optional.
-
 ## Invariants
 
 - `Monument` specializes `Landmark`; `Artifact` is separate.
@@ -111,6 +104,15 @@ Existing Web [OSM landmark mapping](https://github.com/nilx-one/web/blob/master/
 - `landmarksInCell` is never a substitute for a real `artifacts` count in Core proximity policy without an explicit separate policy revision.
 - Lack of enrichment is a normal, safe state.
 
+Unresolved catalog decisions are tracked in [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md#world-content-catalog).
+
+## First delivery slices
+
+1. **Core/catalog types:** versioned `LandmarkKind` and `MonumentKind`, typed summaries, catalog identity and provenance with deterministic compatibility tests. Preserve the existing `ArtifactId` and pickup logic.
+2. **Server catalog:** read-only lookup, persisted localized descriptions and source metadata, bounded validation, an explicit `kyiv.motherland` seed, and a versioned reference to the existing Motherland GLB. No new DB endpoint for a Bond's observations.
+3. **Web adapter:** match existing pinned/archive identifiers deterministically, load and cache optional enrichment, retain geometry and offline fallback, render the optional model. Do not enable unverified #311 archive rows.
+4. **Avaia narration:** introduce a separate guarded narration input (not the current private decision menu), retrieve sourced facts on study, pass only bounded verified context to WebLLM and use factual templates when offline/no model. Later Prism integration is optional.
+
 ## Related Documents
 
 - [Protocol Laws](00-protocol-laws.md)
@@ -119,5 +121,6 @@ Existing Web [OSM landmark mapping](https://github.com/nilx-one/web/blob/master/
 - [Map Architecture](12-map-architecture.md)
 - [0x1 Core and Client Architecture](18-core-and-client-architecture.md)
 - [Avaia Evolution](04-avaia-evolution.md)
+- [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
 
 © 2026 aiaiaiai · aiaiaiai.org

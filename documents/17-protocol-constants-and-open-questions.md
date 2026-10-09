@@ -374,6 +374,15 @@ Also open:
 
 Any answer that widens the permitted speakers, the radius range, or what hearing discloses is a revision of the spoken-line contract, not a deployment setting.
 
+### World Content Catalog
+
+The [World Content Catalog](12-world-content-catalog.md) is a proposed contract. Still open:
+
+- Server placement: a dedicated world-catalog store or service, or an isolated module on existing infrastructure. Either way it never shares private Bond state.
+- Editorial authority: who authors and reviews public descriptions, and which sources satisfy the provenance rules.
+- Identifier binding: which normalized landmark identifiers map onto catalog identifiers. The initial binding is the explicit `kyiv.motherland` entry only.
+- Narration input: the reviewed Web model-input contract that admits curated facts to narration without broadening the current decision menu.
+
 ### Relationship Projection and `level`
 
 How should clients deterministically aggregate eligible `level_delta` contributions across independently terminal BondChains between the same two Bonds without creating a new synchronized permanent relationship log?
