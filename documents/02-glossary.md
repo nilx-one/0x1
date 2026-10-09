@@ -214,6 +214,22 @@ A future authored public projection that exposes a creator offer, work, or perfo
 
 Reconstructable public projection combining anonymous activity, registry observations, physical presences, and digital presences without merging their authority sources. It is not a live per-Bond location registry. The current contract does not yet include creator projections.
 
+### Landmark
+
+A geographic object the map observes, identified by a stable catalog identifier and a versioned normalized kind. Enrichment describes it; it never makes a nonexistent object real or inaccessible ground reachable. See [World Content Catalog](12-world-content-catalog.md).
+
+### Monument
+
+A kind of Landmark, grouped by `MonumentKind`. It is not a separate identity and not an Artifact.
+
+### Artifact
+
+A chance-find with its own identity and claim rules, independent of any Landmark. A location is never relabelled as a found Artifact, and a landmark count is never an artifact count.
+
+### World Content Catalog
+
+The reviewed, versioned, read-only public enrichment of Landmarks: attributed facts and optional 3D assets. It creates no Bond, BondChain, visit, consent, or presence evidence. See [World Content Catalog](12-world-content-catalog.md).
+
 ## Spoken Line Terms
 
 ### Spoken line

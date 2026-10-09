@@ -41,6 +41,7 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 
 - [Proximity, Relay, and Broadcast](11-proximity-relay-and-broadcast.md) — constant-rate discovery, relay behavior, map activity, and broadcast access.
 - [Map Architecture](12-map-architecture.md) — cell activation, current business projections, future creator projection boundary, rendering, and client privacy. The public `map.registry` is not a live per-Bond location registry.
+- [World Content Catalog](12-world-content-catalog.md) — proposed typed Landmark/Monument/Artifact boundary, reviewed server enrichment, optional 3D assets, and grounded Avaia narration.
 - [Bond Location State](12-bond-location-state.md) — owner-submitted Bond coordinate, `live`/`manual` provenance, application authorization roles, Telegram input, privacy boundary, and derived H3 cells.
 - [Spoken Lines and Earshot](12-spoken-lines-and-earshot.md) — unilateral spoken lines, speaking capability and producer authorization, deterministic integer earshot, and the bounded nearby disclosure hearing creates.
 - [Business Bonds and Presence](13-business-bonds-and-presence.md) — business-scoped Bond authority, creator-vs-business boundary, business BondChains, registry-backed physical presence, and auction-backed digital presence.
