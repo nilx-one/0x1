@@ -182,3 +182,5 @@ Fenced code blocks and inline code are excluded from terminology checks, so exam
 - A change to the Protocol Laws is a protocol revision: identify the former law, the replacement, affected boundaries, and migration behavior, and update every dependent document and enforcement rule in the same pull request.
 
 `README.md` is the public-facing thesis and is linted under the same policy as `documents/`. Keep its claims consistent with the specification — it deliberately states limits ("trust-minimized", not unbreakable) rather than softening them.
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

@@ -336,3 +336,5 @@ Open questions are documented instead of softened into implied certainty.
 
 *Built by [0x0sky](https://github.com/0x0sky).*  
 *Two Bonds. Reciprocal action. One bounded truth.*
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

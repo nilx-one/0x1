@@ -172,3 +172,5 @@ Implement:
 - Test cryptographic and Data Protection behavior on physical iOS hardware.
 - Keep operator-side state narrow, auditable, and reconstructable where possible.
 - Reject implementations that broaden plaintext, persistence, autonomous authority, or relationship materialization for convenience.
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

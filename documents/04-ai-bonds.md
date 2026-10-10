@@ -535,3 +535,5 @@ The following remain intentionally unresolved:
 - [Economics and Payments](10-economics-and-payments.md)
 - [Map Architecture](12-map-architecture.md)
 - [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

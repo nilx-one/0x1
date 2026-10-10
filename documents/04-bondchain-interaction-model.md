@@ -262,3 +262,5 @@ Eligible completed BondChains may contribute to relationship-level derived state
 - [Bond Lifecycle](07-bond-lifecycle.md)
 - [Offers and Matrix Engine](08-offers-and-matrix-engine.md)
 - [Business Bonds and Presence](13-business-bonds-and-presence.md)
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

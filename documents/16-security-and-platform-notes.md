@@ -47,3 +47,5 @@ Post-quantum cryptography is not on the v1 critical path. Pairwise BondChain cha
 Economic transfer of `bnd` MUST NOT expose encrypted historical BondChain content. Bonds and BondChain histories are not saleable artifacts.
 
 Any future primitive replacement MUST preserve the existing authority model, causal BondChain boundaries, terminal-state semantics, key epoch transitions, and head binding.
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

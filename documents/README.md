@@ -93,3 +93,5 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 The terms **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, and **MAY** are used in their conventional RFC sense.
 
 The [Protocol Laws](00-protocol-laws.md) are the source of all normative authority. The complete writing contract is defined in the [Documentation Protocol](01-documentation-protocol.md). Where a document describes rationale rather than protocol behavior, it must remain distinguishable from normative requirements.
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

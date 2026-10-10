@@ -489,3 +489,5 @@ The Bond/BondChain ontology defined by the Protocol Laws, [BondChain Interaction
 The exact enabled interaction-contract schemas, creator offer and purchase contracts, donation contract, creator map projection, autonomous AI authority profile, artificial identity bootstrap, AI asset custody, future AI world presence, spoken-line identity and delivery, relationship-level aggregation, map activation, business authority, registry-oracle behavior, digital-presence key lifecycle, renderer camera coordination, and auction timing remain draft or open as listed above.
 
 Any change to Bond/BondChain meaning, participant types, causal boundaries, subject authority, autonomy, delegation, ownership, persistence, recovery, signature requirements, plaintext boundaries, presence classes, creator projection classes, or settlement requires an explicit protocol-version change.
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

@@ -172,3 +172,5 @@ Deltas are fixed where CONTINUE remains eligible: `Delta level = 0`, recovering 
 12. A credential alone yields an inactive session; activation requires the active client's confirmation, or an unanswered request followed by an unobjected live-device objection window.
 13. Apparent co-location on one device never activates a client without the active client's confirmation.
 14. Host-supplied authentication material establishes a session and MUST NOT act as the long-lived session credential.
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

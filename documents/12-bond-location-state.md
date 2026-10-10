@@ -137,3 +137,5 @@ Two Bonds resolving to the same cell is proximity input only. It is not evidence
 - [Proximity, Relay, and Broadcast](11-proximity-relay-and-broadcast.md)
 - [Map Architecture](12-map-architecture.md)
 - [0x1 Core and Client Architecture](18-core-and-client-architecture.md)
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

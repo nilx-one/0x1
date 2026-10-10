@@ -267,3 +267,5 @@ Web and native iOS delivery SHOULD begin from the same Core baseline and proceed
 - [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
 - [Implementation Roadmap](18-implementation-roadmap.md)
 - [0x1 Core Client Contract v0](19-core-client-contract.md)
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

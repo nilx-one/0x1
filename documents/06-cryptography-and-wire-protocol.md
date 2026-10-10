@@ -148,3 +148,5 @@ The protocol does not define merge conflict resolution because conflicting share
 - [Bond and BondChain Lifecycle](07-bond-lifecycle.md)
 - [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
 - [0x1 Core Client Contract v0](19-core-client-contract.md)
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

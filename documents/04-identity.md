@@ -475,3 +475,5 @@ Across the aiaiaiai ecosystem, this Stage 1 reference adapter is the single iden
 - [Cryptography and Wire Protocol](06-cryptography-and-wire-protocol.md)
 - [Devices and Recovery](15-devices-and-recovery.md)
 - [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->
