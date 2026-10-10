@@ -1,24 +1,24 @@
-# Accessible City and Avaia Participation
+# City Exploration and Avaia Participation
 
 **Status:** product direction, non-normative; no interaction types or runtime permissions are activated by this document.
 
 ## Purpose
 
-0x1 is a protocol for connections between Bonds. Its first clients can make a person's own city explorable and socially accessible even when their body cannot travel through it. Being physically confined to bed, living abroad, or simply staying at home should not prevent a person from discovering streets and places, sharing a walk, meeting someone, or taking part in local life.
+0x1 connects Bonds through observable interactions. Its clients can turn a real city into a space for discovery, shared exploration, and participation. A Bond may explore a neighborhood on a map, visit a place, follow its history, or take part in an activity with another Bond.
 
-This is not a separate "accessibility mode" and not a replacement city simulation. It is one product surface with different, honestly represented participation modes. The first clients are entry points into real people, places, knowledge, and interactions; Avaia makes those entry points more personal.
+These are different forms of participation in one product, not separate products or user categories. Physical presence, manually selected location, remote exploration, and Avaia's simulated movement remain distinct facts. The first clients provide entry points to real people, places, knowledge, and interactions; Avaia makes those experiences more personal.
 
-> Access to city life should not depend on the mobility of one's body. The provenance of presence and participation must remain true.
+> A city is more than a map: it is people, places, stories, and interactions. The origin of each action and observation must remain clear.
 
 ## Product Direction
 
 ### A city to discover, not only a map to render
 
-- **Explore:** see reachable, sourced information about real streets, parks, monuments, public places, events, and their history; enrich mapped objects without fabricating their geography or accessibility.
-- **Walk together:** move through a virtual city view while Avaia selects routes, notices verified landmarks, and can invite the owner to explore something together. A virtual walk is described as virtual, not as a physical visit.
+- **Explore:** browse sourced information about real streets, parks, monuments, public places, events, and their history; enrich mapped objects without fabricating their geography or attributes.
+- **Explore together:** navigate a virtual city while Avaia selects routes, notices verified landmarks, and can suggest a shared experience. A virtual journey remains virtual; it is not a physical visit.
 - **Meet:** let people opt into introductions or shared remote walks with other Bonds. No automatic stranger discovery, access to a person's precise position, or implied social consent follows from co-location on a map.
-- **Participate:** find real opportunities to speak with residents, communities, and places, including from home. Actual invitations, attendance, communication, and mutual actions need their own authorized interaction contracts.
-- **Accessible by design:** the same product should work from a phone, with assistive technologies, reduced motion, readable text, captions/transcripts, and usable alternatives when 3D/WebGPU or live media are unavailable. Do not demand physical travel as an eligibility condition for remote participation.
+- **Participate:** discover opportunities to communicate with people, communities, and places, in person or remotely. Actual invitations, attendance, communication, and mutual actions need their own authorized interaction contracts.
+- **Work across clients:** offer dependable exploration and interaction paths when 3D/WebGPU, local inference, or live media are unavailable. Presentation and input options belong to the respective client implementation contracts.
 
 Maps, historical content, live media, user contributions, and real-world events have different provenance. A sourced public description, a person's report, a live location observation, a remote video feed, and a simulated scene must not masquerade as one another.
 
@@ -40,7 +40,7 @@ An owned Avaia is an AI Bond with its own identity, not a visual extension of th
 
 The target experience has two complementary qualities:
 
-1. **A life that is recognizable:** Avaia has a home, energy, curiosity, routes, places she remembers, and a meaningful choice of what to do next. While the owner is at home, Avaia may roam the *digital* city when the currently authorized client session supports it. Her state can outlive the inference process; this does not require a continuously running LLM.
+1. **A life that is recognizable:** Avaia has a home, energy, curiosity, routes, places she remembers, and a meaningful choice of what to do next. During an active owner-selected `SPECTATE` session, Avaia may roam the *digital* city within her authorized capabilities. Her state can outlive the inference process; this does not require a continuously running LLM.
 2. **A relationship built from interactions:** Avaia may suggest a shared activity, ask a question, or offer an introduction. The human may respond. If a future typed interaction contract makes those observed actions a valid reciprocal sequence, that sequence can establish a BondChain between the actual two Bonds. Otherwise these are product events, not protocol facts.
 
 Emotion-like wording, affection, curiosity, memory, and inferred preferences are behavior and interpretation, not proof of human feelings or bilateral consent. [Avaia Evolution](../04-avaia-evolution.md) owns the boundary from observations to revisable tendencies, traits, and personal identity; it does not convert learning into relationship truth.
@@ -78,10 +78,11 @@ These scenarios illustrate possible client journeys. No production interaction r
 - **Exactly two Bonds per interaction:** a facilitator, owner, server, or Avaia does not silently become a third participant or turn an AI–human event into a human–human event.
 - **Evidence before interpretation:** store actual counterpart actions only as their owning contract authorizes; derive Relationship views from valid BondChains, never from a model's assertion.
 - **No authority from UI or AI:** prompts, animation, notifications, chat text, routing, recommendation quality, and a generated personal story cannot sign or complete an interaction.
-- **Private by default:** precise positions, disability or mobility context, private journals, inferred personal traits, and introduction preferences are not published for matchmaking by default. Each disclosure needs purpose, recipient, consent/authorization, retention, and revocation rules.
+- **One experience for all Bonds:** client journeys are chosen by intent and authorization, not inferred personal characteristics or audience labels.
+- **Private by default:** precise positions, personal context, private journals, inferred traits, and introduction preferences are not published for matchmaking by default. Each disclosure needs purpose, recipient, consent/authorization, retention, and revocation rules.
 - **Safe social discovery:** a future opt-in introduction surface needs blocking, reporting, rate limits, anti-harassment controls, and discoverability boundaries without building an operator-owned relationship graph.
-- **No gameplay privilege for physical mobility:** access to learning and remote social interaction must not require a real-world location claim. Any feature genuinely requiring physical presence must state that requirement separately.
-- **Graceful degradation:** no WebGPU, no downloaded model, poor bandwidth, missing public catalog content, or inaccessible 3D presentation should not prevent deterministic exploration and explicit human interactions supported by the client.
+- **Presence is interaction-specific:** remote exploration and communication do not require a device-observed location. Features genuinely requiring on-site presence must specify that requirement separately.
+- **Graceful degradation:** missing WebGPU, a local model, reliable bandwidth, catalog content, or 3D rendering should not prevent deterministic exploration and explicit human interactions supported by the client.
 
 ## Ownership and Delivery Direction
 
@@ -90,12 +91,12 @@ These scenarios illustrate possible client journeys. No production interaction r
 | `nilx-one/0x1` | Normative pairwise interaction semantics and provenance contracts **only when proposed and approved separately** |
 | `nilx-one/core` | Deterministic world/gameplay transitions, typed eligibility, lifecycle rules, and shared Web/Swift behavior |
 | `nilx-one/ai` | Avaia's bounded decision vocabulary, accumulated experience, evolving preferences, and model-independent identity continuity |
-| `nilx-one/web` and future `nilx-one/ios` | Accessible city exploration, map/media presentation, local inference adapters, user-controlled participation, and honest presentation of observed versus simulated state |
+| `nilx-one/web` (existing); `nilx-one/ios` (planned repository) | City exploration, map/media presentation, local inference adapters, user-controlled participation, and honest presentation of observed versus simulated state |
 | `aiaiaiai-org/artificial-intelligence` | Reusable inference, activation, capability, evaluation, and safety primitives without 0x1 Bond semantics |
 
 Suggested delivery slices, subject to their own tasks and reviews:
 
-1. **City exploration for a person at home.** Remote browsing and a usable virtual walk; sourced, versioned public landmark descriptions; truthful location labels; text/accessibility equivalents. No social protocol change.
+1. **City exploration and virtual journeys.** Remote browsing and shared navigation; sourced, versioned public landmark descriptions; truthful location labels; reliable client presentation fallbacks. No social protocol change.
 2. **Shared activity with Avaia.** Define one narrowly scoped human–Avaia interaction candidate and its exact counterpart action in the protocol **before** an app writes a BondChain. Retain deterministic gameplay regardless of inference availability.
 3. **Opt-in introductions and shared remote walks.** Design human–human interaction contract(s) and participant controls; enable discovery only with appropriate privacy and abuse protections.
 4. **Long-lived Avaia continuity.** Product-owned experience and learning, consistent across replaceable models and devices without syncing raw location journals by default.
@@ -105,7 +106,7 @@ Suggested delivery slices, subject to their own tasks and reviews:
 
 - What exactly is the first minimal human–Avaia reciprocal action: accepting an invitation, acknowledging a message, or an activity-specific completion? What is its terminal boundary?
 - How does a client offer a remote shared walk without implying physical co-location, geolocation disclosure, or presence attestation?
-- Which city information is reliably sourced and sufficiently accessible before wider discovery or narration?
+- Which city information is reliably sourced and sufficiently complete for wider discovery or narration?
 - What can Avaia initiate toward strangers, with which explicit authority, and what requires the human owner to take the action personally?
 - How are cross-device state, offline executor authority, conflict reconciliation, and provenance handled without fabricating elapsed life?
 - What privacy, moderation, and user-control standards precede any opt-in matchmaking or introduction feature?
@@ -119,8 +120,10 @@ Suggested delivery slices, subject to their own tasks and reviews:
 - [Avaia Evolution](../04-avaia-evolution.md)
 - [Artificial Bonds — Direction](../artificial-bonds/README.md)
 - [Bond Location State](../12-bond-location-state.md)
+- [Map Architecture](../12-map-architecture.md)
 - [World Content Catalog](../12-world-content-catalog.md)
 - [Core and Client Architecture](../18-core-and-client-architecture.md)
+- [Core Client Contract v0](../19-core-client-contract.md)
 
 ---
 
