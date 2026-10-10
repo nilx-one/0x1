@@ -259,3 +259,5 @@ Any acyclic composition is valid when it has one settlement origin, one `x`, pai
 - [Cryptography and Wire Protocol](06-cryptography-and-wire-protocol.md)
 - [Economics and Payments](10-economics-and-payments.md)
 - [Security and Platform Notes](16-security-and-platform-notes.md)
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

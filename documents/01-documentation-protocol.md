@@ -159,3 +159,5 @@ A revision MUST identify the former contract, the new contract, and the affected
 - [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
 - [0x1 Core and Client Architecture](18-core-and-client-architecture.md)
 - [0x1 Core Client Contract v0](19-core-client-contract.md)
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

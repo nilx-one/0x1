@@ -166,3 +166,5 @@ A change to these laws is a protocol revision, not an editorial clarification.
 - [AI Bonds](04-ai-bonds.md)
 - [Architecture and Data Model](05-architecture-and-data-model.md)
 - [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

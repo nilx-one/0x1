@@ -291,3 +291,5 @@ All disclosures MUST appear before signature.
 | `sk_presence` lifecycle | TBD | Implementation-blocking |
 
 Parameter changes MUST be versioned and global. No implementation may tune them per buyer, business, or cell.
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

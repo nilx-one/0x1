@@ -214,3 +214,5 @@ These are implementation-blocking where relevant. They MUST NOT be inferred from
 - [Map Architecture](12-map-architecture.md)
 - [Business Bonds and Presence](13-business-bonds-and-presence.md)
 - [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

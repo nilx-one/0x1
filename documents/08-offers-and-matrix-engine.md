@@ -115,3 +115,5 @@ These constraints apply to the current human `matr.ix` profile. AI Bond behavior
 - [AI Bonds](04-ai-bonds.md)
 - [Cryptography and Wire Protocol](06-cryptography-and-wire-protocol.md)
 - [0x1 Core and Client Architecture](18-core-and-client-architecture.md)
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

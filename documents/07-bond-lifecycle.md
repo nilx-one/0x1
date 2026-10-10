@@ -134,3 +134,5 @@ For AI-capable interactions, runtime failure, revoked authority, compromise, or 
 - [Cryptography and Wire Protocol](06-cryptography-and-wire-protocol.md)
 - [Business Bonds and Presence](13-business-bonds-and-presence.md)
 - [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md)
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

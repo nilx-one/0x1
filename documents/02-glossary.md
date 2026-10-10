@@ -255,3 +255,5 @@ The inclusive, symmetric predicate that a listener's current location is within 
 - [0x1 Core and Client Architecture](18-core-and-client-architecture.md)
 - [0x1 Core Client Contract v0](19-core-client-contract.md)
 - [Creator Offers and Donations](10-creator-offers-and-donations.md)
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

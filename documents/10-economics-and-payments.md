@@ -152,3 +152,5 @@ The complete mechanism is defined in [Digital Presence Auction](14-claim-auction
 - [Creator Offers and Donations](10-creator-offers-and-donations.md)
 - [Digital Presence Auction](14-claim-auction.md)
 - [0x1 Core and Client Architecture](18-core-and-client-architecture.md)
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->

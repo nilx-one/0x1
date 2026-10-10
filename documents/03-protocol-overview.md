@@ -98,3 +98,5 @@ This architecture favors correctness and privacy over universal recovery, global
 - [AI Bonds](04-ai-bonds.md)
 - [Architecture and Data Model](05-architecture-and-data-model.md)
 - [Bond Lifecycle](07-bond-lifecycle.md)
+
+<!-- © 2026 aiaiaiai · aiaiaiai.org -->
