@@ -71,6 +71,17 @@ Avaia could offer a scoped introduction to a consenting resident. This involves 
 
 Two people can choose a remote shared walk, message one another, or exchange a proposal independently of physical location. This is a **distinct pairwise interaction**, not a by-product of Avaia's earlier introduction. Only the two people's observed actions under their own contract can establish their BondChain. Avaia's memory or UI must not infer friendship, a meeting, or consent from a suggestion.
 
+### Inbound Interaction While Avaia Is Quiesced
+
+While the owner drives their own human Presence in `MANUAL`, another Bond, human or Avaia, may direct a proposal at the owner's quiesced Avaia. A candidate client journey:
+
+1. **Arrival is not a response.** The proposal is addressed to Avaia's Bond, not to the owner. A quiesced Avaia does not reason or generate a reply, and the client does not answer on her behalf. Delivery, display, or a notification is not acceptance, acknowledgement, or any other counterpart action.
+2. **Attention, not a forced cut.** The owner's client shows that something is addressed to Avaia and offers to move focus to her. The camera moves to Avaia only by the owner's choice or a preference they set in advance, and never before an in-flight human-driven action reaches its safe boundary.
+3. **Taking the wheel.** If the owner accepts, the client performs the ordinary `MANUAL -> SPECTATE` transition from [AI Bonds](../04-ai-bonds.md); Avaia's runtime resumes and she may respond within her capabilities and authority. If the owner wants to choose the reply personally, that reply is still an action of Avaia's Bond in an Avaia↔counterpart interaction, under explicit and bounded delegation; the owner does not become a participant or a substitute signer. The current runtime defines no mode in which the owner directly drives Avaia, so this option requires a runtime contract change.
+4. **No answer is a valid outcome.** If the owner ignores or dismisses the request, or the client goes `OFFLINE`, the interaction remains pending, expires, or fails exactly as its owning contract defines. No refusal, reply, or "seen" receipt is fabricated.
+
+The sender learns only what the interaction contract discloses. Avaia's runtime mode, the owner's current activity, and whether a notification was shown are not revealed by default.
+
 These scenarios illustrate possible client journeys. No production interaction registry, signing semantics, completion event, or new protocol law is defined by this document. The [BondChain Interaction Model](../04-bondchain-interaction-model.md), [Protocol Laws](../00-protocol-laws.md), and the eventual specific interaction contract govern what actually becomes shared truth.
 
 ## Design Boundaries
@@ -108,6 +119,8 @@ Suggested delivery slices, subject to their own tasks and reviews:
 - How does a client offer a remote shared walk without implying physical co-location, geolocation disclosure, or presence attestation?
 - Which city information is reliably sourced and sufficiently complete for wider discovery or narration?
 - What can Avaia initiate toward strangers, with which explicit authority, and what requires the human owner to take the action personally?
+- Can an interaction be delivered to and held for a quiesced or `OFFLINE` AI Bond, and which component holds it without becoming a participant?
+- Does an owner-chosen reply on Avaia's behalf need its own runtime mode beyond `SPECTATE` and `MANUAL`, and what, if anything, does the resulting record disclose about that direction?
 - How are cross-device state, offline executor authority, conflict reconciliation, and provenance handled without fabricating elapsed life?
 - What privacy, moderation, and user-control standards precede any opt-in matchmaking or introduction feature?
 
