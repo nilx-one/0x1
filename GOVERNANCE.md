@@ -22,6 +22,8 @@ The initial repository and licensing direction is:
 
 The `0x1` protocol/specification repository intentionally does not receive a software license by inference. Its exact documentation/specification license remains a separate decision. Until that decision is published, this repository does not intend to grant broader redistribution or derivative-work rights merely because its source is publicly readable.
 
+The attribution tooling files `scripts/check_commit_attribution.py`, `tests/test_commit_attribution.py` and `.github/workflows/commit-attribution.yml` are the exception: they carry `SPDX-License-Identifier: MPL-2.0` headers. That license covers only those files. It does not license the protocol specification or any other file in this repository.
+
 ## Canonical Stewardship
 
 `nilx-one/0x1` is the canonical specification repository.
