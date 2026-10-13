@@ -1,4 +1,5 @@
 # © 2026 aiaiaiai · aiaiaiai.org
+# SPDX-License-Identifier: MPL-2.0
 name: Commit attribution
 
 on:

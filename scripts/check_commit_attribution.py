@@ -1,4 +1,5 @@
 # © 2026 aiaiaiai · aiaiaiai.org
+# SPDX-License-Identifier: MPL-2.0
 """Validate new source commit attribution without rewriting Git history."""
 import re
 import subprocess
