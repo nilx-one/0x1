@@ -31,6 +31,7 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 - [City Exploration and Avaia Participation](product-direction/city-exploration-and-avaia.md) — non-normative direction for city discovery, virtual participation, Avaia's bounded activity, and truthful pairwise interactions.
 - [Carrying Inventory, Containers, and Item Loss](product-direction/inventory-carrying-and-loss.md) — non-normative 2D inventory grids, backpack and bag bounds, pocket/wallet geometry, and distance-based loss risk.
 - [Special and Exclusive Subscriptions](product-direction/special-exclusive-subscriptions.md) — proposed paid entitlements, future rarity v2, and server-authority boundaries.
+- [xPing Courier and Map Activities](product-direction/xping-courier.md) — seeded Kyiv destinations, flight presentation, concurrent activity status, and deferred commerce.
 - [Identity](04-identity.md) — `pub_dress`, provider boundaries, registry stages, private identity, authenticated introduction, continuity, and recovery limits.
 - [Avaia `pub_dress` Naming](04-avaia-pub-dress-naming.md) — mandatory terminal `ai`, deterministic default derivation such as `0x0sky -> x0skai`, explicit ownership reference, and Avaia address rotation behavior.
 - [Architecture and Data Model](05-architecture-and-data-model.md) — bounded `bond.chain` encoding, `bond.journal`, public projections, and state ownership.
