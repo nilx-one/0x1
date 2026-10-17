@@ -110,6 +110,21 @@ These invariants are owned by [Creator Offers and Donations](10-creator-offers-a
 | Same subject across cells | physical and digital rights remain independent |
 | Map spend effect on depth or ranking | none |
 
+## Draft BusinessPoint Product Parameters
+
+| Parameter | Draft value |
+|---|---|
+| Business account verification | `unverified` / `verified`, recorded application outcome |
+| Point verification | `draft` / `pending` / `verified` / `rejected` / `expired` / `withdrawn` |
+| Pending claim deadline | exactly `72 hours` from server-accepted submission |
+| Submission retry | idempotent; MUST NOT extend pending deadline |
+| Public pending point | clearly unverified preparation preview; link to organization |
+| Public verified point | application-verified listing; not `REG-ATTEST` |
+| Verification procedure | intentionally unspecified; initial decision recorded manually |
+| Notification targets | organization email and push where enabled |
+
+These are draft product parameters, not new BondChain or presence-right primitives. Their normative ownership is [Business Bonds and Presence](13-business-bonds-and-presence.md).
+
 ## Draft Map Parameters
 
 | Parameter | Draft value |

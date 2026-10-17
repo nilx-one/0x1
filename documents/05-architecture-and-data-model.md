@@ -95,6 +95,12 @@ The externally ordered registry contains:
 
 This state MUST NOT live in `bond.chain`, because one bounded pairwise interaction cannot establish global exclusivity.
 
+### Business-point application projection
+
+A business may publish zero or more BusinessPoint address claims after its account is verified. This application's point catalog is separate from the four `map.registry` authority classes above and is neither a registry-oracle attestation nor an auction ledger.
+
+The service records ownership, stable point identity, address, and bounded verification status, then exposes only eligible pending previews or verified listings through a versioned `map.business_points` read projection. A pending preview expires 72 hours after accepted submission even if cleanup is delayed. A verification outcome is an application decision, not bilateral history or proof of registry-backed physical presence.
+
 ## `map.registry`
 
 The public map projection combines, but does not merge, those sources:
@@ -122,6 +128,7 @@ Every projected record remains traceable to its authority source.
 - External business-registry observations belong in the registry-oracle log.
 - Physical-presence projection belongs in `map.registry`.
 - Exclusive digital-presence tenure belongs in the externally ordered auction registry.
+- BusinessPoint claims, deadlines, and manual verification outcomes belong to the business application's single-owner state, with a separate read-only map projection; they are not `REG-ATTEST` evidence.
 - Ephemeral negotiation state belongs in encrypted transport and expires without durable traces.
 
 Moving data across these boundaries is an architectural change, not a storage optimization.

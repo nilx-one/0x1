@@ -1,6 +1,6 @@
 # Map Architecture
 
-**Status:** draft v2  
+**Status:** draft v3  
 **Companions:** [BondChain Interaction Model](04-bondchain-interaction-model.md), [Creator Offers and Donations](10-creator-offers-and-donations.md), [Business Bonds and Presence](13-business-bonds-and-presence.md), [Digital Presence Auction](14-claim-auction.md)
 
 ## Purpose
@@ -78,6 +78,26 @@ Every active cell exposes exactly one independently auctioned digital presence, 
 
 The map projects its current holder and marker metadata. The auction determines tenure. The renderer does not.
 
+## BusinessPoint Discovery Projection
+
+A BusinessPoint is a declared, business-owned address record defined in [Business Bonds and Presence](13-business-bonds-and-presence.md). It is not the coordinate-only rendering unit named `point` above, and neither a pending nor verified BusinessPoint is a registry-backed `physical_presence`.
+
+The initial application publication contract is an **adjacent, versioned projection** and MUST NOT be silently inserted into `map.registry`:
+
+```text
+map.business_points = {
+  pending_previews[],  // accepted, unresolved, deadline still in the future
+  verified_listings[], // verified BusinessPoint claims
+  projection_version
+}
+```
+
+Every projected entry names the owning BBond and stable BusinessPoint ID. Pending previews link to the owner's public profile, have an explicit unverified/preparation label, and use only building-scale geography. They disappear automatically when the effective 72-hour deadline is reached, including when background cleanup is delayed. An owner whose organization is no longer verified has no publicly eligible point previews or listings, even if point records retain prior decisions. A construction motif is not a statement of actual building work.
+
+A verified listing may show the owner's authorized public point name and address, with a distinct application-verification badge; it MUST NOT use `REG-ATTEST` presentation or imply that a registry-backed physical presence was established. Neither preview nor listing represents a claim on an H3 cell, changes cell activity/activation, occupies `SLOT-DIGITAL`, or affects interaction/recommendation metrics. A verified point and a `REG-ATTEST` presence may coexist without either state deriving from the other.
+
+The business-point projection is generated from application-accepted claims and recorded verification decisions, not from map camera movements, user observations, or BondChain events. The service owns publication and expiry ordering; the renderer owns only how eligible entries look. Address validation, correction, safe publication, duplicate handling, and bounded abuse controls must be covered in the implementation before exposing public points.
+
 ## Future Creator Projections
 
 A creator offer or performance may be geographically discoverable without claiming that its author is physically present at that location.
@@ -123,9 +143,11 @@ A projection implementation MUST preserve those source boundaries instead of fla
 
 Future creator projection data MUST NOT be inserted into this schema until its authority and lifecycle contract is versioned.
 
+BusinessPoint discovery uses the adjacent `map.business_points` application projection. It does not widen the registry's physical or digital presence rights.
+
 ## Marker Geometry
 
-A marker point MUST resolve inside its cell.
+A marker point MUST resolve inside its cell when it represents a cell-scoped presence. BusinessPoint discovery markers instead follow the verified/declaration address projection above and do not assign a cell right.
 
 - A physical point is derived from the registered address and MAY be adjusted to a verified entrance without changing the underlying cell entitlement.
 - A digital point is selected by the holder within the cell.
@@ -218,6 +240,10 @@ Self-hosted Protomaps/PMTiles provide geographic data. The versioned MapLibre st
 14. The current `map.registry` MUST NOT publish creator projections before a versioned creator-projection contract exists.
 15. Cyan and orange are presentation roles and MUST NOT encode Bond identity, reciprocity, consent, or Relationship truth.
 16. Basemap styling MUST NOT fabricate geographic or interaction state.
+
+17. BusinessPoint previews and verified listings remain outside `map.registry` and do not mint any physical/digital presence rights.
+18. Every pending preview expires by the server-authoritative 72-hour deadline, regardless of delayed cleanup.
+19. Application point verification MUST NOT be rendered as `REG-ATTEST`.
 
 ## Related Documents
 
