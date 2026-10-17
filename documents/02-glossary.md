@@ -12,7 +12,7 @@ The authority to continue authenticated history. External classifications may de
 
 ### `pub_dress`
 
-The current human-readable public address pointer bound to a Bond identity. A human address has form `0x{d}{slug}` and an owned-AI-avatar address has form `x{d}{slug}` under the exact grammar in [Identity](04-identity.md). The discriminator is immutable under the current model; the slug may rotate when the owning identity contract authorizes it and the requested complete address is globally available. Historical authenticated address bindings remain immutable. `pub_dress` is a discovery pointer, not the cryptographic foundation of identity.
+The current human-readable public address pointer bound to a Bond identity. A human address has form `0x{d}{slug}` and an owned-AI-avatar address has form `x{d}{slug}` under the exact grammar in [Identity](04-identity.md). The discriminator is immutable under the current model; the slug may rotate when the owning identity contract authorizes it and the requested complete address is globally available. Historical authenticated address bindings remain immutable. `pub_dress` is a discovery pointer, not the cryptographic foundation of identity. A BusinessPoint's point `pub_dress` is derived from its owning BBond's `pub_dress` and addresses that point; it is not bound to a Bond identity of its own (see [Business Bonds and Presence](13-business-bonds-and-presence.md#model-and-ownership)).
 
 ### Identity provider
 

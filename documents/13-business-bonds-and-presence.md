@@ -1,6 +1,6 @@
 # Business Bonds and Presence
 
-**Status:** draft v4
+**Status:** draft v4  
 **Companions:** [BondChain Interaction Model](04-bondchain-interaction-model.md), [Creator Offers and Donations](10-creator-offers-and-donations.md), [Map Architecture](12-map-architecture.md), [Digital Presence Auction](14-claim-auction.md)
 
 ## Business Bond
@@ -46,9 +46,9 @@ The portable conceptual shape is:
 BusinessPoint {
   owner_bond_ref,
   id: BusinessPointID { owner_pub_dress, number: UInt8 },
-  pub_dress: String,
+  pub_dress: String,     // derived from owner pub_dress + description
   description: String,
-  isVerified: Bool,
+  isVerified: Bool,      // derived: verification.status == verified
   location: {
     address: {
       country,
@@ -71,9 +71,9 @@ BusinessPoint {
 
 `BusinessPointID` combines the owning BBond's `pub_dress` at allocation with an unsigned eight-bit point number (`0` through `255`). These are separate identity components, not ambiguous string concatenation. The application allocates each number atomically within that owning Bond and MUST NOT reassign it to a different point. Exhaustion returns an explicit failure; rotating the owner's public handle does not reset its allocation or extend the 256-point limit. The ID is stable: description edits, address corrections and later owner public-handle rotation MUST NOT rewrite it. `owner_bond_ref` continues to identify the same owning Bond independently of its current public handle. The exact portable ID encoding remains an implementation-contract decision.
 
-`description` is the point-specific string entered in that point's settings by an authorized BBond representative. The point's `pub_dress` is formed from the owning BBond's current `pub_dress` and that description, using a normalized place component, conceptually `<BBond.pub_dress>-<place>`. It is a public address of the BusinessPoint, not another Bond or Avaia identity. Changing the description updates the point's derived public address without changing its ID. Derivation, normalization, length limits and collision handling MUST be defined by the shared Core address contract before clients implement this operation; clients MUST NOT invent separate transliteration or silent suffixing rules. A failed address update preserves the previous accepted record.
+`description` is the point-specific string entered in that point's settings by an authorized BBond representative. The point's `pub_dress` is formed from the owning BBond's current `pub_dress` and that description, using a normalized place component, conceptually `<BBond.pub_dress>-<place>`. It is a public address of the BusinessPoint, not another Bond or Avaia identity. Changing the description updates the point's derived public address without changing its ID. Derivation, normalization, length limits and collision handling, including collisions with Bond addresses in the same global availability surface, MUST be defined by the shared Core address contract before clients implement this operation; clients MUST NOT invent separate transliteration or silent suffixing rules. A failed address update preserves the previous accepted record.
 
-`isVerified` is a read-only convenience projection of `verification.status == verified`, not an independently writable verification flag. Every other lifecycle state projects `false`; the Boolean alone cannot distinguish a draft, pending, expired or withdrawn point and MUST NOT determine publication eligibility. Organization verification and point verification remain separate.
+`isVerified` is a read-only convenience projection of `verification.status == verified`, not an independently writable verification flag. Every other lifecycle state projects `false`; the Boolean alone cannot distinguish a draft, pending, rejected, expired or withdrawn point and MUST NOT determine publication eligibility. Organization verification and point verification remain separate.
 
 The application owns this record and its publication decision. The authenticated BBond representative owns declarations and withdrawal requests; only the authorized verification result may transition a pending claim to `verified` or `rejected`. The exact decision procedure is not specified here. The service may keep private audit records, but the public projection MUST expose only the minimum fields necessary for discovery and the displayed verification class.
 

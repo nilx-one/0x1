@@ -129,7 +129,7 @@ These invariants are owned by [Creator Offers and Donations](10-creator-offers-a
 
 These are draft product parameters, not new BondChain or presence-right primitives. Their normative ownership is [Business Bonds and Presence](13-business-bonds-and-presence.md).
 
-The portable encoding of the composite point ID, point-address derivation and collision rules, and compatibility mapping for existing station/point IDs must be fixed in the Core implementation contract before rollout. Existing stored references must be preserved explicitly. No migration is authorized by this specification revision alone.
+The portable encoding of the composite point ID, point-address derivation and collision rules (including collisions with Bond addresses), and compatibility mapping for existing station/point IDs must be fixed in the Core implementation contract before rollout. Existing stored references must be preserved explicitly. No migration is authorized by this specification revision alone.
 
 ## Draft Map Parameters
 

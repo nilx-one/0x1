@@ -15,7 +15,8 @@ Selecting **Exclusive** or **Special** pickup opens an xPing offer, not an xSash
 scene. Exclusive replaces the display name Legendary; the existing `legendary`
 wire/storage value remains compatible. Special remains locked. Declining restores
 the pickup settings and scroll position. Skipping is not consent to dispatch.
-Accepting asks Core for a destination; it never changes pickup eligibility.
+Accepting asks the destination selector below for a BusinessPoint; it never
+changes pickup eligibility.
 
 A host supplies the owning 0xda-market BBond reference and a projection of its
 BusinessPoints eligible for the requested context. A BusinessPoint is itself
@@ -62,7 +63,8 @@ permits preview flight before verified publication and subscription integration.
 Only one courier trip per local session may run. The intended Core contract selects the BusinessPoint;
 the existing Web flyover finds its road route once, with its documented fallback,
 and flies at 30 m/s with building avoidance. Its actual progress supplies the UI
-countdown and arrival event. The selector does not own flight speed, ETA or
+progress, told as distance from Avaia in 50 m steps (remaining time when Avaia
+has no body), and the arrival event. The selector does not own flight speed, ETA or
 arrival; selecting a point must not drive completion. No duplicate flight engine is introduced.
 Refresh ends local simulation;
 no fabricated durable job or server receipt is created. A future persistent-job
