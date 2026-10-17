@@ -92,7 +92,7 @@ map.business_points = {
 }
 ```
 
-Every projected entry names the owning BBond and stable BusinessPoint ID. Pending previews link to the owner's public profile, have an explicit unverified/preparation label, and use only building-scale geography. They disappear automatically when the effective 72-hour deadline is reached, including when background cleanup is delayed. A construction motif is not a statement of actual building work.
+Every projected entry names the owning BBond and stable BusinessPoint ID. Pending previews link to the owner's public profile, have an explicit unverified/preparation label, and use only building-scale geography. They disappear automatically when the effective 72-hour deadline is reached, including when background cleanup is delayed. An owner whose organization is no longer verified has no publicly eligible point previews or listings, even if point records retain prior decisions. A construction motif is not a statement of actual building work.
 
 A verified listing may show the owner's authorized public point name and address, with a distinct application-verification badge; it MUST NOT use `REG-ATTEST` presentation or imply that a registry-backed physical presence was established. Neither preview nor listing represents a claim on an H3 cell, changes cell activity/activation, occupies `SLOT-DIGITAL`, or affects interaction/recommendation metrics. A verified point and a `REG-ATTEST` presence may coexist without either state deriving from the other.
 

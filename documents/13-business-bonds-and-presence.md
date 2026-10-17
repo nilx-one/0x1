@@ -34,7 +34,7 @@ The lifecycle for business-side delegation and representative rotation remains a
 
 A business Bond has an application verification status: `unverified` or `verified`. A newly registered organization starts `unverified`. A `verified` decision is a service-recorded claim about the organization's registration status, not a new Bond identity, a representative's signing authority, a `REG-ATTEST`, or proof of any particular address. The verification procedure is deliberately outside this document; initially its outcome is recorded manually.
 
-Only an authenticated, authorized representative of a `verified` BBond may submit a business point for publication. A verification badge for the organization MUST NOT automatically verify any of its points.
+Only an authenticated, authorized representative of a `verified` BBond may submit a business point for publication. A verification badge for the organization MUST NOT automatically verify any of its points. If a business loses verified status, public projections of its points MUST cease immediately; retaining a prior point decision in private history MUST NOT preserve public eligibility.
 
 A **BusinessPoint** is a business-owned, addressable location record. It is not a Bond, an Avaia, a `bond.chain`, a physical-presence right, a digital-presence slot, or a proxy for attendance. One BBond may have zero or many BusinessPoints and does not inherit one global `Bond.location`.
 
@@ -80,16 +80,18 @@ draft -- submit by verified BBond --> pending
 pending -- verified decision ------> verified
 pending -- rejected decision ------> rejected
 pending -- deadline reached -------> expired
+pending -- authorized withdrawal ---> withdrawn
 verified -- authorized withdrawal -> withdrawn
+rejected/expired/withdrawn -- explicit new submission --> pending
 ```
 
-An accepted submission sets `submitted_at` and `deadline_at = submitted_at + 72 hours` using the service's clock. A retry of the same request MUST NOT restart the clock. From the effective deadline onward, an unresolved point is `expired` and cannot appear as pending even if a scheduled cleanup has not yet executed. A new attempt after rejection or expiry requires an explicit new submission; no previous verification decision is reused. Decisions and amendments MUST be auditable, with idempotent transitions.
+An accepted submission sets `submitted_at` and `deadline_at = submitted_at + 72 hours` using the service's clock. A retry of the same request MUST NOT restart the clock. From the effective deadline onward, an unresolved point is `expired` and cannot appear as pending even if a scheduled cleanup has not yet executed. A new attempt after rejection, expiry, or withdrawal requires an explicit new submission with a fresh deadline; no previous verification decision is reused. A verification result accepted at or after the deadline MUST NOT revive an expired claim. Decisions and amendments MUST be auditable, with idempotent transitions.
 
 A point in `draft`, `rejected`, `expired`, or `withdrawn` MUST NOT have an active public point marker. Verification of a business or point never establishes an Interaction, a BondChain, a Relationship, a visit, or a business `ATTEST`.
 
 ### Public discovery and notifications
 
-While `pending` and before its deadline, a limited **preparation preview** MAY appear on the map at the claimed building-scale location. It MUST link to the owning organization's main public page and clearly say the point is unverified / being prepared. A construction-themed symbol is visual metaphor only: the app MUST NOT claim that real construction is happening, that a shop exists, or that anyone is present. Office details and unnecessary private address information MUST NOT be disclosed in pending previews.
+While `pending` and before its deadline, the application MUST publish an eligible limited **preparation preview** for the map at the claimed building-scale location. It MUST link to the owning organization's main public page and clearly say the point is unverified / being prepared. A construction-themed symbol is visual metaphor only: the app MUST NOT claim that real construction is happening, that a shop exists, or that anyone is present. Office details and unnecessary private address information MUST NOT be disclosed in pending previews.
 
 On a `verified` result, the preparation preview is replaced by a **verified BusinessPoint listing**. Its badge states that the point's application claim was verified, not that a public business registry issued `REG-ATTEST`. Verified listings remain distinguishable from registry-backed physical presence and auctioned digital presence. If a business has a real `REG-ATTEST`, that separate evidence keeps its own lifecycle.
 
@@ -270,7 +272,6 @@ For a pending point preview: "This business point is being prepared and has not 
 
 For a verified point listing: "The organization's point claim is verified by the application. This is not a public-registry physical-presence attestation."
 
-
 At physical-presence activation:
 
 > This marker reflects a supported public registry record. It is not purchased and cannot be taken through the auction. It remains only while the supporting registry fact remains valid.
@@ -308,5 +309,6 @@ A creator projection MUST use language that describes the work, offer, or perfor
 19. Preparation previews cannot claim real construction, occupancy, or registry-backed presence.
 20. Manual verification outcomes do not substitute for `REG-ATTEST` or confer relationship truth.
 21. A business point may exist without any Avaia and does not confer authority on an AI representative.
+22. Loss of the organization's verified status removes all public BusinessPoint eligibility without rewriting stored point decisions.
 
 <!-- © 2026 aiaiaiai · aiaiaiai.org -->
