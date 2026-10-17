@@ -64,7 +64,8 @@ BusinessPoint {
     status: draft | pending | verified | rejected | expired | withdrawn,
     submitted_at?,
     deadline_at?,
-    decided_at?
+    decided_at?,   // verification outcome or expiry deadline
+    withdrawn_at?  // authorized withdrawal; never replaces decided_at
   }
 }
 ```
@@ -75,7 +76,7 @@ BusinessPoint {
 
 `isVerified` is a read-only convenience projection of `verification.status == verified`, not an independently writable verification flag. Every other lifecycle state projects `false`; the Boolean alone cannot distinguish a draft, pending, rejected, expired or withdrawn point and MUST NOT determine publication eligibility. Organization verification and point verification remain separate.
 
-The application owns this record and its publication decision. The authenticated BBond representative owns declarations and withdrawal requests; only the authorized verification result may transition a pending claim to `verified` or `rejected`. The exact decision procedure is not specified here. The service may keep private audit records, but the public projection MUST expose only the minimum fields necessary for discovery and the displayed verification class.
+The application owns this record and its publication decision. The authenticated BBond representative owns declarations and withdrawal requests; only the authorized verification result may transition a pending claim to `verified` or `rejected`. The exact decision procedure is not specified here. The service MUST authenticate the representative or decision authority as applicable, use its own clock, and authorize each transition before persisting it. It MUST require a verified organization to submit or resubmit a claim and to publish a point; withdrawal, decisions and expiry do not depend on the organization's current verification status. A client-produced BusinessPoint state or a client-supplied `verified` decision MUST NOT be treated as authority. The service may keep private audit records, but the public projection MUST expose only the minimum fields necessary for discovery and the displayed verification class.
 
 `id` survives description changes and verified address updates. A location change MUST NOT silently inherit previous point verification: it requires a new explicit claim and verification cycle. An address or coordinate is a declared location input, not proof of physical occupancy.
 
@@ -99,7 +100,14 @@ verified -- authorized withdrawal -> withdrawn
 rejected/expired/withdrawn -- explicit new submission --> pending
 ```
 
-An accepted submission sets `submitted_at` and `deadline_at = submitted_at + 72 hours` using the service's clock. A retry of the same request MUST NOT restart the clock. From the effective deadline onward, an unresolved point is `expired` and cannot appear as pending even if a scheduled cleanup has not yet executed. A new attempt after rejection, expiry, or withdrawal requires an explicit new submission with a fresh deadline; no previous verification decision is reused. A verification result accepted at or after the deadline MUST NOT revive an expired claim. Decisions and amendments MUST be auditable, with idempotent transitions.
+Withdrawal is a distinct, authorized application transition, never a verification decision. Only `pending` or `verified` may transition to `withdrawn`, and `withdrawn_at` records the withdrawal without overwriting `decided_at`. Exactly two withdrawn lifecycle shapes are valid:
+
+- **Pending withdrawal:** `decided_at` is absent and `submitted_at <= withdrawn_at < deadline_at`. At or after the deadline, an unresolved pending claim has expired and cannot instead be withdrawn.
+- **Verified withdrawal:** the original verified outcome remains recorded at `decided_at` with `submitted_at <= decided_at < deadline_at`, and `withdrawn_at >= decided_at`. Withdrawal MAY happen after the former pending deadline; it does not erase or revise the verified decision.
+
+A rejected or expired claim cannot be withdrawn; it requires a separate explicit resubmission if another claim is intended. Neither valid withdrawn shape remains eligible for public publication.
+
+An accepted submission sets `submitted_at` and `deadline_at = submitted_at + 72 hours` using the service's clock. A retry of the same request MUST NOT restart the clock. From the effective deadline onward, an unresolved point is `expired` and cannot appear as pending even if a scheduled cleanup has not yet executed. A new attempt after rejection, expiry, or withdrawal requires an explicit new submission with a fresh deadline; no previous verification decision is reused. The fresh attempt resets the current claim's decision and withdrawal timestamps without rewriting the prior auditable outcome; its service-clock time MUST NOT precede the preceding `decided_at` or `withdrawn_at`, when present. A verification result accepted at or after the deadline MUST NOT revive an expired claim. Decisions and amendments MUST be auditable, with idempotent transitions.
 
 A point in `draft`, `rejected`, `expired`, or `withdrawn` MUST NOT have an active public point marker. Verification of a business or point never establishes an Interaction, a BondChain, a Relationship, a visit, or a business `ATTEST`.
 
