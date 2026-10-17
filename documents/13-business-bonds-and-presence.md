@@ -1,6 +1,6 @@
 # Business Bonds and Presence
 
-**Status:** draft v2  
+**Status:** draft v3  
 **Companions:** [BondChain Interaction Model](04-bondchain-interaction-model.md), [Creator Offers and Donations](10-creator-offers-and-donations.md), [Map Architecture](12-map-architecture.md), [Digital Presence Auction](14-claim-auction.md)
 
 ## Business Bond
@@ -29,6 +29,77 @@ A business BondChain reuses the same bounded interaction contracts:
 - no operator-owned relationship history.
 
 The lifecycle for business-side delegation and representative rotation remains an explicit open contract. It MUST NOT be improvised as a server-side account reset.
+
+## Business Verification and BusinessPoint
+
+A business Bond has an application verification status: `unverified` or `verified`. A newly registered organization starts `unverified`. A `verified` decision is a service-recorded claim about the organization's registration status, not a new Bond identity, a representative's signing authority, a `REG-ATTEST`, or proof of any particular address. The verification procedure is deliberately outside this document; initially its outcome is recorded manually.
+
+Only an authenticated, authorized representative of a `verified` BBond may submit a business point for publication. A verification badge for the organization MUST NOT automatically verify any of its points.
+
+A **BusinessPoint** is a business-owned, addressable location record. It is not a Bond, an Avaia, a `bond.chain`, a physical-presence right, a digital-presence slot, or a proxy for attendance. One BBond may have zero or many BusinessPoints and does not inherit one global `Bond.location`.
+
+### Model and ownership
+
+The portable conceptual shape is:
+
+```text
+BusinessPoint {
+  owner_bond_ref,
+  identity: {
+    id,             // stable within its business; not a pub_dress
+    name
+  },
+  location: {
+    address: {
+      country,
+      locality,
+      street,
+      number,
+      building?,     // корпус / будівля
+      office?        // офіс / приміщення
+    },
+    coordinate: { latitude_e7, longitude_e7 }
+  },
+  verification: {
+    status: draft | pending | verified | rejected | expired | withdrawn,
+    submitted_at?,
+    deadline_at?,
+    decided_at?
+  }
+}
+```
+
+The application owns this record and its publication decision. The authenticated BBond representative owns declarations and withdrawal requests; only the authorized verification result may transition a pending claim to `verified` or `rejected`. The exact decision procedure is not specified here. The service may keep private audit records, but the public projection MUST expose only the minimum fields necessary for discovery and the displayed verification class.
+
+`identity.id` survives caption changes and verified address updates. A location change MUST NOT silently inherit previous point verification: it requires a new explicit claim and verification cycle. An address or coordinate is a declared location input, not proof of physical occupancy.
+
+### Point lifecycle and 72-hour window
+
+```text
+draft -- submit by verified BBond --> pending
+pending -- verified decision ------> verified
+pending -- rejected decision ------> rejected
+pending -- deadline reached -------> expired
+verified -- authorized withdrawal -> withdrawn
+```
+
+An accepted submission sets `submitted_at` and `deadline_at = submitted_at + 72 hours` using the service's clock. A retry of the same request MUST NOT restart the clock. From the effective deadline onward, an unresolved point is `expired` and cannot appear as pending even if a scheduled cleanup has not yet executed. A new attempt after rejection or expiry requires an explicit new submission; no previous verification decision is reused. Decisions and amendments MUST be auditable, with idempotent transitions.
+
+A point in `draft`, `rejected`, `expired`, or `withdrawn` MUST NOT have an active public point marker. Verification of a business or point never establishes an Interaction, a BondChain, a Relationship, a visit, or a business `ATTEST`.
+
+### Public discovery and notifications
+
+While `pending` and before its deadline, a limited **preparation preview** MAY appear on the map at the claimed building-scale location. It MUST link to the owning organization's main public page and clearly say the point is unverified / being prepared. A construction-themed symbol is visual metaphor only: the app MUST NOT claim that real construction is happening, that a shop exists, or that anyone is present. Office details and unnecessary private address information MUST NOT be disclosed in pending previews.
+
+On a `verified` result, the preparation preview is replaced by a **verified BusinessPoint listing**. Its badge states that the point's application claim was verified, not that a public business registry issued `REG-ATTEST`. Verified listings remain distinguishable from registry-backed physical presence and auctioned digital presence. If a business has a real `REG-ATTEST`, that separate evidence keeps its own lifecycle.
+
+The service SHOULD send the organization an email and push notification at accepted submission and at the final verification, rejection, or expiry outcome, when authorized contact channels exist. Delivery failures MUST NOT affect verification state; notifications MUST be deduplicated by transition and support safe retries. Email addresses, push tokens, and internal verification metadata never enter public map records.
+
+Pending previews and verified listings belong to a distinct versioned business-point application projection, not to `map.registry` physical or digital presence. They MUST NOT activate cells, reserve `SLOT-DIGITAL`, mint `level`/`bnd`, create `ATTEST`, or affect `matr.ix` rank. The map projection is specified in [Map Architecture](12-map-architecture.md).
+
+### Migration boundary
+
+The existing Web `business_stations` storage represents one stationary Avaia identity per shop. That is a legacy implementation coupling, not the BusinessPoint model. A migration MUST preserve existing addresses, captions, coordinates, and references; it MUST NOT silently convert station-Avaia identities into BusinessPoint authorities, grant verified status to existing rows, or erase a genuine AI Bond. Station-to-point compatibility and disposal of obsolete bindings require a separately reviewed rollout. BusinessPoint existence never requires an Avaia, and Avaia assignment remains optional and independent.
 
 ## Creator Is Not Automatically a Business
 
@@ -71,6 +142,8 @@ The same business may be physically present in Paris and hold a digital presence
 A future creator projection is not one of these business presence rights. It represents authored discovery state and MUST use its own versioned map contract.
 
 ## Physical Presence
+
+A verified BusinessPoint listing is an application claim, not the registry-backed physical-presence right defined here. A point does not acquire a physical-presence right without its own qualifying registry observation.
 
 ### Source of authority
 
@@ -193,6 +266,11 @@ Future creator-projection records likewise remain outside interaction `bond.chai
 
 ## Product Language
 
+For a pending point preview: "This business point is being prepared and has not been verified. View the organization." This text does not claim physical construction or occupancy.
+
+For a verified point listing: "The organization's point claim is verified by the application. This is not a public-registry physical-presence attestation."
+
+
 At physical-presence activation:
 
 > This marker reflects a supported public registry record. It is not purchased and cannot be taken through the auction. It remains only while the supporting registry fact remains valid.
@@ -224,5 +302,11 @@ A creator projection MUST use language that describes the work, offer, or perfor
 13. Presence cannot buy depth.
 14. Only eligible bilateral business BondChain outcomes can create business relationship depth.
 15. Creator projections MUST remain distinct from business physical and digital presence.
+16. BBond verification and BusinessPoint verification are distinct application states.
+17. BusinessPoint is a business-owned location record, not an Avaia, Bond, or presence right.
+18. An unresolved pending point expires 72 hours after its accepted submission; retries do not extend that deadline.
+19. Preparation previews cannot claim real construction, occupancy, or registry-backed presence.
+20. Manual verification outcomes do not substitute for `REG-ATTEST` or confer relationship truth.
+21. A business point may exist without any Avaia and does not confer authority on an AI representative.
 
 <!-- © 2026 aiaiaiai · aiaiaiai.org -->

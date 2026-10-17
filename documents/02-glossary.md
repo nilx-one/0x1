@@ -84,6 +84,14 @@ The long-lived, derived behavioral and personality state of an Avaia that may em
 
 A business-scoped Bond: a Bond whose subject is a business and whose current actions require valid human representative authority under the business contract. BBond does not define a separate chain primitive. AI Bond support does not silently revise business-representation authority.
 
+### BusinessPoint
+
+A location record owned by one BBond with its own stable point identifier, name, structured address, and derived map coordinate. It is not a Bond, Avaia, `pub_dress`, or physical/digital presence right. Its claim verification is independent of the owning business's verification and of `REG-ATTEST`. See [Business Bonds and Presence](13-business-bonds-and-presence.md).
+
+### BusinessPoint preview
+
+A temporary unverified map publication for one pending point claim, bounded to 72 hours from accepted submission. It links to the business profile and does not assert physical construction, attendance, or registry-backed presence. See [Map Architecture](12-map-architecture.md).
+
 ### Creator
 
 A contextual role in which a Bond publishes creative work, goods, performances, commissions, or other authorized output. Creator is not a new fundamental identity type and does not imply BBond status or physical presence.
