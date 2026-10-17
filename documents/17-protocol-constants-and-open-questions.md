@@ -116,6 +116,10 @@ These invariants are owned by [Creator Offers and Donations](10-creator-offers-a
 |---|---|
 | Business account verification | `unverified` / `verified`, recorded application outcome |
 | Point verification | `draft` / `pending` / `verified` / `rejected` / `expired` / `withdrawn` |
+| Point ID | owner BBond `pub_dress` at allocation + `UInt8` number (`0`–`255`); stable, no reassignment |
+| Point public address | owning BBond current `pub_dress` + normalized settings description; same stable ID after edits |
+| Point `isVerified` | derived Boolean; true exactly for `verification.status == verified` |
+| Courier destination | the same BusinessPoint ID and record; no independent destination catalog |
 | Pending claim deadline | exactly `72 hours` from server-accepted submission |
 | Submission retry | idempotent; MUST NOT extend pending deadline |
 | Public pending point | clearly unverified preparation preview; link to organization |
@@ -124,6 +128,8 @@ These invariants are owned by [Creator Offers and Donations](10-creator-offers-a
 | Notification targets | organization email and push where enabled |
 
 These are draft product parameters, not new BondChain or presence-right primitives. Their normative ownership is [Business Bonds and Presence](13-business-bonds-and-presence.md).
+
+The portable encoding of the composite point ID, point-address derivation and collision rules, and compatibility mapping for existing station/point IDs must be fixed in the Core implementation contract before rollout. Existing stored references must be preserved explicitly. No migration is authorized by this specification revision alone.
 
 ## Draft Map Parameters
 

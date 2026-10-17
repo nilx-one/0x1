@@ -17,11 +17,15 @@ wire/storage value remains compatible. Special remains locked. Declining restore
 the pickup settings and scroll position. Skipping is not consent to dispatch.
 Accepting asks Core for a destination; it never changes pickup eligibility.
 
-A host supplies the stable 0xda-market BusinessBond ID and an authenticated
-projection of its verified, subscription-capable BusinessPoints. Never infer
-ownership from a display name or convert a legacy station/Avaia into a verified
-BusinessPoint. Core chooses the geographically nearest candidate, with stable
-point-ID tie breaking. Start and destination
+A host supplies the owning 0xda-market BBond reference and a projection of its
+BusinessPoints eligible for the requested context. A BusinessPoint is itself
+the destination: map, settings and courier share its ID and record, with no
+separate destination entity or catalog. Real subscription dispatch requires
+the separately accepted provider capability and verification eligibility;
+local preview eligibility does not establish either. Never infer ownership
+from a display name or convert a legacy station/Avaia into a verified
+BusinessPoint. The intended Core selector chooses the geographically nearest
+candidate, with stable BusinessPoint-ID tie breaking. Start and destination
 are captured once per flight. User movement does not retarget an active trip.
 An absent external catalog or older Core without a preview produces an explicit
 unavailable result. This seam is independent
@@ -33,24 +37,33 @@ The product author explicitly requested 22 local 0xda-market destination pins.
 Their coordinates, source links and placement choices are recorded in Web's
 [`docs/market-points.md`](https://github.com/nilx-one/web/blob/feature/xping-courier/docs/market-points.md).
 The same catalog supplies both map pins and the courier's candidate list.
-These pins are game destinations, not verified BusinessPoints, registered
-business identities, real shop tenancy or evidence that a provider is available.
-They do not enter the business-station service or load Avaia/shop models.
+These pins represent the same BusinessPoint records used as destinations,
+initially with `isVerified: false`, not a parallel game-destination model.
+Each point uses the [owner/UInt8 ID, derived public address and settings
+description](../13-business-bonds-and-presence.md#model-and-ownership).
+The author-seeded local preview does not assert registered business identities,
+verified point claims, real shop tenancy or provider availability. It does not
+bypass the public publication lifecycle. Points do not require an Avaia or shop
+model. The existing Web catalog predates this model revision: implementation
+must map its stable references explicitly before claiming conformance, rather
+than silently replacing IDs or promoting legacy station identities.
 
-Core's optional planner selects the nearest when available. This fixed catalog
-also supports a local presentation preview using the shared map distance utility
-and stable-ID tie breaking. Only an absent courier binding enables this preview;
-malformed Core output or service failures remain failures. No other directory
-silently inherits this fallback. This permits flight to the requested pins before
-a future verified catalog and subscription integration are published.
+The intended Core selector consumes this same BusinessPoint projection and
+returns a reference to the selected point. Its export and portable wire shape
+must be established in Core before Web claims that capability. The current
+fixed catalog supports local preview selection using the shared map distance
+utility and stable-ID tie breaking. An explicitly supported older-runtime
+preview must use that same catalog; malformed Core output or service failures
+remain failures. No other directory silently inherits this fallback. This
+permits preview flight before verified publication and subscription integration.
 
 ## Flight and activities
 
-Only one courier trip per local session may run. Core selects the destination;
+Only one courier trip per local session may run. The intended Core contract selects the BusinessPoint;
 the existing Web flyover finds its road route once, with its documented fallback,
 and flies at 30 m/s with building avoidance. Its actual progress supplies the UI
-countdown and arrival event. Any preliminary Core estimate is not evidence of
-arrival and must not drive completion. No duplicate flight engine is introduced.
+countdown and arrival event. The selector does not own flight speed, ETA or
+arrival; selecting a point must not drive completion. No duplicate flight engine is introduced.
 Refresh ends local simulation;
 no fabricated durable job or server receipt is created. A future persistent-job
 adapter must be scoped to owner identity and revalidate destination eligibility.
@@ -81,8 +94,10 @@ intent, counterpart action and completion evidence separately.
 
 ## Delivery / acceptance
 
-Core: validate projections, choose nearest, reject malformed/duplicate
-IDs and timestamp overflow. Web: optional capability; older runtime stays usable.
+Core target: validate the BusinessPoint projection, choose nearest and reject
+malformed/duplicate IDs. Web: reference the same point records and retain an
+explicit local preview for supported older runtimes. The selector requires no
+tier, flight timestamp or estimated arrival field.
 Tests must cover decline/skip, missing point/runtime, repeat dispatch, context loss,
 unmount, concurrent activities, completion/cancellation and camera ownership.
 Real-map GPU/mobile acceptance remains distinct from Full CI and deploy validation.

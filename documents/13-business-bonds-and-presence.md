@@ -1,6 +1,6 @@
 # Business Bonds and Presence
 
-**Status:** draft v3  
+**Status:** draft v4
 **Companions:** [BondChain Interaction Model](04-bondchain-interaction-model.md), [Creator Offers and Donations](10-creator-offers-and-donations.md), [Map Architecture](12-map-architecture.md), [Digital Presence Auction](14-claim-auction.md)
 
 ## Business Bond
@@ -45,10 +45,10 @@ The portable conceptual shape is:
 ```text
 BusinessPoint {
   owner_bond_ref,
-  identity: {
-    id,             // stable within its business; not a pub_dress
-    name
-  },
+  id: BusinessPointID { owner_pub_dress, number: UInt8 },
+  pub_dress: String,
+  description: String,
+  isVerified: Bool,
   location: {
     address: {
       country,
@@ -69,9 +69,23 @@ BusinessPoint {
 }
 ```
 
+`BusinessPointID` combines the owning BBond's `pub_dress` at allocation with an unsigned eight-bit point number (`0` through `255`). These are separate identity components, not ambiguous string concatenation. The application allocates each number atomically within that owning Bond and MUST NOT reassign it to a different point. Exhaustion returns an explicit failure; rotating the owner's public handle does not reset its allocation or extend the 256-point limit. The ID is stable: description edits, address corrections and later owner public-handle rotation MUST NOT rewrite it. `owner_bond_ref` continues to identify the same owning Bond independently of its current public handle. The exact portable ID encoding remains an implementation-contract decision.
+
+`description` is the point-specific string entered in that point's settings by an authorized BBond representative. The point's `pub_dress` is formed from the owning BBond's current `pub_dress` and that description, using a normalized place component, conceptually `<BBond.pub_dress>-<place>`. It is a public address of the BusinessPoint, not another Bond or Avaia identity. Changing the description updates the point's derived public address without changing its ID. Derivation, normalization, length limits and collision handling MUST be defined by the shared Core address contract before clients implement this operation; clients MUST NOT invent separate transliteration or silent suffixing rules. A failed address update preserves the previous accepted record.
+
+`isVerified` is a read-only convenience projection of `verification.status == verified`, not an independently writable verification flag. Every other lifecycle state projects `false`; the Boolean alone cannot distinguish a draft, pending, expired or withdrawn point and MUST NOT determine publication eligibility. Organization verification and point verification remain separate.
+
 The application owns this record and its publication decision. The authenticated BBond representative owns declarations and withdrawal requests; only the authorized verification result may transition a pending claim to `verified` or `rejected`. The exact decision procedure is not specified here. The service may keep private audit records, but the public projection MUST expose only the minimum fields necessary for discovery and the displayed verification class.
 
-`identity.id` survives caption changes and verified address updates. A location change MUST NOT silently inherit previous point verification: it requires a new explicit claim and verification cycle. An address or coordinate is a declared location input, not proof of physical occupancy.
+`id` survives description changes and verified address updates. A location change MUST NOT silently inherit previous point verification: it requires a new explicit claim and verification cycle. An address or coordinate is a declared location input, not proof of physical occupancy.
+
+### Destination references
+
+A BusinessPoint is itself the destination when a courier such as xPing travels to a business point. The map, point settings and courier MUST reference the same `BusinessPoint.id`; they MUST NOT allocate a second destination identity or maintain an independent destination catalog for those locations. A route may capture the point ID and coordinate at departure as transient execution state. That snapshot is not a second BusinessPoint and does not establish verification, arrival or purchase.
+
+Destination selection accepts only the BusinessPoints made eligible by its calling application context. A local preview may use explicitly unverified points without promoting them to verified public listings or bypassing the publication lifecycle below. A point's existence or selection never proves subscription availability, payment, a completed transaction or physical presence.
+
+This revision replaces the former nested `identity { id, name }` model with the stable owner/UInt8 ID, point `pub_dress`, editable `description` and derived `isVerified` projection. It also unifies map points and courier destinations. Existing verification authority, the 72-hour publication lifecycle and the separate station migration boundary remain applicable. Existing stored identifiers require an explicit compatibility mapping; this documentation change does not migrate data.
 
 ### Point lifecycle and 72-hour window
 

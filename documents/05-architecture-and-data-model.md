@@ -101,6 +101,8 @@ A business may publish zero or more BusinessPoint address claims after its accou
 
 The service records ownership, stable point identity, address, and bounded verification status, then exposes only eligible pending previews or verified listings through a versioned `map.business_points` read projection. A pending preview expires 72 hours after accepted submission even if cleanup is delayed. A verification outcome is an application decision, not bilateral history or proof of registry-backed physical presence.
 
+The [BusinessPoint model](13-business-bonds-and-presence.md#model-and-ownership) owns the BBond-address/UInt8 ID, derived point `pub_dress`, editable description and derived `isVerified` projection. The same BusinessPoint is used for map display and courier destination selection; an execution-time route reference is not a second location entity or independently maintained destination catalog.
+
 ## `map.registry`
 
 The public map projection combines, but does not merge, those sources:

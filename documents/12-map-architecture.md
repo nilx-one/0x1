@@ -98,6 +98,8 @@ A verified listing may show the owner's authorized public point name and address
 
 The business-point projection is generated from application-accepted claims and recorded verification decisions, not from map camera movements, user observations, or BondChain events. The service owns publication and expiry ordering; the renderer owns only how eligible entries look. Address validation, correction, safe publication, duplicate handling, and bounded abuse controls must be covered in the implementation before exposing public points.
 
+A map entry and a courier destination for the same business location reference the same BusinessPoint ID and record. `pub_dress` and description are point-address presentation; neither replaces the stable ID. `isVerified` projects the point's accepted verification status, and does not replace the lifecycle checks above. A local seeded preview uses the same BusinessPoint model with `isVerified: false`; its preview rendering does not create a verified listing or a second destination identity.
+
 ## Future Creator Projections
 
 A creator offer or performance may be geographically discoverable without claiming that its author is physically present at that location.

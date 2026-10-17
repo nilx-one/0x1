@@ -86,7 +86,7 @@ A business-scoped Bond: a Bond whose subject is a business and whose current act
 
 ### BusinessPoint
 
-A location record owned by one BBond with its own stable point identifier, name, structured address, and derived map coordinate. It is not a Bond, Avaia, `pub_dress`, or physical/digital presence right. Its claim verification is independent of the owning business's verification and of `REG-ATTEST`. See [Business Bonds and Presence](13-business-bonds-and-presence.md).
+A location record owned by one BBond, identified by the owner's public address at allocation plus a `UInt8` point number. It has its own derived `pub_dress`, settings-managed description, structured address, map coordinate and derived `isVerified` Boolean. It is itself the destination for travel to that point, not a separate destination entity. It is not a Bond, Avaia, or physical/digital presence right. Its claim verification is independent of the owning business's verification and of `REG-ATTEST`. See [Business Bonds and Presence](13-business-bonds-and-presence.md).
 
 ### BusinessPoint preview
 
