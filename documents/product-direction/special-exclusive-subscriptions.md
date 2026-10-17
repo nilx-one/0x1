@@ -6,10 +6,19 @@
 
 | Subscription | Payment | Target artifact eligibility | XP bonus |
 | --- | --- | --- | --- |
-| Special | 1,000 Seeds ₴€£ / month, or real money priced at about 50% of a comparable monthly Telegram Premium | Through Special (tier 6) | Avaia ×1.5, Bond ×1 |
-| Exclusive | Real-money supporter purchase priced at about 120% of a comparable monthly Telegram Premium; not Seeds | Through Exclusive (tier 7), including Special | Bond ×1.25; Avaia ×2 on eligible future awards |
+| Special | USDT or Seeds (SEED, glyph ₴€£) | Through Special (tier 6) | Avaia ×1.5, Bond ×1 |
+| Exclusive | USDT only; not Seeds | Through Exclusive (tier 7), including Special | Bond ×1.25; Avaia ×2 on eligible future awards |
 
-Prices are provisional. An actual quote must capture the amount, duration, currency, comparable Premium reference, consent and expiration. A payment granting a benefit is commercial consideration, not a pure protocol Donation under [Creator Offers and Donations](../10-creator-offers-and-donations.md).
+Introductory fixed-duration price matrix (same user-declared prices as the [0xda-market catalog proposal](https://github.com/0xda-market/core/pull/116)):
+
+| Duration | Special (USDT) | Special (SEED ₴€£) | Exclusive (USDT) |
+| --- | ---: | ---: | ---: |
+| 1 month | 2.49 | 400 | 5.49 |
+| 3 months | 6.29 | 1,020 | 13.99 |
+| 6 months | 11.49 | 1,800 | 24.49 |
+| 12 months | 14.99 | 2,400 | 32.99 |
+
+`₴€£` is one **in-game Seeds denomination**, not a set of fiat currencies and not an FX conversion rule. There is no SEED payment option for Exclusive. The listed prices are product targets, **not live checkout availability**: each actual quote must bind the recipient Bond, exact duration and currency, amount, consent and expiration. A payment granting a benefit is commercial consideration, not a pure protocol Donation under [Creator Offers and Donations](../10-creator-offers-and-donations.md).
 
 Subscriptions belong to the authenticated Bond, not the Telegram account, Avaia, device or BondChain. An active Exclusive includes Special capabilities. Pending payments, UI state and unverified client assertions do not grant access.
 
