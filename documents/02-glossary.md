@@ -12,7 +12,7 @@ The authority to continue authenticated history. External classifications may de
 
 ### `pub_dress`
 
-The current human-readable public address pointer bound to a Bond identity. A human address has form `0x{d}{slug}` and an owned-AI-avatar address has form `x{d}{slug}` under the exact grammar in [Identity](04-identity.md). The discriminator is immutable under the current model; the slug may rotate when the owning identity contract authorizes it and the requested complete address is globally available. Historical authenticated address bindings remain immutable. `pub_dress` is a discovery pointer, not the cryptographic foundation of identity.
+The current human-readable public address pointer bound to a Bond identity. A human address has form `0x{d}{slug}` and an owned-AI-avatar address has form `x{d}{slug}` under the exact grammar in [Identity](04-identity.md). The discriminator is immutable under the current model; the slug may rotate when the owning identity contract authorizes it and the requested complete address is globally available. Historical authenticated address bindings remain immutable. `pub_dress` is a discovery pointer, not the cryptographic foundation of identity. A BusinessPoint's point `pub_dress` is derived from its owning BBond's `pub_dress` and addresses that point; it is not bound to a Bond identity of its own (see [Business Bonds and Presence](13-business-bonds-and-presence.md#model-and-ownership)).
 
 ### Identity provider
 
@@ -86,7 +86,7 @@ A business-scoped Bond: a Bond whose subject is a business and whose current act
 
 ### BusinessPoint
 
-A location record owned by one BBond with its own stable point identifier, name, structured address, and derived map coordinate. It is not a Bond, Avaia, `pub_dress`, or physical/digital presence right. Its claim verification is independent of the owning business's verification and of `REG-ATTEST`. See [Business Bonds and Presence](13-business-bonds-and-presence.md).
+A location record owned by one BBond, identified by the owner's public address at allocation plus a `UInt8` point number. It has its own derived `pub_dress`, settings-managed description, structured address, map coordinate and derived `isVerified` Boolean. It is itself the destination for travel to that point, not a separate destination entity. It is not a Bond, Avaia, or physical/digital presence right. Its claim verification is independent of the owning business's verification and of `REG-ATTEST`. See [Business Bonds and Presence](13-business-bonds-and-presence.md).
 
 ### BusinessPoint preview
 
