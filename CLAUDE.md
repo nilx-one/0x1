@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code in this repository.
 
 ## GitHub delivery
 
@@ -14,8 +14,8 @@ deploys. For anything else, ignore this section.
   missing capability, or a step that needs account-owner privileges.
 - Reversible actions (branches, commits, pull requests, comments) proceed
   without asking again.
-- Ask first, every time, before: merge, deploy, delete, transfer a repository,
-  a destructive data operation, or anything irreversible outside the repository.
+- Ask first, every time, before: deploy, delete, transfer a repository, a
+  destructive data operation, or anything irreversible outside the repository.
 
 ### One task, one pull request
 
@@ -78,47 +78,35 @@ the artifact changed, the relevant environment state changed, the platform
 requires it, or the repository documents why. Keep a repeat narrow and
 different from the earlier check.
 
-### Shared-account co-authorship
+### Commit attribution
 
-Commit as the GitHub account that actually did the work, identified by its
-account ID:
+One rule, no judgement calls:
 
-| GitHub account | Account ID | Git author (ID-based noreply)               |
-| -------------- | ---------- | ------------------------------------------- |
-| `0x0sky`       | 75973992   | `75973992+0x0sky@users.noreply.github.com`  |
-| `x0skai`       | 300452669  | `300452669+x0skai@users.noreply.github.com` |
+| Who                 | Identity in Git                                     |
+| ------------------- | --------------------------------------------------- |
+| Claude Code (agent) | `x0skai <x0skai@aiaiaiai.org>`                      |
+| Account owner       | `0x0sky <75973992+0x0sky@users.noreply.github.com>` |
 
-Tool credit is separate from account credit and applies only to real
-contribution to the commit:
-
-- `Assisted-by: OpenAI Codex` when Codex contributed.
-- `Co-authored-by: Claude <noreply@anthropic.com>` when Claude contributed.
-
-Rules:
-
-- Add the other account as `Co-authored-by: <login> <<ID>+<login>@users.noreply.github.com>`
-  only when it contributed code, tests, documentation or an incorporated patch
-  to that exact commit. A review, approval, prompt or account ownership alone
-  does not qualify.
-- Solo authorship is normal. A commit with no real second contributor has no
-  account co-author. Do not add one for an achievement or to satisfy a check.
-- Never add the primary author as its own co-author, and never duplicate a
-  trailer.
-- Put trailers in the final paragraph of the commit message, one per line.
-- Never label a commit as an unknown author to avoid this rule. If the connected
-  GitHub API cannot author as the correct account, commit from a shell with the
-  correct repository-local identity. If no such shell exists, state the
-  limitation in the PR and do not claim the attribution.
-- The commit-attribution check validates identities, trailer format, and
-  duplicate or self credit. It cannot prove that a contribution happened; the
-  author and reviewers establish that.
-- Before merge, inspect the pushed commits: author account ID, trailers and
-  co-author IDs. A comment, review or PR body is not a substitute.
-- For squash merges, write the final message explicitly so genuine co-authors
-  and tool credits survive. Do not assume GitHub preserves them.
-- Do not manufacture commits, rewrite merged history, or change merge methods to
-  create credit. Signature verification and achievement status are reported
-  separately.
+- **Claude Code commits only as `x0skai <x0skai@aiaiaiai.org>`**, as author
+  and committer. That is the session's git identity; never override it, and
+  never commit as `0x0sky`.
+- **End every Claude Code commit with**
+  `Co-authored-by: Claude <noreply@anthropic.com>` whenever Claude wrote any
+  of it. Add `Co-authored-by: Codex <codex@openai.com>` only when Codex
+  contributed substantive changes to that exact commit. `Assisted-by` is not
+  GitHub co-authorship.
+- **Claude Code never adds `0x0sky` as a co-author.** When `0x0sky`
+  contributes to a commit, `0x0sky` adds its own `Co-authored-by` trailer.
+- Trailers go in the final paragraph, one per line, never duplicated, and the
+  commit's author never appears among its own co-authors.
+- **Squash merges:** GitHub makes the PR's author the squash commit's author.
+  Write the final message explicitly: keep genuine Claude and Codex co-author
+  trailers from the branch, plus credited account contributors (only for
+  incorporated work). Never repeat the squash author among its co-authors.
+  Verify the actual merged commit's author and trailer lines afterwards.
+- Never rewrite merged history, manufacture commits or change merge methods
+  to create credit. The commit-attribution check validates identities and
+  trailer format; it cannot prove a contribution happened.
 
 ### Efficiency
 
@@ -147,81 +135,5 @@ remaining risk or blocker, and whether deploy or another protected action
 needs authorization. Do not narrate every tool call, repeat logs without
 interpreting them, claim success you did not verify, or ask for confirmation
 the policy already grants.
-
-
-## What this repository is
-
-`0x1` is a **specification repository**, not an implementation. There is no application source, build system, or package manifest. The deliverable is the protocol specification in `documents/`; the only executable code is the documentation linter that enforces the specification's own contract.
-
-Per `documents/README.md`, `0x1` is a protocol product within the `nilx.one` ecosystem — not a GitHub organization, company identity, or alias for `nilx.one`.
-
-## Commands
-
-```bash
-# Full documentation policy check (foundation, catalog, structure, terminology, links)
-python scripts/lint_documentation.py
-
-# Linter contract tests
-python -m unittest tests/test_documentation_linter.py
-
-# A single test
-python -m unittest tests.test_documentation_linter.DocumentationLinterTests.test_broken_relative_link_is_reported
-
-# Lint an alternate tree or policy file
-python scripts/lint_documentation.py --root /path/to/tree --policy .github/documentation-style.json
-```
-
-Python 3.13, standard library only — no dependencies to install. `.github/workflows/documentation-ci.yml` runs exactly these two commands as the `Documentation policy` check. The linter prints GitHub `::error` annotations and exits non-zero on any finding.
-
-## Documentation architecture
-
-The specification is organized by **authority boundary**, and the two-digit filename prefix encodes dependency and reading order — not a version.
-
-- `documents/00-protocol-laws.md` is the normative root. Ten laws (human authority, pairwise truth, explicit consent, append-only continuity, authority-not-from-mechanism, minimal disclosure, separation of value/depth/visibility, bounded global state, explicit failure, versioned change). Every normative statement anywhere in the repository must derive from these. A subordinate document that conflicts with them is a specification defect, not an exception.
-- `documents/01-documentation-protocol.md` governs how the specification is written, divided, and enforced. Read it before authoring or restructuring any document — it defines the canonical section order (Purpose, Principles, Model, Records, Protocol, Lifecycle, Failure, Privacy, Invariants, Examples, Related Documents), the layer boundaries (model → behavior → protocol records → cryptography → implementation), and the change-discipline categories (clarification / extension / revision).
-- `documents/02-glossary.md` owns canonical vocabulary repository-wide. One term, one meaning. Define a term there rather than locally.
-- `documents/17-protocol-constants-and-open-questions.md` owns unresolved values. An open question must stay marked open — never resolve one by writing it as a stable guarantee elsewhere.
-- `documents/18-core-and-client-architecture.md` owns the portable Rust product-engine boundary, peer Web/iOS client model, bindings, MapLibre integration, and GPU fallback contract.
-- `documents/18-implementation-roadmap.md` stages delivery against the protocol and Core boundaries.
-- `documents/19-core-client-contract.md` owns the versioned Core envelopes, compatibility, canonical fixture bytes, typed failures, and cross-runtime handshake.
-- `documents/README.md` is the unnumbered index and is itself linted for completeness and order.
-
-Each document owns exactly one architectural concern and **links** to adjacent contracts instead of restating them.
-
-## The enforcement chain
-
-Policy is data, not code. Four files move together:
-
-| File | Owns |
-|---|---|
-| `.github/documentation-style.json` | Foundation document, canonical ordered catalog, required foundation consumers, deprecated terms, canonical code terms, excluded paths |
-| `scripts/lint_documentation.py` | The deterministic checks (`DOC*`, `TERM*`, `LINK*` finding codes) |
-| `tests/test_documentation_linter.py` | Regression protection for those check functions |
-| `.github/workflows/documentation-ci.yml` | Surfacing the result as a required check |
-
-The linter enforces explicit, declared rules only — it does not infer intent, judge prose, or call a model. Adding a new rule means: derive it from the Protocol Laws, express it in the policy JSON where possible, implement the check, and add a test.
-
-## Rules that will fail CI
-
-- **Adding, removing, or renumbering a document** requires the same pull request to update the file, `ordered_documents` in the policy JSON, and `documents/README.md` — including link order, which is checked positionally (`DOC011`–`DOC014`). Any `documents/*.md` outside the canonical sequence fails.
-- **Exactly one H1, on line 1** (`DOC001`/`DOC002`).
-- **Trailing whitespace** must be 0 or exactly 2 spaces (the Markdown line break); tabs are forbidden (`DOC003`/`DOC004`).
-- **Deprecated terms** (`TERM001`, case-insensitive, prose only): "hub"/"hubs" → transit party/parties; "settlement anchor" → settlement origin; "settlement set" → Settlement Context. These encode architectural decisions — AMS roles are local edge positions, and the settlement relation is implicit rather than a materialized set.
-- **Canonical code terms** must be inline-code formatted in prose (`TERM002`): `bond.chain`, `bond.journal`, `matr.ix`, `sk_bond`, `sk_ack`, `sk_presence`, `pub_dress`.
-- **Local links** must resolve inside the repository (`LINK001`/`LINK002`).
-- `documents/README.md`, `01-documentation-protocol.md`, and `02-glossary.md` must each link to `00-protocol-laws.md` (`DOC009`), and the index's first Markdown link must be `00-protocol-laws.md` (`DOC010`).
-
-Fenced code blocks and inline code are excluded from terminology checks, so examples can carry legacy or rejected vocabulary. Per-line escapes `doclint: allow-terms` and `doclint: allow-code-terms` exist but must stay visible in review — they are not a substitute for a glossary change when the vocabulary itself has moved. `documents/17-protocol-constants-and-open-questions.md` is in `excluded_paths` (skipped by prose checks) yet still required by the catalog check.
-
-## Writing normative text
-
-- Use **MUST / MUST NOT / SHOULD / SHOULD NOT / MAY** in the RFC sense. Keep rationale plainly distinguishable from requirements.
-- Prefer statements of capability and impossibility ("the relay never learns", "a record is invalid unless") over narrative description.
-- Do not invent actors for narrative convenience — coordinator, master, and generic authority roles are not primitives unless a contract defines them.
-- Every durable fact must answer: who can create it, who can read it, who can change or invalidate it. If an answer crosses an authority boundary, name that crossing as an architectural decision.
-- Examples demonstrate behavior; they never create it.
-- A change to the Protocol Laws is a protocol revision: identify the former law, the replacement, affected boundaries, and migration behavior, and update every dependent document and enforcement rule in the same pull request.
-
-`README.md` is the public-facing thesis and is linted under the same policy as `documents/`. Keep its claims consistent with the specification — it deliberately states limits ("trust-minimized", not unbreakable) rather than softening them.
 
 <!-- © 2026 aiaiaiai · aiaiaiai.org -->
