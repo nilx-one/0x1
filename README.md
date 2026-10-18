@@ -337,4 +337,8 @@ Open questions are documented instead of softened into implied certainty.
 *Built by [0x0sky](https://github.com/0x0sky).*  
 *Two Bonds. Reciprocal action. One bounded truth.*
 
+## Repository-specific agent guidance
+
+The shared `CLAUDE.md` and `AGENTS.md` are synchronized with `nilx-one/core`. Local instructions (protocol authorship, documentation commands, and normative ownership rules) are preserved in [repository agent guidance](.claude/rules/protocol-repository.md).
+
 <!-- © 2026 aiaiaiai · aiaiaiai.org -->

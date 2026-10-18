@@ -30,10 +30,11 @@ jobs:
         shell: bash
         run: |
           set -Eeuo pipefail
+          # Agent documentation under .claude/rules is not implementation code.
           unexpected=()
           while IFS= read -r entry; do
             case "$entry" in
-              .git|.github|contracts|documents|scripts|tests|.gitignore|.gitattributes|*.md)
+              .git|.github|.claude|contracts|documents|scripts|tests|.gitignore|.gitattributes|*.md)
                 ;;
               *)
                 unexpected+=("$entry")
