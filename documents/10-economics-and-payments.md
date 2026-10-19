@@ -40,6 +40,14 @@ CONTINUE rewards are fixed protocol behavior:
 - assisting participant: `+100 exp`;
 - relationship `level`: unchanged.
 
+### First additional external provider — product onboarding `exp`
+
+0x1 may grant **one**, non-transferable `exp` reward for the first newly verified **additional** third-party provider binding completed by an already existing Bond. This is a narrow authenticated *account-safety onboarding milestone*, not an ordinary observed event or a provider sign-in event. It never increases relationship `level`, issues `bnd`, affects ranking, or alters any BondChain fact.
+
+Eligibility MUST be decided by 0x1 Core from one verified, replay-resistant Identity-boundary attestation and a durable **claimed-once** marker. The Identity Service does not mint game experience. The initial account-creation provider is baseline, not bonus-eligible. New email, passkeys, native password, reauthentication, refresh, or reconnect of a previously used provider do not qualify. The award persists through a `pub_dress` rename or provider unlink. Multiple callbacks, concurrently completed links, retries, and client replay must all be idempotent.
+
+**Open numerical constant:** the `exp` amount is intentionally unspecified; it must be set with a Core contract and tests before any live grant. Until then this is a defined product incentive, not permission for client-side XP issuance.
+
 ## Pairwise Payments
 
 Payments use authorized `PAY-REQ` and `PAY-SETTLE` records with an HTLC-style settlement proof inside the BondChain that owns that payment interaction.
