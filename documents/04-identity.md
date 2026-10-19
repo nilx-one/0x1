@@ -284,6 +284,22 @@ A future privacy contract MAY allow a person to publish selected provider presen
 
 Native credentials MAY be represented separately in account/security UI. They are not listed as an external provider merely to make the presentation uniform.
 
+### Optional provider connections and first-link incentive
+
+**All actually implemented and enabled authentication methods and external provider connections must remain usable across ecosystem products**; no provider is exclusive to 0x1, Prism, or a bot. Native `pub_dress` + password is a common baseline. A product may feature relevant providers without turning its preferences into Identity Service authorization restrictions. 0x1 MAY prominently offer supported Telegram and Discord sign-in (when operational). GitHub is a **future UI/integration candidate**, not a commitment to ship a sign-in control now. Less prominent supported methods remain discoverable as optional connections in account/security settings. A login is an authentication event; logging in with an already bound provider is NOT the act of attaching an additional provider.
+
+After an existing Bond is authenticated, 0x1 MAY invite the person to connect one more independent external provider account for added sign-in flexibility. This invitation is optional. It MUST NOT silently create or merge identities; attaching a provider requires verified proof of both the current Bond and the external provider subject as defined above.
+
+**First additional provider award:** the first verified, explicit, **post-registration connection of a new external provider type** to an existing human Bond is eligible for a **single** product `exp` reward. An external provider that supplied the initial registration proof is not an additional provider. Native passwords, email addresses, email verification, and passkeys are not synthetic external-provider types and do not satisfy this reward. Provider login, repeat authorization, token refresh, re-link, account reconnect, or a return to a provider used earlier never mints new experience. The award remains spent/claimed across public-address slug changes, provider removal and reconnection, session/device changes, and subsequent visits to other products.
+
+Only an authenticated, durable provider-binding transition recognized by Identity can be evidence for eligibility. Identity Service owns the binding proof and the private stable person identifier; **the internal identifier MUST NOT be disclosed to 0x1**. A future integration supplies a minimal product-scoped, replay-safe, non-secret receipt/attestation. 0x1 Core is the sole authority deciding first-link eligibility and recording an idempotent experience award. No client-supplied provider name, arbitrary callback, or provider access token can grant `exp`. This onboarding incentive is **product-owned** and MUST NOT become a global Identity reward or be shown in Prism.
+
+The numerical amount, receipt protocol, and exact Core reward transition are **open implementation contracts**; this document establishes the expected behavior, not an already shipping award.
+
+### Email experience boundary
+
+Verified email sign-in and recovery may be supported by the shared Identity Service and used from Prism or another ecosystem client for the same underlying person, including later access to 0x1. **0x1 does not require email or feature it during ordinary registration**. Nevertheless, a person may voluntarily discover, use, verify, and manage supported email authentication/recovery in an optional account/security flow. This is a product prominence rule, not a server-side restriction on permitted connections or verified email recovery. Prism may choose email as its principal new-user entry, deriving only an editable `pub_dress` **suggestion** from the email local-part; Telegram bots may start from verified Telegram proof. Every context still offers native `pub_dress` + password and the same eligible optional methods; no email or Telegram username becomes the permanent private user identifier. See the [ecosystem identity contract](https://github.com/aiaiaiai-org/.github/blob/main/ecosystem/identity/DESIGN.md).
+
 ## Registry boundary
 
 Identity records have two architectural stages.
