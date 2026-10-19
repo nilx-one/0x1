@@ -286,7 +286,7 @@ Native credentials MAY be represented separately in account/security UI. They ar
 
 ### Optional provider connections and first-link incentive
 
-0x1 MAY offer sign-in via supported, actually enabled external providers (Telegram and Discord where available). GitHub is a **future UI/integration candidate**, not a commitment to ship a sign-in control now. A login is an authentication event; logging in with an already bound provider is NOT the act of attaching an additional provider.
+**All actually implemented and enabled authentication methods and external provider connections must remain usable across ecosystem products**; no provider is exclusive to 0x1, Prism, or a bot. Native `pub_dress` + password is a common baseline. A product may feature relevant providers without turning its preferences into Identity Service authorization restrictions. 0x1 MAY prominently offer supported Telegram and Discord sign-in (when operational). GitHub is a **future UI/integration candidate**, not a commitment to ship a sign-in control now. Less prominent supported methods remain discoverable as optional connections in account/security settings. A login is an authentication event; logging in with an already bound provider is NOT the act of attaching an additional provider.
 
 After an existing Bond is authenticated, 0x1 MAY invite the person to connect one more independent external provider account for added sign-in flexibility. This invitation is optional. It MUST NOT silently create or merge identities; attaching a provider requires verified proof of both the current Bond and the external provider subject as defined above.
 
@@ -298,7 +298,7 @@ The numerical amount, receipt protocol, and exact Core reward transition are **o
 
 ### Email experience boundary
 
-Verified email sign-in and recovery may be supported by the shared Identity Service and used from Prism or another ecosystem client for the same underlying person, including later access to 0x1. **0x1 itself does not solicit, require, recommend, or display email** in its registration, login, or recovery UI. This is a product presentation rule, not a prohibition on a verified email recovery capability of the shared account. See the [ecosystem identity contract](https://github.com/aiaiaiai-org/.github/blob/main/ecosystem/identity/DESIGN.md).
+Verified email sign-in and recovery may be supported by the shared Identity Service and used from Prism or another ecosystem client for the same underlying person, including later access to 0x1. **0x1 does not require email or feature it during ordinary registration**. Nevertheless, a person may voluntarily discover, use, verify, and manage supported email authentication/recovery in an optional account/security flow. This is a product prominence rule, not a server-side restriction on permitted connections or verified email recovery. Prism may choose email as its principal new-user entry, deriving only an editable `pub_dress` **suggestion** from the email local-part; Telegram bots may start from verified Telegram proof. Every context still offers native `pub_dress` + password and the same eligible optional methods; no email or Telegram username becomes the permanent private user identifier. See the [ecosystem identity contract](https://github.com/aiaiaiai-org/.github/blob/main/ecosystem/identity/DESIGN.md).
 
 ## Registry boundary
 
