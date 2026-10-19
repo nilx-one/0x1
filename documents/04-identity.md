@@ -284,6 +284,22 @@ A future privacy contract MAY allow a person to publish selected provider presen
 
 Native credentials MAY be represented separately in account/security UI. They are not listed as an external provider merely to make the presentation uniform.
 
+### Optional provider connections and first-link incentive
+
+0x1 MAY offer sign-in via supported, actually enabled external providers (Telegram and Discord where available). GitHub is a **future UI/integration candidate**, not a commitment to ship a sign-in control now. A login is an authentication event; logging in with an already bound provider is NOT the act of attaching an additional provider.
+
+After an existing Bond is authenticated, 0x1 MAY invite the person to connect one more independent external provider account for added sign-in flexibility. This invitation is optional. It MUST NOT silently create or merge identities; attaching a provider requires verified proof of both the current Bond and the external provider subject as defined above.
+
+**First additional provider award:** the first verified, explicit, **post-registration connection of a new external provider type** to an existing human Bond is eligible for a **single** product `exp` reward. An external provider that supplied the initial registration proof is not an additional provider. Native passwords, email addresses, email verification, and passkeys are not synthetic external-provider types and do not satisfy this reward. Provider login, repeat authorization, token refresh, re-link, account reconnect, or a return to a provider used earlier never mints new experience. The award remains spent/claimed across public-address slug changes, provider removal and reconnection, session/device changes, and subsequent visits to other products.
+
+Only an authenticated, durable provider-binding transition recognized by Identity can be evidence for eligibility. Identity Service owns the binding proof and the private stable person identifier; **the internal identifier MUST NOT be disclosed to 0x1**. A future integration supplies a minimal product-scoped, replay-safe, non-secret receipt/attestation. 0x1 Core is the sole authority deciding first-link eligibility and recording an idempotent experience award. No client-supplied provider name, arbitrary callback, or provider access token can grant `exp`. This onboarding incentive is **product-owned** and MUST NOT become a global Identity reward or be shown in Prism.
+
+The numerical amount, receipt protocol, and exact Core reward transition are **open implementation contracts**; this document establishes the expected behavior, not an already shipping award.
+
+### Email experience boundary
+
+Verified email sign-in and recovery may be supported by the shared Identity Service and used from Prism or another ecosystem client for the same underlying person, including later access to 0x1. **0x1 itself does not solicit, require, recommend, or display email** in its registration, login, or recovery UI. This is a product presentation rule, not a prohibition on a verified email recovery capability of the shared account. See the [ecosystem identity contract](https://github.com/aiaiaiai-org/.github/blob/main/ecosystem/identity/DESIGN.md).
+
 ## Registry boundary
 
 Identity records have two architectural stages.
