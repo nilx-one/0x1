@@ -6,7 +6,7 @@
 
 | Subscription | Payment | Target artifact eligibility | XP bonus |
 | --- | --- | --- | --- |
-| Special | USDT or seeds (seeds, glyph ₴€£) | Through Special (tier 6) | Avaia ×1.5, Bond ×1 |
+| Special | USDT or seeds (₴€£) | Through Special (tier 6) | Avaia ×1.5, Bond ×1 |
 | Exclusive | USDT only; not seeds | Through Exclusive (tier 7), including Special | Bond ×1.25; Avaia ×2 on eligible future awards |
 
 Introductory fixed-duration price matrix (same user-declared prices as the [0xda-market catalog proposal](https://github.com/0xda-market/core/pull/116)):
