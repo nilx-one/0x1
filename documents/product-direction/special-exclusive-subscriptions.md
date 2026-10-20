@@ -6,19 +6,48 @@
 
 | Subscription | Payment | Target artifact eligibility | XP bonus |
 | --- | --- | --- | --- |
-| Special | USDT or Seeds (SEED, glyph ₴€£) | Through Special (tier 6) | Avaia ×1.5, Bond ×1 |
-| Exclusive | USDT only; not Seeds | Through Exclusive (tier 7), including Special | Bond ×1.25; Avaia ×2 on eligible future awards |
+| Special | USDT or seeds (seeds, glyph ₴€£) | Through Special (tier 6) | Avaia ×1.5, Bond ×1 |
+| Exclusive | USDT only; not seeds | Through Exclusive (tier 7), including Special | Bond ×1.25; Avaia ×2 on eligible future awards |
 
 Introductory fixed-duration price matrix (same user-declared prices as the [0xda-market catalog proposal](https://github.com/0xda-market/core/pull/116)):
 
-| Duration | Special (USDT) | Special (SEED ₴€£) | Exclusive (USDT) |
+| Duration | Special (USDT) | Special (seeds ₴€£) | Exclusive (USDT) |
 | --- | ---: | ---: | ---: |
 | 1 month | 2.49 | 400 | 5.49 |
 | 3 months | 6.29 | 1,020 | 13.99 |
 | 6 months | 11.49 | 1,800 | 24.49 |
 | 12 months | 14.99 | 2,400 | 32.99 |
 
-`₴€£` is one **in-game Seeds denomination**, not a set of fiat currencies and not an FX conversion rule. There is no SEED payment option for Exclusive. The listed prices are product targets, **not live checkout availability**: each actual quote must bind the recipient Bond, exact duration and currency, amount, consent and expiration. A payment granting a benefit is commercial consideration, not a pure protocol Donation under [Creator Offers and Donations](../10-creator-offers-and-donations.md).
+`₴€£` is one **in-game seeds denomination**, not a set of fiat currencies and not an FX conversion rule. There is no seeds payment option for Exclusive. The listed prices are product targets, **not live checkout availability**: each actual quote must bind the recipient Bond, exact duration and currency, amount, consent and expiration. A payment granting a benefit is commercial consideration, not a pure protocol Donation under [Creator Offers and Donations](../10-creator-offers-and-donations.md).
+
+### seeds naming and quantity forms
+
+The canonical game-currency identifier is always `seeds` (lowercase);
+the English singular is `seed`. `₴€£` is the invariant presentation
+glyph: it cannot be uppercased or lowercased, and it does not represent
+three independent fiat currency balances.
+
+Numeric unit labels are localized as follows for whole numbers:
+
+| Locale | One (1, 21, 31…) | Few (2–4, 22–24…) | Many (0, 5–20, 25–30…) |
+| --- | --- | --- | --- |
+| `en_US` | seed | seeds | seeds |
+| `uk_UA` | сід | сіди | сідів |
+| `ru_RU` | сид | сида | сидов |
+
+`uk_UA` and `ru_RU` use the **many** form for numbers with last
+two digits 11–14, including 111–114, irrespective of their final digit.
+Otherwise the last digit chooses one (1), few (2–4), or many (all others).
+Thus `1 сід`, `2 сіди`, `5 сідів`, `11 сідів`, `21 сід`,
+`22 сіди`, `25 сідів`; `1 сид`, `2 сида`, `5 сидов`,
+`11 сидов`, `21 сид`, `22 сида`, `25 сидов`.
+The Ukrainian standard form is **`сідів`**, not `сідив`.
+Avoid a fixed noun label `сід` after every count; compact balance/price
+labels may instead use `₴€£`, e.g. `400 ₴€£`. Lowercase spellings
+are preserved even at the beginning of a sentence.
+
+These are naming/presentation rules, not an implemented balance renderer,
+payment permission, credit, or new gameplay currency conversion.
 
 Subscriptions belong to the authenticated Bond, not the Telegram account, Avaia, device or BondChain. An active Exclusive includes Special capabilities. Pending payments, UI state and unverified client assertions do not grant access.
 
@@ -40,7 +69,7 @@ Pickup selector, left to right: **Off → Exclusive (7) → Special (6) → Rare
 
 The identity service owns durable tier entitlements, effective periods, refunds/revocations and access checks at find generation, discovery, pickup and server claim. The server prices eligible committed XP once, using a documented integer rounding rule and an entitlement snapshot. **Special** grants only Avaia ×1.5 XP (Bond ×1); **Exclusive** grants Avaia ×2 XP and Bond ×1.25 XP. Benefits are **exclusive tier alternatives**, not cumulative: Exclusive must never apply ×1.5 ×2 to Avaia. Apply bonuses only to new eligible committed gameplay awards at the authoritative award time; first-iteration one-time device achievements remain unchanged. The rounding rule must be explicit and stable in tests. Old XP and already accepted inventory are never recomputed or confiscated.
 
-Seeds purchases require an authenticated, idempotent, server-verified debit and grant; the locally stored inventory balance alone cannot authorize a paid subscription. Monetary purchases require 0xda-market confirmed settlement, recipient binding and exactly-once fulfillment. Term overlap and upgrades need an explicit policy before charging users.
+seeds purchases require an authenticated, idempotent, server-verified debit and grant; the locally stored inventory balance alone cannot authorize a paid subscription. Monetary purchases require 0xda-market confirmed settlement, recipient binding and exactly-once fulfillment. Term overlap and upgrades need an explicit policy before charging users.
 
 Offline Avaia is a possible **later** Exclusive capability, not part of the initial entitlement.
 
@@ -64,7 +93,7 @@ The Bond Gifts catalog landing is a **future integration contract**, not an impl
 
 ## Delivery Order
 
-1. Rarity v2 and legacy migration, plus identity entitlements and authoritative Seeds debit.
+1. Rarity v2 and legacy migration, plus identity entitlements and authoritative seeds debit.
 2. Server discovery/claim gates and committed XP multipliers.
 3. 0xda-market Special/Exclusive products and verified fulfillment, distinct from broker-resold Telegram Premium.
 4. Web and other clients activate the new pickup selector only against a compatible Core and identity-service capability.
