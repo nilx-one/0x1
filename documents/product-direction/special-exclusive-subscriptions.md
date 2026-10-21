@@ -1,15 +1,15 @@
 # Special and Exclusive Subscriptions
 
-**Status:** proposed, non-normative product direction. No payments, rarity codes, entitlement grants, or interaction types are activated by this document.
+**Status:** approved target, not yet activated. Rarity and economic ratios follow [Five-tier rarity economy](five-tier-rarity-economy.md). No payments, rarity codes, entitlement grants, or interaction types are activated by this document.
 
 ## Products
 
 | Subscription | Payment | Target artifact eligibility | XP bonus |
 | --- | --- | --- | --- |
-| Special | USDT or seeds (₴€£) | Through Special (tier 6) | Avaia ×1.5, Bond ×1 |
-| Exclusive | USDT only; not seeds | Through Exclusive (tier 7), including Special | Bond ×1.25; Avaia ×2 on eligible future awards |
+| Special | USDT or seeds (₴€£) | Through Special (target tier 4) | Avaia ×1.5, Bond ×1 |
+| Exclusive | USDT only in staged catalog; Seeds proposed, not yet enabled | Through Exclusive (target tier 5), including Special | Bond ×1.25; Avaia ×2 on eligible future awards |
 
-Introductory fixed-duration price matrix (same user-declared prices as the [0xda-market catalog proposal](https://github.com/0xda-market/core/pull/116)):
+**Pre-migration, inactive** 0xda-market catalog values from [0xda-market/core#116](https://github.com/0xda-market/core/pull/116). Exclusive USDT prices below are *not* aligned with the newly agreed price ×2 rarity ratio and require a separate market change:
 
 | Duration | Special (USDT) | Special (seeds ₴€£) | Exclusive (USDT) |
 | --- | ---: | ---: | ---: |
@@ -18,7 +18,7 @@ Introductory fixed-duration price matrix (same user-declared prices as the [0xda
 | 6 months | 11.49 | 1,800 | 24.49 |
 | 12 months | 14.99 | 2,400 | 32.99 |
 
-`₴€£` is one **in-game seeds denomination**, not a set of fiat currencies and not an FX conversion rule. There is no seeds payment option for Exclusive. The listed prices are product targets, **not live checkout availability**: each actual quote must bind the recipient Bond, exact duration and currency, amount, consent and expiration. A payment granting a benefit is commercial consideration, not a pure protocol Donation under [Creator Offers and Donations](../10-creator-offers-and-donations.md).
+`₴€£` is one **in-game seeds denomination**, not a set of fiat currencies and not an FX conversion rule. There is no seeds payment option for Exclusive. Derived Exclusive Seeds prices under the ×2 multiplier, using the existing Special Seed schedule, are **800 / 2,040 / 3,600 / 4,800** for 1/3/6/12 months, respectively. These are design targets, not activation of Exclusive Seeds checkout. Term discounts remain tier-independent and commercial rounding is denomination-specific. The listed staged prices are **not live checkout availability**: each actual quote must bind the recipient Bond, exact duration and currency, amount, consent and expiration. A payment granting a benefit is commercial consideration, not a pure protocol Donation under [Creator Offers and Donations](../10-creator-offers-and-donations.md).
 
 ### seeds naming and quantity forms
 
@@ -51,19 +51,21 @@ payment permission, credit, or new gameplay currency conversion.
 
 Subscriptions belong to the authenticated Bond, not the Telegram account, Avaia, device or BondChain. An active Exclusive includes Special capabilities. Pending payments, UI state and unverified client assertions do not grant access.
 
-## Future Artifact Rarity v2
+## Target five-tier Artifact Rarity v3
 
-| Tier | Code | Color | Access |
-| --- | --- | --- | --- |
-| 1–3 | `common` | Gray | All Bonds |
-| 4 | `uncommon` | Bond cyan | All Bonds |
-| 5 | `rare` | Blue | All Bonds |
-| 6 | `special` | Avaia violet | Special or Exclusive |
-| 7 | `exclusive` | Gold | Exclusive |
+| Tier | Code | Price multiplier | Base find XP | Color | Access |
+| ---: | --- | ---: | ---: | --- | --- |
+| 1 | `common` | ×1 | 10 | Gray | All Bonds |
+| 2 | `uncommon` | ×2 | 30 | Bond cyan | All Bonds |
+| 3 | `rare` | ×4 | 90 | Blue | All Bonds |
+| 4 | `special` | ×8 | 270 | Avaia violet | Special or Exclusive |
+| 5 | `exclusive` | ×16 | 800 | Gold | Exclusive |
 
-Pickup selector, left to right: **Off → Exclusive (7) → Special (6) → Rare (5) → Uncommon (4) → Common (1–3)**. A selected threshold means that rarity plus all *rarer* authorized rarities. The effective pickup set is the intersection of a preference with server-authorized tiers. The rightmost Common includes everything the Bond is entitled to; Off includes nothing. The gradient progresses white → gold → violet → blue → cyan → gray. Labels below the selector remain single-line and omit numbers.
+The XP progression is roughly ×3 with intentional rounding from nominal 810 to **800** at the top. There are no `common` subtiers or new `legendary`; see [canonical target](five-tier-rarity-economy.md).
 
-**Existing contract conflict:** Core currently defines tier 6 as `legendary` and no tier 7. The change requires a versioned catalog migration, deterministic roll probabilities, claims, inventory, XP, localization, server and pinned Core Wasm alignment. Previously earned Legendary items retain their original catalog-version provenance; migration must not silently rename historical records. Do not enable new pickup wire codes or misleading obtainability in a Web-only release.
+Pickup selector, left to right: **Off → Exclusive (5) → Special (4) → Rare (3) → Uncommon (2) → Common (1)**. A selected threshold means that rarity plus all *rarer* authorized rarities. The effective pickup set is the intersection of a preference with server-authorized tiers. The rightmost Common includes everything the Bond is entitled to; Off includes nothing. The gradient progresses white → gold → violet → blue → cyan → gray. Labels below the selector remain single-line and omit numbers.
+
+**Existing contract conflict:** legacy Core has six numeric tiers (1–3 all `common`, 6 `legendary`); target has five, one per rarity. A versioned catalog/roll/claim/inventory/XP/identity/Wasm migration is required. Historical v1 items and XP retain their original semantics and provenance; tier numbers cannot be reinterpreted without their version. Do not enable new pickup wire codes or misleading obtainability in a Web-only release.
 
 ## Authority and Payment
 
@@ -75,14 +77,14 @@ Offline Avaia is a possible **later** Exclusive capability, not part of the init
 
 ## Locked Pickup Choice and xPing Cutscene
 
-A pickup selector is a **request**, not the source of capability. Let `entitlement` be an authority-backed result (`none`, `special`, `exclusive`, or `unknown`), and `requested` be the user-selected threshold. `canApply` must check the selected tier against a verified entitlement; the free tier cannot select Special (6) or Exclusive (7), and Special cannot select Exclusive (7). Clicking a locked stop, using the keyboard, or sending an equivalent programmatic selection MUST NOT write pickup preferences or change stored entitlement.
+A pickup selector is a **request**, not the source of capability. Let `entitlement` be an authority-backed result (`none`, `special`, `exclusive`, or `unknown`), and `requested` be the user-selected threshold. `canApply` must check the selected tier against a verified entitlement; the free tier cannot select Special (4) or Exclusive (5), and Special cannot select Exclusive (5). Clicking a locked stop, using the keyboard, or sending an equivalent programmatic selection MUST NOT write pickup preferences or change stored entitlement.
 
 An `unknown` entitlement caused by connectivity failure MUST NOT be treated as `none` or trigger a sales upsell: show a service-unavailable path while remaining at the previous valid selection. The client may only prompt a purchase after confirmed absence of access. A user with Exclusive can choose either Special or Exclusive; a user with Special can choose Special without a prompt.
 
 When a Bond selects an unavailable paid stop:
 
 1. Keep the previous authorized pickup value unchanged. Pop the active nested Dock screen back exactly **one** level, preserving the previous Dock window in the navigation stack. Do not discard the stack or move the Bond.
-2. Start a **system informational cutscene** with **xPing** (a presentation drone, not a Bond or Avaia). xPing communicates the missing entitlement and asks: “Для цього потрібна підписка Special / Exclusive. В 0xda-market якраз завезли кілька.” The required subscription matches the requested stop: Special (6) requires Special **or** Exclusive; Exclusive (7) requires Exclusive.
+2. Start a **system informational cutscene** with **xPing** (a presentation drone, not a Bond or Avaia). xPing communicates the missing entitlement and asks: “Для цього потрібна підписка Special / Exclusive. В 0xda-market якраз завезли кілька.” The required subscription matches the requested stop: Special (4) requires Special **or** Exclusive; Exclusive (5) requires Exclusive.
 3. Show two explicit actions: **Перейти в 0xda-market** and **Пропустити**. Skip ends the scene and restores the previous Dock window without further navigation or writes. It is not agreement to purchase. Each completed scene records its *presentation* result as an ordinary local toast, without granting anything.
 4. Go to market ends the dialog and dispatches a visual drone-flight request. xPing flies in the **world renderer** from its current scene position to the nearest **verified 0xda-market location** in the world data, not a viewport-attached graphic. The Bond and Avaia positions remain unchanged, and the camera can be restored.
 5. Only when the flight reaches a real location may the client open the **0xda-market catalog**, landing on **Bond Gifts 🎁**. This is navigation, **not** checkout, donation, entitlement activation, or BondChain completion. The future purchase implementation is an independent iteration.
@@ -93,7 +95,7 @@ The Bond Gifts catalog landing is a **future integration contract**, not an impl
 
 ## Delivery Order
 
-1. Rarity v2 and legacy migration, plus identity entitlements and authoritative seeds debit.
+1. Five-tier rarity v3 and legacy migration, plus identity entitlements and authoritative Seeds debit.
 2. Server discovery/claim gates and committed XP multipliers.
 3. 0xda-market Special/Exclusive products and verified fulfillment, distinct from broker-resold Telegram Premium.
 4. Web and other clients activate the new pickup selector only against a compatible Core and identity-service capability.
