@@ -41,6 +41,28 @@ A landmark's rarity belongs to **one identified landmark**, not its kind, proxim
 - A registry version also freezes the orb rules laid under it: the XP table, the rarity roll **and its hash domain**. Published versions remain immutable. A revision to a landmark's rarity, payout or roll requires a new version and affects new spills only; historical orb IDs must retain their original pricing.
 - The registry is product data, not evidence. It states nothing about a place's history, heritage status or any Bond's visit.
 
+## Evidence-based landmark classification (all cities)
+
+**Classification is a reviewed decision for a verified archive subject, never an algorithm that reads UNESCO badges or map pins.** Every rarity uses the same criteria regardless of country, city, popularity, whether the building operates as a museum, or how many Exclusive landmarks already exist nearby. One city can have many Exclusive sites; another may have none. The user-visible map marker or glow cannot define protocol truth.
+
+| Rarity | Product meaning |
+| --- | --- |
+| **Common** | Default for an otherwise valid, uncurated landmark; **not** a negative heritage judgment |
+| **Uncommon** | Credible documentation of an individually important or distinctive **local** landmark |
+| **Rare** | Credible evidence for an individually notable **regional or national** landmark |
+| **Special** | Site-specific, officially supported **internationally exceptional** importance, such as a named major component of UNESCO World Heritage, or comparably strong evidence without UNESCO inscription |
+| **Exclusive** | **Special plus a separately articulated extraordinary contribution by that exact landmark**: a distinct architectural masterpiece, globally influential example, singular engineering achievement, or historically defining cultural role; not simply more tourist traffic |
+
+**UNESCO is not two badges.** The Outstanding Universal Value (OUV) finding is part of World Heritage inscription; counting "World Heritage + OUV" as two independent confirmations of Special would double count one fact. Property-level selection criteria do not automatically classify each building in a World Heritage city. The additional Exclusive evidence must describe the **specific monument or defined ensemble**. The same UNESCO dossier may support both recognition and specific unique contribution, provided they are **separate substantive assertions**, not a repeated label.
+
+A World Heritage property's **buffer zone**, adjacent shops, churches, children of a palace ensemble or the mere contents of a museum receive **no inherited rarity**. For overlapping mapped ensembles and their components, curate the canonical archived landmark and explicitly prevent duplicate rewards for two IDs that represent the same visitable subject. Before assigning any non-Common tier, review the archive ID/release, mapped subject/geometry, official source and recognition scope, individual significance evidence, reviewer decision and historical version. Never replace a UNESCO component number with a fabricated Core feature ID.
+
+**Cross-city consistency examples (not an active catalog):** the previously approved product targets **Kyiv-Pechersk Lavra** and **Saint-Sophia Cathedral** remain Exclusive pending ID curation. Apply the exact same test to **Louvre Palace** (UNESCO property 600) and **Winter Palace / Hermitage architectural ensemble** (property 540): neither gains nor loses eligibility merely because it houses a major museum. Other ensembles in **Odesa, Saint Petersburg, Paris and elsewhere** require documented individual decisions, rather than city quotas or automatic promotion from a historic-centre listing. The cultural source, not a sightseeing list, establishes the factual evidence; 0x1 makes the actual product-level rarity decision.
+
+For the **Core implementation checklist and immutable registry rules**, see [Core landmark rarity policy](https://github.com/nilx-one/core/blob/master/docs/landmark-rarity-policy.md) once that document is merged. Product classification is independent of the orb's roll and XP schedule: the **landmark tier is a ceiling**, and Core still rolls each orb under its registry-specific rules. Until archive mapping, registry publication and Identity award validation land, this policy **does not activate paid content, rarity rewards or interactions**.
+
+**Official evidence reference points:** [UNESCO's inclusion/OUV criteria](https://whc.unesco.org/en/criteria/), [Kyiv property 527](https://whc.unesco.org/en/list/527/), [Saint Petersburg property 540](https://whc.unesco.org/en/list/540/), [Paris property 600](https://whc.unesco.org/en/list/600/), [Odesa property 1703](https://whc.unesco.org/en/list/1703/).
+
 ## Orb rarity and its authority
 
 A cell spills five orbs around its centre and five around each landmark in it ([Experience Orbs](https://github.com/nilx-one/web/blob/master/docs/exp-orbs.md)).
