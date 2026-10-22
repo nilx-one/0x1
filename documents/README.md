@@ -34,6 +34,7 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 - [xPing Courier and Map Activities](product-direction/xping-courier.md) — seeded Kyiv destinations, flight presentation, concurrent activity status, and deferred commerce.
 - [xPing Flight Loot](product-direction/xping-flight-loot.md) — proposed five-lane collectibles, rarity, Exclusive gift-balloon odds, and pending activation boundaries.
 - [Experience Orb Rarity](product-direction/rarity-coefficient.md) — the orb's own chance and experience rules over five-tier rarity, per-landmark rarity from a versioned Core registry, and orb rarity capped by its landmark.
+- [Visitor-place Rarity](product-direction/place-rarity.md) — separate reviewed rarity for parks, nature and public recreation places, reusing canonical archive subjects without minting a new destination or affecting orb XP.
 - [Identity](04-identity.md) — `pub_dress`, provider boundaries, registry stages, private identity, authenticated introduction, continuity, and recovery limits.
 - [Avaia `pub_dress` Naming](04-avaia-pub-dress-naming.md) — mandatory terminal `ai`, deterministic default derivation such as `0x0sky -> x0skai`, explicit ownership reference, and Avaia address rotation behavior.
 - [Architecture and Data Model](05-architecture-and-data-model.md) — bounded `bond.chain` encoding, `bond.journal`, public projections, and state ownership.
