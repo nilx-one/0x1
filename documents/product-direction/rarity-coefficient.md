@@ -84,6 +84,14 @@ For the **Core implementation checklist and immutable registry rules**, see [Cor
 
 **Official evidence reference points:** [UNESCO's inclusion/OUV criteria](https://whc.unesco.org/en/criteria/), [Kyiv property 527](https://whc.unesco.org/en/list/527/), [Saint Petersburg property 540](https://whc.unesco.org/en/list/540/), [Paris property 600](https://whc.unesco.org/en/list/600/), [Odesa property 1703](https://whc.unesco.org/en/list/1703/).
 
+## Map visibility of curated Rare, Special and Exclusive landmarks
+
+**Decided product requirement:** every successfully reviewed and published **Rare**, **Special** and **Exclusive** geographic landmark must be discoverable as a pin on the 0x1 map wherever its relevant published map archive is available. There is **no city quota**, arbitrary hand-seeded top-N list, or suppression of a genuine Rare/Special feature because a more famous landmark is nearby. Pins may use zoom-aware label collision avoidance, but the actual features must remain available and discoverable (including through an accessible list when their labels overlap).
+
+The map uses **one canonical archive subject per landmark**. Core's additive `landmark_map_view` projection filters a host-verified archive batch with the immutable registry; the host resolves its stable feature IDs and factual coordinates in the **same archive revision**. The map colours are **Rare blue, Special violet, Exclusive gold**, tied only to the versioned Core result. A yellow sacred or manually pinned landmark with no verified Core rarity is **not** automatically Exclusive. Distinguish ordinary `BusinessPoint` pins, Bond position and separate park/recreation rarity.
+
+**Runtime boundary:** current Core registry v1 is empty, so there are **no activated Rare/Special/Exclusive entries to project**. `nilx-one/core#76` establishes the projection, while `nilx-one/web#539` adds rendering and strict map-adapter validation. A trusted archive enumeration, verified stable-ID crosswalk, actual reviewed non-Common registry entries, compatible Web/Core runtime and release validation remain required **before real pins can appear**. Never silently fill the map with hypothetical heritage classifications from editorial drafts or on-device name matching.
+
 ## Orb rarity and its authority
 
 A cell spills five orbs around its centre and five around each landmark in it ([Experience Orbs](https://github.com/nilx-one/web/blob/master/docs/exp-orbs.md)).
