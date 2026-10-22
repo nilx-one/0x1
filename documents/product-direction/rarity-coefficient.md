@@ -41,6 +41,57 @@ A landmark's rarity belongs to **one identified landmark**, not its kind, proxim
 - A registry version also freezes the orb rules laid under it: the XP table, the rarity roll **and its hash domain**. Published versions remain immutable. A revision to a landmark's rarity, payout or roll requires a new version and affects new spills only; historical orb IDs must retain their original pricing.
 - The registry is product data, not evidence. It states nothing about a place's history, heritage status or any Bond's visit.
 
+## Evidence-based landmark classification (all cities)
+
+**Classification is a reviewed decision for a verified archive subject, never an algorithm that reads UNESCO badges or map pins.** Every rarity uses the same criteria regardless of country, city, popularity, whether the building operates as a museum, or how many Exclusive landmarks already exist nearby. One city can have many Exclusive sites; another may have none. The user-visible map marker or glow cannot define protocol truth.
+
+| Rarity | Product meaning |
+| --- | --- |
+| **Common** | Default for an otherwise valid, uncurated landmark; **not** a negative heritage judgment |
+| **Uncommon** | Credible documentation of an individually important or distinctive **local** landmark |
+| **Rare** | Credible evidence for an individually notable **regional or national** landmark |
+| **Special** | Site-specific, officially supported **internationally exceptional** importance, such as a named major component of UNESCO World Heritage, or comparably strong evidence without UNESCO inscription |
+| **Exclusive** | **Special plus a separately articulated extraordinary contribution by that exact landmark**: a distinct architectural masterpiece, globally influential example, singular engineering achievement, or historically defining cultural role; not simply more tourist traffic |
+
+### Complete Common/Uncommon baseline for buildings and monuments
+
+**The default is a rule, not an incomplete hand-maintained list.** Every **eligible, canonically identified** monument, memorial, artwork, historic structure or curated landmark in the verified map archive begins as `Common`. A recognized place only becomes `Uncommon` after a reviewer documents its **individual local significance**; name, age, tourist counts and `historic` or `memorial` tags alone do not qualify. A higher-tier object retains its reviewed tier, not an additional Common entry.
+
+| Existing map object | Baseline | When Uncommon is possible |
+| --- | --- | --- |
+| Ordinary named or unnamed eligible monument / memorial / public sculpture | **Common** unless reviewed | Corroborated local commemoration, architecture or cultural importance tied to this exact feature |
+| Explicitly mapped, culturally meaningful building that passed landmark admission | **Common** unless reviewed | Documented locally distinctive design, history or public significance |
+| Ordinary residential block, office, shop, industrial or otherwise generic building footprint | **Neutral map geometry, not a Landmark or orb source** | Only after deliberately verifying it as a significant building with stable archive identity and a reviewed curation record |
+| Repeated map-label / polygon pieces for one monument | **One subject** | Deduplicate by checked archive identity; do not create a second rarity/award |
+
+This is **exhaustive by rule for eligible subjects**, not a claim that we have catalogued every Kyiv building or that all visible building polygons have stable archive IDs. Web's client-normalized kind/rounded-point ID is **not yet demonstrated equivalent to Core's stable archive feature ID**; bulk registry publication is blocked on an inspected archive-ID crosswalk. **No invented `Uncommon` entries.**
+
+**Stadium Start (Kyiv):** the historical 1942 match occurred on that site, but the widely circulated story that the players were shot *because they won the match* is unsupported propaganda, as [the Ukrainian Institute of National Memory documents](https://old.uinp.gov.ua/news/mif-9-serpnya-1942-roku-match-smerti-zavershivsya-rozstril-radyanskoi-komandi). Therefore **no Rare/Special based on that legend**. The stadium may be individually reviewed as a **local Uncommon candidate** on verified sports history; that is not yet an approved tier or published registry value.
+
+**Visitor places are separate:** parks, gardens, waterfronts, recreation grounds and other visitable areas have an independent [visitor-place rarity policy](place-rarity.md). That facet does not automatically determine monument rarity, orb XP or BusinessPoint status.
+
+**UNESCO is not two badges.** The Outstanding Universal Value (OUV) finding is part of World Heritage inscription; counting "World Heritage + OUV" as two independent confirmations of Special would double count one fact. Property-level selection criteria do not automatically classify each building in a World Heritage city. The additional Exclusive evidence must describe the **specific monument or defined ensemble**. The same UNESCO dossier may support both recognition and specific unique contribution, provided they are **separate substantive assertions**, not a repeated label.
+
+**Preservation-neutral tiers:** damage, restoration and partial reconstruction do **not** themselves change a historic landmark's rarity. Preserve the distinction between original fabric, preserved archaeological remains and later protective or hypothetical reconstruction, but assign the tier using the **historically documented significance and influence of the identified landmark**, not a percentage of old materials. Notre-Dame de Paris retained its cultural standing after the 2019 fire and 2024 reopening; the Golden Gate of Kyiv retains its eleventh-century remnants beneath the 1982 protective pavilion. Neither historic identity nor extraordinary significance is automatically erased by restoration. [UNESCO on Notre-Dame](https://www.unesco.org/en/articles/audrey-azoulay-salutes-rebirth-notre-dame-paris-unesco-world-heritage-site), [Encyclopedia of Modern Ukraine on Golden Gate](https://esu.com.ua/article-16975).
+
+**Kyiv Golden Gate — Exclusive candidate, pending review:** it was the principal ceremonial entrance of Kyivan Rus' Kyiv; the [Encyclopedia of Modern Ukraine](https://esu.com.ua/article-16975) records its later architectural influence on the Golden Gate in Vladimir. This is a **specific cross-regional contribution** qualifying it for individual Exclusive assessment even though the gate is not independently inscribed as a UNESCO World Heritage component. Confirm the exact mapped archive subject and evidence before approving/activating the tier; it is **not an entry in registry v1**.
+
+A World Heritage property's **buffer zone**, adjacent shops, churches, children of a palace ensemble or the mere contents of a museum receive **no inherited rarity**. For overlapping mapped ensembles and their components, curate the canonical archived landmark and explicitly prevent duplicate rewards for two IDs that represent the same visitable subject. Before assigning any non-Common tier, review the archive ID/release, mapped subject/geometry, official source and recognition scope, individual significance evidence, reviewer decision and historical version. Never replace a UNESCO component number with a fabricated Core feature ID.
+
+**Cross-city consistency examples (not an active catalog):** the previously approved product targets **Kyiv-Pechersk Lavra** and **Saint-Sophia Cathedral** remain Exclusive pending ID curation. Apply the exact same test to **Louvre Palace** (UNESCO property 600) and **Winter Palace / Hermitage architectural ensemble** (property 540): neither gains nor loses eligibility merely because it houses a major museum. Other ensembles in **Odesa, Saint Petersburg, Paris and elsewhere** require documented individual decisions, rather than city quotas or automatic promotion from a historic-centre listing. The cultural source, not a sightseeing list, establishes the factual evidence; 0x1 makes the actual product-level rarity decision.
+
+For the **Core implementation checklist and immutable registry rules**, see [Core landmark rarity policy](https://github.com/nilx-one/core/blob/master/docs/landmark-rarity-policy.md) once that document is merged. Product classification is independent of the orb's roll and XP schedule: the **landmark tier is a ceiling**, and Core still rolls each orb under its registry-specific rules. Until archive mapping, registry publication and Identity award validation land, this policy **does not activate paid content, rarity rewards or interactions**.
+
+**Official evidence reference points:** [UNESCO's inclusion/OUV criteria](https://whc.unesco.org/en/criteria/), [Kyiv property 527](https://whc.unesco.org/en/list/527/), [Saint Petersburg property 540](https://whc.unesco.org/en/list/540/), [Paris property 600](https://whc.unesco.org/en/list/600/), [Odesa property 1703](https://whc.unesco.org/en/list/1703/).
+
+## Map visibility of curated Rare, Special and Exclusive landmarks
+
+**Decided product requirement:** every successfully reviewed and published **Rare**, **Special** and **Exclusive** geographic landmark must be discoverable as a pin on the 0x1 map wherever its relevant published map archive is available. There is **no city quota**, arbitrary hand-seeded top-N list, or suppression of a genuine Rare/Special feature because a more famous landmark is nearby. Pins may use zoom-aware label collision avoidance, but the actual features must remain available and discoverable (including through an accessible list when their labels overlap).
+
+The map uses **one canonical archive subject per landmark**. Core's additive `landmark_map_view` projection filters a host-verified archive batch with the immutable registry; the host resolves its stable feature IDs and factual coordinates in the **same archive revision**. The map colours are **Rare blue, Special violet, Exclusive gold**, tied only to the versioned Core result. A yellow sacred or manually pinned landmark with no verified Core rarity is **not** automatically Exclusive. Distinguish ordinary `BusinessPoint` pins, Bond position and separate park/recreation rarity.
+
+**Runtime boundary:** current Core registry v1 is empty, so there are **no activated Rare/Special/Exclusive entries to project**. `nilx-one/core#76` establishes the projection, while `nilx-one/web#539` adds rendering and strict map-adapter validation. A trusted archive enumeration, verified stable-ID crosswalk, actual reviewed non-Common registry entries, compatible Web/Core runtime and release validation remain required **before real pins can appear**. Never silently fill the map with hypothetical heritage classifications from editorial drafts or on-device name matching.
+
 ## Orb rarity and its authority
 
 A cell spills five orbs around its centre and five around each landmark in it ([Experience Orbs](https://github.com/nilx-one/web/blob/master/docs/exp-orbs.md)).
