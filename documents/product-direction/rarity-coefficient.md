@@ -28,7 +28,7 @@ Rarity applies to two things, kept apart:
 A landmark's rarity belongs to that **one landmark**, not to its kind or to how many landmarks a cell holds. The Kyiv Pechersk Lavra is Exclusive; a minor monument of the same kind may be Common.
 
 - Rarities live in a versioned registry that Core owns, keyed by the published archive's stable feature id. A landmark absent from a version is Common.
-- A published registry version never changes. A revision is a new version, and it changes only spills answered with it.
+- A registry version also freezes the orb rules laid under it: the experience table and the rarity roll. A published version never changes. A revision of a landmark's rarity or of an orb rule is a new version, and it changes only spills answered with it.
 - The registry is product data, not evidence. It states nothing about a place's history, heritage status or any Bond's visit.
 
 ## Orb rarity and its authority
@@ -37,7 +37,8 @@ A cell spills five orbs around its centre and five around each landmark in it ([
 
 - The cell's own five are Common. Each landmark's five are rolled independently under the orb chance rule, capped at the landmark's rarity.
 - A spill names the registry version and each landmark by its archive id. The host never states a rarity; Core reads it from the registry.
-- An orb's id names the cell key, the registry version, its landmark and its number. Its rarity depends on nothing else, so the same id has the same rarity and pays the same on every retry and runtime.
+- An orb's id names the cell key, the registry version, its landmark and its number. Its rarity and experience depend on nothing else, so the same id has the same rarity and pays the same on every retry and runtime, whatever later versions change.
+- A landmark is named once per spill; the same id at two positions is refused.
 - Before paying, the identity service checks that the key is its own for that Bond and cell, and that the landmark lies in that cell in the archive it answered from. Until it does, a rated orb is presentation only and its rarity is not an award.
 
 ## Access
