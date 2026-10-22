@@ -25,7 +25,17 @@ Rarity applies to two things, kept apart:
 
 ## Landmark rarity
 
-A landmark's rarity belongs to that **one landmark**, not to its kind or to how many landmarks a cell holds. **Proposed example:** the Kyiv Pechersk Lavra could be rated Exclusive while a minor monument of the same kind remains Common. **This is not active in Core:** the published `LANDMARK_RARITY_REGISTRY_VERSION = 1` contains `landmarks: &[]`; consequently **all currently recognized landmarks resolve to Common**, including Lavra. Any future curation requires verifying a real stable archive feature ID and publishing a new registry version; do not invent that ID.
+A landmark's rarity belongs to **one identified landmark**, not its kind, proximity, the colour of its map marker or the number of landmarks in a cell.
+
+### World Heritage ensembles: Exclusive
+
+**Decided Kyiv landmark targets:** **Kyiv-Pechersk Lavra** and **Saint-Sophia Cathedral (Sophia of Kyiv)** are each **Exclusive** at the product-curation level. These two principal monumental ensembles together form **one** UNESCO World Heritage property, no. **527**, inscribed in **1990** under cultural criteria **(i)–(iv)**. They are not two separately inscribed World Heritage properties. In UNESCO's geographic component mapping, Saint-Sophia Cathedral is `527ter-001` and Kyiv-Pechersk Lavra is `527ter-002`. See the [UNESCO property record](https://whc.unesco.org/en/list/527/) and [official component map](https://whc.unesco.org/en/list/527/maps/).
+
+**Rule for other landmarks:** recognition as a **specifically identified primary monumental ensemble** of an inscribed UNESCO World Heritage property is strong, verifiable grounds for an **Exclusive candidate**, but not an automatic reward. Curate the named landmark individually: check its official World Heritage property/component, resolve **one canonical Pamiatka** to an actually published, stable map-archive feature ID, and record the source and decision before appending its `Exclusive` rarity to a new Core registry version. UNESCO property IDs (such as `527ter-001`) identify *heritage components*, **not** Core's `CellLandmark.id`; never pass them as archive IDs without a verified archive mapping.
+
+**No inherited rarity:** other monuments, churches, buildings, subordinate map features, nearby sites and objects inside the property's **buffer zone** do **not** become Exclusive merely by belonging to or being near an ensemble. Other separately mapped UNESCO components, including the Church of the Saviour at Berestove (`527ter-003`), require their **own** explicit product classification; do not silently promote them by containment.
+
+**Current implementation boundary:** Core `LANDMARK_RARITY_REGISTRY_VERSION = 1` contains `landmarks: &[]`; therefore **both named targets and every other landmark currently resolve to Common** in rated spills. The existing yellow/gold on-map marker is presentation, **not proof** of a deployed rarity. Activating the two Exclusive targets requires archive-ID verification and an **appended immutable registry version** (never editing v1), followed by separate Identity/Web rollout. Neither this document nor the UNESCO record authenticates a Bond's visit.
 
 - Rarities live in a versioned registry that Core owns, keyed by the published archive's stable feature id. A landmark absent from a version is Common.
 - A registry version also freezes the orb rules laid under it: the XP table, the rarity roll **and its hash domain**. Published versions remain immutable. A revision to a landmark's rarity, payout or roll requires a new version and affects new spills only; historical orb IDs must retain their original pricing.
