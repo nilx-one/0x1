@@ -4,13 +4,13 @@
 
 ## One rarity per tier
 
-| Tier | Code | Price multiplier | Find resale (seeds, ₴€£) | Base find XP | Presentation |
+| Tier | Code | Find resale factor vs Common | Find resale (seeds, ₴€£) | Base find XP | Presentation |
 | ---: | --- | ---: | ---: | ---: | --- |
-| 1 | `common` | ×1 | 40 | 10 | Gray |
-| 2 | `uncommon` | ×2 | 80 | 30 | Bond cyan |
-| 3 | `rare` | ×4 | 160 | 90 | Blue |
-| 4 | `special` | ×8 | 320 | 270 | Avaia violet |
-| 5 | `exclusive` | ×16 | 640 | 800 | Gold |
+| 1 | `common` | ×1 | 10 | 10 | Gray |
+| 2 | `uncommon` | ×4 | 40 | 30 | Bond cyan |
+| 3 | `rare` | ×16 | 160 | 90 | Blue |
+| 4 | `special` | ×64 | 640 | 270 | Avaia violet |
+| 5 | `exclusive` | ×256 | 2,560 | 800 | Gold |
 
 There are **exactly five canonical current rarity tiers**, one per rarity code. There are **no subtiers of Common** and **no current Legendary rarity**. Historical v1 `legendary` is a legacy source value, not an alias for `special` or `exclusive`.
 
@@ -23,33 +23,38 @@ The design target is roughly ×3 XP between successive rarities, *not* an inviol
 - For this table, round values below 500 to the nearest 10 and values **at least** 500 to the nearest 100, with ties rounded up. Thus 810 becomes **800**.
 - Final base XP is exactly **10 / 30 / 90 / 270 / 800**. No floating-point powers or client-side rounding are needed at runtime; publish the exact versioned integers in Core.
 
+**Balancing rationale:** an Exclusive monument may be intentionally sought out; describing a verified Exclusive landmark is a potential separately authorized 800-XP event, much smaller numerically than its 2,560-seeds tier value. This is a **product intention**, not evidence that landmark-description claims exist or are active: a later interaction-specific contract must define what qualifies as a description, the one-time identity/claim verification, and payout authority. Merely seeing a map pin, opening a description, reaching a location, or collecting its rated Experience Orbs does **not** imply an 800-XP award. Orb registry v1 remains 10/20/40/80/160 XP.
+
 The last effective increment is 800/270 ≈ 2.963. This small, deliberate deformation is preferable to a conspicuously awkward reward. Do not apply a second "nice-number" rounding to already committed XP. A subscription's XP benefit is a separate, authorized modifier: apply to the base award **once**, round a fractional final result to the nearest whole XP (half up), commit once, and never recalculate history. The existing entitlement proposal remains: Free (Bond ×1, Avaia ×1), Special (Bond ×1, Avaia ×1.5), Exclusive (Bond ×1.25, Avaia ×2); Exclusive replaces, rather than stacks with, Special.
 
 ## Prices by rarity, not item title
 
 For a rarity-priced **find**, identical rarity means identical canonical resale value in seeds (₴€£), regardless of the item's name, performer, artwork, 3D model, or otherwise arbitrary SKU. No per-title bespoke sale prices or exceptions (e.g., two different records given whimsical unrelated prices).
 
-**Approved 2026-10-26:** `FIND_COMMON_BASE_SEEDS = 40`. The Common find resale value is **40 ₴€£** in in-game `seeds`; ₴€£ is the currency's product symbol, **not** a fiat UAH/EUR/GBP exchange rate.
+**Final decision, 2026-10-26:** the Common baseline is **10 seeds and 10 XP**. Found-item resale value grows by **×4 from the immediately preceding rarity tier**, independently of the approximately ×3 base find XP progression. The in-game `seeds` currency uses ₴€£ as its product symbol; these are **not** UAH/EUR/GBP fiat amounts or FX rates.
 
 ```text
-FIND_COMMON_BASE_SEEDS = 40
-find_sell_price_seeds(rarity) =
-    FIND_COMMON_BASE_SEEDS × PRICE_MULTIPLIER[rarity]
-                           = 40 × 2^(tier - 1)
+FIND_COMMON_BASE_SEEDS = 10
+find_resale_multiplier_v3(tier) = 4^(tier - 1)
+find_sell_price_seeds(tier) =
+    FIND_COMMON_BASE_SEEDS × find_resale_multiplier_v3(tier)
+    = 10 × 4^(tier - 1)
 ```
 
-The exact v3 resale values are **40 / 80 / 160 / 320 / 640 seeds**, respectively for Common / Uncommon / Rare / Special / Exclusive. The base is **one value for all rarity-priced finds**, not a base per item. This prices the found item's resale value; it is **not** an automatic seeds payout on pickup. The change is an approved target contract, not a live economy activation or retrospective repricing. The item catalogue still defines the object's identity, dimensions, whether it can be traded, and crafting/repair use. A non-saleable object or money pickup is governed by its own explicit type and is not silently made tradeable. Repair inputs/costs, equipment and crafting costs are separate services and cannot automatically be reinterpreted as found-item sale values.
+The exact target v3 resale values are **10 / 40 / 160 / 640 / 2,560 seeds**, respectively for Common / Uncommon / Rare / Special / Exclusive. The base is **one value for all rarity-priced finds**, not a base per item. This prices the found item's resale value; it is **not** an automatic seeds payout on pickup. The change is an approved target contract, not a live economy activation or retrospective repricing. The item catalogue still defines the object's identity, dimensions, whether it can be traded, and crafting/repair use. A non-saleable object or money pickup is governed by its own explicit type and is not silently made tradeable. Repair inputs/costs, equipment and crafting costs are separate services and cannot automatically be reinterpreted as found-item sale values.
 
-The exact scale ×1/×2/×4/×8/×16 is the shared economic ratio. A subscription is a duration-priced product, not a found object, so it uses the **same rarity ratio** with its own monthly commercial starting price and duration discount; this does not license arbitrary per-artifact pricing.
+**Do not conflate three distinct ratios:** find resale uses **×1/×4/×16/×64/×256 from Common** (×4 per tier); base find XP uses **10/30/90/270/800**; published Experience Orb registry v1 independently uses **×1/×2/×4/×8/×16 for orb probability and XP** (10/20/40/80/160 XP). Changing find resale must not alter historical orb registry versions or claims. Subscription term pricing is a **separate commercial schedule**, not an application of found-item resale factors.
 
 ### Subscriptions and duration discounts
 
-Special is rarity multiplier ×8; Exclusive is ×16. Before final commercial rounding, **Exclusive is 2× Special** for the *same duration and payment denomination*. An identical duration-discount policy applies to both tiers in a denomination. Duration (1/3/6/12 months) changes the unit price; it does not change rarity.
+Subscription pricing retains a distinct rule: before final commercial rounding, **Exclusive is 2× Special** for the *same duration and payment denomination*. The new ×4 find-resale progression **does not** make subscriptions ×4 apart. An identical duration-discount policy applies to both tiers in a denomination. Duration (1/3/6/12 months) changes the unit price; it does not change rarity.
 
 ```text
 base_term_price(currency, duration, tier) =
-    monthly_common_anchor(currency) × rarity_multiplier(tier)
+    monthly_special_anchor(currency) × subscription_tier_factor(tier)
     × duration × (1 − duration_discount(currency, duration))
+# subscription_tier_factor(special) = 1
+# subscription_tier_factor(exclusive) = 2
 
 quoted_price = commercial_round(base_term_price, currency)
 ```
@@ -97,7 +102,7 @@ The currently deployed v1 find catalogue has numeric tiers 1–6: `1/2/3 → com
 - Server-owned denomination-specific commercial rounding policy, especially for USDT.
 - Backward-compatible storage/pack schema migrations and staged rollout flags.
 
-The shared Common find resale base is **approved at 40 seeds** (and the derived prices are fixed above); this document does not determine encounter probabilities or authorize product activation.
+The shared Common find resale base is **approved at 10 seeds**, with **×4 per subsequent tier**, and the base XP is **10** with separate published values. This document does not determine encounter probabilities or authorize product activation.
 
 ---
 
