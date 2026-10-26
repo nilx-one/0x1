@@ -2,7 +2,7 @@
 
 **Status:** decided product direction; Core `ORB_SPILL_VERSION = 4` is implemented on `master`, but **rated orb awards are not active**. This document does not itself activate payments, entitlements, inventory records or interactions. Until Identity authenticates and prices rated-orb claims, Core provides presentation and deterministic reward calculations, not a committed award.
 
-Rarity names, codes, colours and multipliers are the five tiers of [Five-tier rarity and deterministic economy](five-tier-rarity-economy.md): Common ×1, Uncommon ×2, Rare ×4, Special ×8, Exclusive ×16. That document keeps rarity value, XP and encounter frequency as three distinct rules. This document **defines the orb's own two rules** explicitly; they are not inferred from the find tables and do not change them.
+Rarity names, codes and colours are shared with [Five-tier rarity and deterministic economy](five-tier-rarity-economy.md), but **reward coefficients depend on the reward type**. The immutable orb registry v1 keeps **Common ×1, Uncommon ×2, Rare ×4, Special ×8, Exclusive ×16**, paying 10/20/40/80/160 XP; the newly approved found-item **seeds resale** scale instead starts at 10 and multiplies by ×4 per successive rarity (10/40/160/640/2,560 seeds), while the separate base find XP table remains 10/30/90/270/800. This document **defines the orb's own two rules** explicitly; they are not inferred from the find tables and do not change them.
 
 Rarity applies to two things, kept apart:
 
