@@ -59,18 +59,20 @@ subscription_tier_factor(exclusive) = 2
 quoted_price = commercial_round(base_term_price, currency)
 ```
 
-Use one *reviewed* base/discount schedule per denomination (USDT and in-game `seeds`), not a separate arbitrary Special/Exclusive price list. Publish an exact quote, including price/version, term, currency, rounding policy and recipient, before payment; quote values and history do not change retrospectively. Currency rounding may introduce a small deviation from an exact 2× display ratio (e.g., the price **4.98 USDT** may be commercially displayed as **4.99 USDT**). The exact denomination-specific rounding policy needs implementation approval before checkout and must be deterministic and server-side.
+Use one *reviewed* base/discount schedule per supported payment mode (USDT, and `seeds` for Special only), not an arbitrary per-SKU price list. Publish an exact quote, including price/version, term, currency, rounding policy and recipient, before payment; quote values and history do not change retrospectively. Currency rounding may introduce a small deviation from an exact 2× display ratio (e.g., the price **4.98 USDT** may be commercially displayed as **4.99 USDT**). The exact denomination-specific rounding policy needs implementation approval before checkout and must be deterministic and server-side.
 
-The currently staged Special seeds starting prices provide this **illustrative, arithmetically exact target** for Exclusive if the present Special prices remain authoritative:
+**Approved payment eligibility is asymmetric:** Special accepts `seeds` or USDT; Exclusive accepts **only USDT**. The ×2 tier multiplier applies only to the USDT monthly subscription anchor; it **must not** be used to construct a non-existent Exclusive seeds offer.
 
-| Duration | Special seeds (staged) | Exclusive seeds (derived target) |
-| --- | ---: | ---: |
-| 1 month | 400 | 800 |
-| 3 months | 1,020 | 2,040 |
-| 6 months | 1,800 | 3,600 |
-| 12 months | 2,400 | 4,800 |
+After merged [0xda-market/core#130](https://github.com/0xda-market/core/pull/130), the inactive staged catalog has the following **non-executable** prices (the provider `0x1` is a non-human system digital supplier, as defined in [core#131](https://github.com/0xda-market/core/pull/131)):
 
-These values **do not activate Exclusive seeds checkout**. Existing 0xda-market staged SKUs explicitly exclude Exclusive seeds and have USDT Exclusive prices that do *not* follow the new ×2 ratio. A separate 0xda-market product/settlement change and verified entitlement/debit flow are required; do not rewrite historical accepted quotes, migration 020, or payment history. Do not infer a USDT/seeds exchange rate from the two parallel payment denominations.
+| Duration | Special seeds (₴€£) | Special USDT | Exclusive USDT |
+| --- | ---: | ---: | ---: |
+| 1 month | 640 | 2.49 | 4.99 |
+| 3 months | 1,632 | 6.29 | 12.69 |
+| 6 months | 2,496 | 9.69 | 19.49 |
+| 12 months | 3,840 | 14.99 | 29.99 |
+
+The nominal term discounts are **0/15/35/50%**. For USDT, the authoritative market computes the exact discounted term price, then chooses the nearest configured promotional cent ending **.29/.49/.69/.99**, ties to the lower buyer price. The actual percentage after price presentation may be slightly different from the nominal percentage (for instance, 14.99 USDT is approximately 49.83% off Special's 12-month undiscounted base). seeds term prices are exact integers and are not currency conversions. A staged quote is not a fulfilled order: both settlement confirmation and a server-verified, idempotent entitlement grant are still needed before enabling checkout. Do not rewrite historical accepted quotes, migration 020, or payment history.
 
 ### Drop probability is independent
 
