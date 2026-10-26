@@ -53,8 +53,8 @@ Subscription pricing retains a distinct rule: before final commercial rounding, 
 base_term_price(currency, duration, tier) =
     monthly_special_anchor(currency) × subscription_tier_factor(tier)
     × duration × (1 − duration_discount(currency, duration))
-# subscription_tier_factor(special) = 1
-# subscription_tier_factor(exclusive) = 2
+subscription_tier_factor(special) = 1
+subscription_tier_factor(exclusive) = 2
 
 quoted_price = commercial_round(base_term_price, currency)
 ```
