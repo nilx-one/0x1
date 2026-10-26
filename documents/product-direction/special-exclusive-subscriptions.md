@@ -7,18 +7,22 @@
 | Subscription | Payment | Target artifact eligibility | XP bonus |
 | --- | --- | --- | --- |
 | Special | USDT or seeds (₴€£) | Through Special (target tier 4) | Avaia ×1.5, Bond ×1 |
-| Exclusive | USDT only in staged catalog; Seeds proposed, not yet enabled | Through Exclusive (target tier 5), including Special | Bond ×1.25; Avaia ×2 on eligible future awards |
+| Exclusive | **USDT only** (seeds purchases are not offered) | Through Exclusive (target tier 5), including Special | Bond ×1.25; Avaia ×2 on eligible future awards |
 
-**Pre-migration, inactive** 0xda-market catalog values from [0xda-market/core#116](https://github.com/0xda-market/core/pull/116). Exclusive USDT prices below are *not* aligned with the newly agreed price ×2 rarity ratio and require a separate market change:
+**Current staged, inactive** 0xda-market catalog after [core#130](https://github.com/0xda-market/core/pull/130) and [core#131](https://github.com/0xda-market/core/pull/131). These are recorded prices and supplier metadata, **not** active checkout or permission to grant a Bond entitlement. The issuer-owned system broker `0x1` is a non-human digital supplier, not a market-user broker or simulated finite inventory:
 
 | Duration | Special (USDT) | Special (seeds ₴€£) | Exclusive (USDT) |
 | --- | ---: | ---: | ---: |
-| 1 month | 2.49 | 400 | 5.49 |
-| 3 months | 6.29 | 1,020 | 13.99 |
-| 6 months | 11.49 | 1,800 | 24.49 |
-| 12 months | 14.99 | 2,400 | 32.99 |
+| 1 month | 2.49 | 640 | 4.99 |
+| 3 months | 6.29 | 1,632 | 12.69 |
+| 6 months | 9.69 | 2,496 | 19.49 |
+| 12 months | 14.99 | 3,840 | 29.99 |
 
-`₴€£` is one **in-game seeds denomination**, not a set of fiat currencies and not an FX conversion rule. There is no seeds payment option for Exclusive. Derived Exclusive Seeds prices under the ×2 multiplier, using the existing Special Seed schedule, are **800 / 2,040 / 3,600 / 4,800** for 1/3/6/12 months, respectively. These are design targets, not activation of Exclusive Seeds checkout. Term discounts remain tier-independent and commercial rounding is denomination-specific. The listed staged prices are **not live checkout availability**: each actual quote must bind the recipient Bond, exact duration and currency, amount, consent and expiration. A payment granting a benefit is commercial consideration, not a pure protocol Donation under [Creator Offers and Donations](../10-creator-offers-and-donations.md).
+`₴€£` is one **in-game seeds denomination**, not fiat currencies or an FX conversion rule. **Special alone** may be purchased in seeds; **Exclusive may be purchased only in USDT**. Never create or preview a speculative Exclusive seeds price.
+
+The monthly bases are **2.49 USDT Special**, **4.98 USDT Exclusive** (undiscounted ×2 ratio), and **640 seeds Special**. Apply 0%/15%/35%/50% term discounts for 1/3/6/12 months. USDT offers use exact decimals followed by 0xda-market's deterministic *nearest promotional ending* `.29 / .49 / .69 / .99`, with lower-price tie breaking. Thus Special 3m = **6.29 USDT** and Special 12m = **14.99 USDT**; the latter is approximately, not exactly, 50% off. Exclusive's *commercially adjusted* USDT price need not be exactly twice the adjusted Special price; only the undiscounted monthly anchor is exactly ×2. seeds prices use their exact integer discounted amounts, with no USDT conversion.
+
+The listed staged prices are **not live checkout availability**: each actual quote must bind the recipient Bond, exact duration and currency, amount, consent, expiry, and immutable price revision. Payment alone must not grant an entitlement without a verified idempotent issuer fulfillment. A payment granting a benefit is commercial consideration, not a pure protocol Donation under [Creator Offers and Donations](../10-creator-offers-and-donations.md).
 
 ### seeds naming and quantity forms
 
@@ -43,7 +47,7 @@ Thus `1 сід`, `2 сіди`, `5 сідів`, `11 сідів`, `21 сід`,
 `11 сидов`, `21 сид`, `22 сида`, `25 сидов`.
 The Ukrainian standard form is **`сідів`**, not `сідив`.
 Avoid a fixed noun label `сід` after every count; compact balance/price
-labels may instead use `₴€£`, e.g. `400 ₴€£`. Lowercase spellings
+labels may instead use `₴€£`, e.g. `640 ₴€£`. Lowercase spellings
 are preserved even at the beginning of a sentence.
 
 These are naming/presentation rules, not an implemented balance renderer,
@@ -53,13 +57,13 @@ Subscriptions belong to the authenticated Bond, not the Telegram account, Avaia,
 
 ## Target five-tier Artifact Rarity v3
 
-| Tier | Code | Price multiplier | Base find XP | Color | Access |
+| Tier | Code | Find resale factor vs Common | Base find XP | Color | Access |
 | ---: | --- | ---: | ---: | --- | --- |
 | 1 | `common` | ×1 | 10 | Gray | All Bonds |
-| 2 | `uncommon` | ×2 | 30 | Bond cyan | All Bonds |
-| 3 | `rare` | ×4 | 90 | Blue | All Bonds |
-| 4 | `special` | ×8 | 270 | Avaia violet | Special or Exclusive |
-| 5 | `exclusive` | ×16 | 800 | Gold | Exclusive |
+| 2 | `uncommon` | ×4 | 30 | Bond cyan | All Bonds |
+| 3 | `rare` | ×16 | 90 | Blue | All Bonds |
+| 4 | `special` | ×64 | 270 | Avaia violet | Special or Exclusive |
+| 5 | `exclusive` | ×256 | 800 | Gold | Exclusive |
 
 The XP progression is roughly ×3 with intentional rounding from nominal 810 to **800** at the top. There are no `common` subtiers or new `legendary`; see [canonical target](five-tier-rarity-economy.md).
 
