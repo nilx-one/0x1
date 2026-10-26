@@ -44,6 +44,8 @@ requester (inactive, or credential-authenticated)
 
 Returning to a client that was active earlier is route 1: one control on the inactive client sends the request, and the active client confirms it. The protocol MUST NOT activate an inactive client without the active client's confirmation merely because both clients appear to be on the same device. Separate hosts on one device share no storage the server can treat as proof that they are co-located.
 
+For seeds purchases, a [Single Active Client write-boundary check](product-direction/authoritative-seeds-wallet.md) MUST be performed inside the same authoritative transaction as the debit and product grant. A competing, genuine activation request before the lock cancels an uncommitted spend; a mere login attempt does not. A client activation cannot split a completed transaction.
+
 Host-supplied authentication material, such as Telegram `initData` or a Discord embedded-host authorization, authenticates the Bond only when a session is established. It MUST NOT serve as the long-lived session credential. A verified launch yields a server-issued session whose active or inactive state follows this section. A short validity window for host-supplied material is therefore sufficient, and implementations MUST NOT widen it to keep a backgrounded host signed in.
 
 An activation request or objection challenge MUST NOT reveal the requesting device, host, or Bond on a lock screen, matching the notification rule for `REC-REQ`.
