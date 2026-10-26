@@ -48,6 +48,8 @@ Eligibility MUST be decided by 0x1 Core from one verified, replay-resistant Iden
 
 **Open numerical constant:** the `exp` amount is intentionally unspecified; it must be set with a Core contract and tests before any live grant. Until then this is a defined product incentive, not permission for client-side XP issuance.
 
+The separate in-game `seeds` (₴€£) denomination is governed by the [Identity-owned seeds wallet](product-direction/authoritative-seeds-wallet.md). This local-game economic wallet does not replace the external settlement network, BondChain escrow or pairwise `bnd` rules specified here. No client or marketplace snapshot can act as spend authority.
+
 ## Pairwise Payments
 
 Payments use authorized `PAY-REQ` and `PAY-SETTLE` records with an HTLC-style settlement proof inside the BondChain that owns that payment interaction.
