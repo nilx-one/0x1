@@ -69,6 +69,8 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 
 ## Status
 
+- [Market Special Purchase Delivery](product-direction/market-special-purchase-delivery.md) — verified post-flight gaps, existing PR reuse, implementation sequence and acceptance gates.
+
 **Version:** v1
 
 **Identity layer:** Stage 1 provider-backed registration is implemented; Stage 2 self-signed identity and transparent registry behavior are specified as the target contract. Artificial identity bootstrap is not yet a production contract.
