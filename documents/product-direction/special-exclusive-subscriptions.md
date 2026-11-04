@@ -87,25 +87,43 @@ checks the wallet and existing Special under the debit lock. Special already
 running or paused behind Exclusive closes the purchase. Exclusive alone leaves
 it open.
 
-| Confirmed action | Durable result | What the player sees |
-| --- | --- | --- |
-| Pay with seeds | Debit once and record the paid order awaiting collection, keyed by its order ID and owner. | “Оплачено”. Dispatch xSasha to Market after payment succeeds. |
-| Cancel the flight or close the app | The same paid order remains collectible at any Market point. | The player can collect it later without paying again. |
-| Collect at a Market point | Move that order into Avaia’s inventory once as an unused Special item. The calendar term is still intact. | Return the camera to Avaia and show a notification with **Активувати**. Dismissing it leaves the item in inventory. |
-| Choose **Активувати** from the notification or inventory | Consume that item and grant its term to its Bond in one transaction using the authority clock. | Both entry points show the same activation result. |
+**At Market.** The courier is xPing. On a purchase intent, xPing flies to the
+nearest Market point. On arrival the same tab opens
+`https://0xda-market.nilx.one/{point}` with the same world view. The Market
+Dock opens and animates into that point’s product screen. Confirmed payment
+debits seeds once. For orders already paid in the development bot or Mini App,
+the point hands xPing the existing paid order. Cancelling before collection
+leaves that order paid and collectible at any point.
 
-An unused Special item occupies a **2×2** square in one inventory grid,
-regardless of the purchased term. Future Exclusive subscription items use
-the same footprint. Collection requires four free cells in a contiguous
-2×2 square. If it cannot fit, the order stays paid and collectible at any
-Market point after space is freed. Successful activation frees all four cells.
+**On the way back.** Once xPing takes the paid item, it flies to Avaia.
+The camera focuses on Avaia immediately and the notification offers
+**Активувати** while xPing is still in flight. Tapping it instructs xPing
+to activate the carried item immediately. The server consumes the item
+once and starts its calendar term at activation. The verified subscription
+and its aura appear on both the Bond and Avaia. Both reflect the same
+entitlement and the existing Exclusive priority rule.
 
-Pickup requires the owner's authorized visit to a Market point. A cancelled
-flight or a camera animation cannot serve as proof of pickup. Pickup retries,
-including attempts at different points, resolve to the same inventory item.
-Both activation buttons address the same item. Concurrent taps or a lost
-response may yield only one grant. A failed activation leaves the item usable.
-Special time follows the existing Exclusive pause rule after activation.
+**When xPing reaches Avaia.** Ignoring or dismissing the notification leaves
+the item in transit until delivery. Resolve the order at most once:
+
+| State at delivery | Result |
+| --- | --- |
+| Already activated in flight | Complete the flight. Nothing is added to inventory. |
+| Unused and a contiguous 2×2 square is free | Place the unused item there. Its term remains intact until the player selects **Активувати** in inventory. |
+| Unused and no contiguous 2×2 square is free | xPing automatically activates the item for its owner at delivery. The item takes no inventory space. |
+
+Special items of every term occupy **2×2** cells in a single inventory grid.
+Future Exclusive items use the same footprint. Four scattered free cells
+cannot hold the item. Activating a stored item releases its four cells.
+
+Market pickup, arrival and activation are distinct, durable transitions
+keyed by the paid order and its owner. Reopening the app resumes the
+recorded state. A camera animation or dismissed notification never proves
+delivery. Inventory placement and the capacity check at arrival must share
+one transaction. A late notification tap and arrival must serialize against
+the same item so they cannot both store and consume it. Retried activation
+from either surface returns the same result. A failed transaction leaves
+the paid item recoverable and its term unspent.
 
 This is the target for new item-based orders. Previously fulfilled direct
 grants retain their original clocks and receipts; replaying those orders must
