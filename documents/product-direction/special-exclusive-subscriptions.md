@@ -75,9 +75,35 @@ Pickup selector, left to right: **Off → Exclusive (5) → Special (4) → Rare
 
 The identity service owns durable tier entitlements, effective periods, refunds/revocations and access checks at find generation, discovery, pickup and server claim. The server prices eligible committed XP once, using a documented integer rounding rule and an entitlement snapshot. **Special** grants only Avaia ×1.5 XP (Bond ×1); **Exclusive** grants Avaia ×2 XP and Bond ×1.25 XP. Benefits are **exclusive tier alternatives**, not cumulative: Exclusive must never apply ×1.5 ×2 to Avaia. Apply bonuses only to new eligible committed gameplay awards at the authoritative award time; first-iteration one-time device achievements remain unchanged. The rounding rule must be explicit and stable in tests. Old XP and already accepted inventory are never recomputed or confiscated.
 
-seeds purchases require the single [Identity-owned wallet and active-client atomic-spend contract](authoritative-seeds-wallet.md): authenticated, idempotent, server-verified debit and grant in one transaction. The locally stored inventory balance alone cannot authorize a paid subscription. Monetary purchases require 0xda-market confirmed settlement, recipient binding and exactly-once fulfillment. Term overlap and upgrades need an explicit policy before charging users.
+seeds purchases require the single [Identity-owned wallet and active-client atomic-spend contract](authoritative-seeds-wallet.md): authenticated, idempotent, server-verified debit and issuance of the purchased item in one transaction. Activation is a later action. The locally stored inventory balance alone cannot authorize a paid subscription. Monetary purchases require 0xda-market confirmed settlement, recipient binding and exactly-once fulfillment. Term overlap and upgrades need an explicit policy before charging users.
 
 Offline Avaia is a possible **later** Exclusive capability, not part of the initial entitlement.
+
+## Special bought as an inventory item
+
+A Special order fixes its calendar term (1, 3, 6 or 12 months) and the purchasing
+Bond. The first channel is the development Market bot and Mini App. Identity
+checks the wallet and existing Special under the debit lock. Special already
+running or paused behind Exclusive closes the purchase. Exclusive alone leaves
+it open.
+
+| Confirmed action | Durable result | What the player sees |
+| --- | --- | --- |
+| Pay with seeds | Debit once and record the paid order awaiting collection, keyed by its order ID and owner. | “Оплачено”. Dispatch xSasha to Market after payment succeeds. |
+| Cancel the flight or close the app | The same paid order remains collectible at any Market point. | The player can collect it later without paying again. |
+| Collect at a Market point | Move that order into Avaia’s inventory once as an unused Special item. The calendar term is still intact. | Return the camera to Avaia and show a notification with **Активувати**. Dismissing it leaves the item in inventory. |
+| Choose **Активувати** from the notification or inventory | Consume that item and grant its term to its Bond in one transaction using the authority clock. | Both entry points show the same activation result. |
+
+Pickup requires the owner's authorized visit to a Market point. A cancelled
+flight or a camera animation cannot serve as proof of pickup. Pickup retries,
+including attempts at different points, resolve to the same inventory item.
+Both activation buttons address the same item. Concurrent taps or a lost
+response may yield only one grant. A failed activation leaves the item usable.
+Special time follows the existing Exclusive pause rule after activation.
+
+This is the target for new item-based orders. Previously fulfilled direct
+grants retain their original clocks and receipts; replaying those orders must
+never issue an additional item.
 
 ## Locked Pickup Choice and xPing Cutscene
 

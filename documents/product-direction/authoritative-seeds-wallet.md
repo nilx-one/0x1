@@ -58,11 +58,13 @@ A Market expense uses the same authority, but with a different origin:
    independently verifies its processing status, issuer identity,
    authenticated buyer/recipient binding and current entitlement rules;
    it MUST NOT blindly trust an order body received from a browser.
-3. Identity checks the active-client authorization and performs **the
-   same atomic spend-and-grant**, using the Market order ID as
-   idempotency key. The Special subscription clock is updated using Core:
-   active Exclusive suspends consumption of Special time.
-4. A successful debit+grant is reported back to Market as `fulfilled`.
+3. Identity checks authorization and atomically debits the wallet and
+   issues the paid item for collection, keyed by the Market order ID.
+   For Special, pickup places the item in Avaia's inventory. Only the
+   owner's explicit activation consumes it and updates the Core clock.
+   See [Special as an inventory item](special-exclusive-subscriptions.md#special-bought-as-an-inventory-item).
+4. Market records confirmed payment and issuance as `fulfilled`. Pickup
+   and activation have their own durable state.
    If delivery of that confirmation fails, the worker retries with the
    SAME order ID; Identity returns the existing committed receipt and
    cannot debit again. A pre-debit refusal is reported as `rejected`.
