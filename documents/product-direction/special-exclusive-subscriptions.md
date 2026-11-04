@@ -94,6 +94,12 @@ it open.
 | Collect at a Market point | Move that order into Avaia’s inventory once as an unused Special item. The calendar term is still intact. | Return the camera to Avaia and show a notification with **Активувати**. Dismissing it leaves the item in inventory. |
 | Choose **Активувати** from the notification or inventory | Consume that item and grant its term to its Bond in one transaction using the authority clock. | Both entry points show the same activation result. |
 
+An unused Special item occupies a **2×2** square in one inventory grid,
+regardless of the purchased term. Future Exclusive subscription items use
+the same footprint. Collection requires four free cells in a contiguous
+2×2 square. If it cannot fit, the order stays paid and collectible at any
+Market point after space is freed. Successful activation frees all four cells.
+
 Pickup requires the owner's authorized visit to a Market point. A cancelled
 flight or a camera animation cannot serve as proof of pickup. Pickup retries,
 including attempts at different points, resolve to the same inventory item.
