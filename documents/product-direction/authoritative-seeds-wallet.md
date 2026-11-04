@@ -60,8 +60,9 @@ A Market expense uses the same authority, but with a different origin:
    it MUST NOT blindly trust an order body received from a browser.
 3. Identity checks authorization and atomically debits the wallet and
    issues the paid item for collection, keyed by the Market order ID.
-   For Special, pickup places the item in Avaia's inventory. Only the
-   owner's explicit activation consumes it and updates the Core clock.
+   xPing carries the paid Special item to Avaia. Activation consumes it
+   and updates the Core clock once, either by player choice or automatically
+   on delivery if the unused 2×2 item cannot fit.
    See [Special as an inventory item](special-exclusive-subscriptions.md#special-bought-as-an-inventory-item).
 4. Market records confirmed payment and issuance as `fulfilled`. Pickup
    and activation have their own durable state.
