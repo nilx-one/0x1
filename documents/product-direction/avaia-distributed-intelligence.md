@@ -110,11 +110,11 @@ No architecture choice here asserts that SNN, RL, or another method outperforms 
 
 ## 8. Existing specification conflict: observer-gated Avaia
 
-[AI Bonds](04-ai-bonds.md) currently states that an owned avatar is active only while the owner is in `SPECTATE`; `MANUAL` and `OFFLINE` quiesce its world activity. This is a **current normative product constraint**, not an already removed limitation.
+[AI Bonds](../04-ai-bonds.md) currently states that an owned avatar is active only while the owner is in `SPECTATE`; `MANUAL` and `OFFLINE` quiesce its world activity. This is a **current normative product constraint**, not an already removed limitation.
 
 The proposed direction would eventually allow bounded autonomous Avaia activity without owner spectating. That requires a **separate explicit contract revision** addressing owner opt-in, authority, resource limits, state persistence, offline behavior, action cancellation, in-flight interactions, and recovery. This document does not silently supersede `SPECTATE`/`MANUAL`/`OFFLINE` or authorize background life today.
 
-Likewise, [Avaia Evolution](04-avaia-evolution.md) already defines individualized learned tendencies and their privacy boundaries; this proposal adds possible runtime organization, not new authority or shared learning permission.
+Likewise, [Avaia Evolution](../04-avaia-evolution.md) already defines individualized learned tendencies and their privacy boundaries; this proposal adds possible runtime organization, not new authority or shared learning permission.
 
 ## 9. Suggested sequencing (not an approved implementation plan)
 
@@ -144,10 +144,10 @@ Do not interpret this sequencing as permission to merge, deploy, activate autono
 
 ## Related documents
 
-- [Protocol Laws](00-protocol-laws.md)
-- [AI Bonds](04-ai-bonds.md)
-- [Avaia Evolution](04-avaia-evolution.md)
-- [0x1 Core and Client Architecture](18-core-and-client-architecture.md)
+- [Protocol Laws](../00-protocol-laws.md)
+- [AI Bonds](../04-ai-bonds.md)
+- [Avaia Evolution](../04-avaia-evolution.md)
+- [0x1 Core and Client Architecture](../18-core-and-client-architecture.md)
 
 ---
 
