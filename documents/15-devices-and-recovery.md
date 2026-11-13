@@ -20,27 +20,31 @@ A device transition changes future signing authority. It MUST NOT rewrite signat
 
 ## Single Active Client
 
-The single-active rule also governs client sessions. At any time exactly one authenticated client of a Bond is active: one client, in one [host](02-glossary.md), on one device. Other authenticated clients of the same Bond MAY stay signed in as inactive. An inactive client can show what its host is authorized to show, but it cannot act for the Bond.
+The single-active rule also governs client sessions. A client session is either active or inactive. At any time at most one authenticated client of a Bond is active: one client, in one [host](02-glossary.md), on one device. Other authenticated clients of the same Bond MAY stay signed in as inactive. An inactive client can show what its host is authorized to show, but it cannot act for the Bond.
 
 A client is presented to the person by device and host, for example `iPhone Air · Safari`, `iPhone Air · Telegram`, or `iPad · Discord`.
 
 Activation passes to another client only through one of these routes:
 
-1. **Confirmation on the active client.** The requesting client sends an activation request that names its device and host. The active client shows that request with an explicit accept and decline. Accept makes the requester active and the previous client inactive, still signed in. Decline or expiry changes nothing.
-2. **Credential, then confirmation.** A client on a device with no session for the Bond authenticates with the Bond's credential (a password today, a passkey later). Successful authentication yields an inactive session only. Activation still requires route 1.
-3. **Credential, then objection window.** If the active client does not answer an activation request from a credential-authenticated client within the activation request TTL, the requester MAY hold a pending activation. The active client receives an objection challenge. The pending activation completes only after the live-device objection window elapses without objection, and an objection cancels it.
+1. **Confirmation on the active client, then sync.** The requesting client sends an activation request that names its device and host. The active client shows that request with an explicit accept and decline. Accept starts a sync: the active client uploads its state and the requester receives it. The requester becomes active and the previous client inactive, still signed in, only when that sync completes. Decline, cancellation, expiry, or an interrupted sync changes nothing.
+2. **Authentication with no active client.** A client that authenticates while the Bond has no active session becomes active. While another client is active, every authentication method (a password today, a passkey later, a verified email, or host-supplied material) yields an inactive session only, and activation still requires route 1.
+
+No other route exists. The active client's confirmation requires no second factor. A silent active client is never overridden: an unanswered request expires, no objection window activates a client, and no authentication method substitutes for the active client's confirmation. Client activation has no recovery route of its own. Recovery exists only through a BondChain, as `REC-REQ` below defines.
 
 ```text
-requester (inactive, or credential-authenticated)
+requester (inactive)
   -> activation request naming device and host
   -> active client: accept / decline
-       accept                  -> requester active, previous inactive
+       accept                  -> sync: active client uploads, requester receives
+                                  sync completes   -> requester active, previous inactive
+                                  sync interrupted -> no change
        decline                 -> no change
-       no answer within TTL    -> credential-authenticated requester only:
-                                  pending activation + objection challenge
-                                  window elapses -> requester active
-                                  objection      -> no change
+       no answer within TTL    -> request expires, no change
+
+authentication with no active session -> active
 ```
+
+[Telegram-to-Browser Client Activation UX](15-telegram-browser-session-handoff.md) applies these routes to a move from the Telegram Mini App to a browser and defines the sync, the terminal states, and the observable client states.
 
 Returning to a client that was active earlier is route 1: one control on the inactive client sends the request, and the active client confirms it. The protocol MUST NOT activate an inactive client without the active client's confirmation merely because both clients appear to be on the same device. Separate hosts on one device share no storage the server can treat as proof that they are co-located.
 
@@ -48,9 +52,9 @@ For seeds purchases, a [Single Active Client write-boundary check](product-direc
 
 Host-supplied authentication material, such as Telegram `initData` or a Discord embedded-host authorization, authenticates the Bond only when a session is established. It MUST NOT serve as the long-lived session credential. A verified launch yields a server-issued session whose active or inactive state follows this section. A short validity window for host-supplied material is therefore sufficient, and implementations MUST NOT widen it to keep a backgrounded host signed in.
 
-An activation request or objection challenge MUST NOT reveal the requesting device, host, or Bond on a lock screen, matching the notification rule for `REC-REQ`.
+An activation request MUST NOT reveal the requesting device, host, or Bond on a lock screen, matching the notification rule for `REC-REQ`.
 
-Route 3 activates a session. It does not move or mint signing authority. Once native signing keys exist, the active client is the one on the device holding the `active` signing key, a handoff between the person's own devices follows the synchronous handoff above, and a silent active device's signing authority moves only through `REC-REQ` and the live-device objection window.
+Client activation moves a session. It does not move or mint signing authority. Once native signing keys exist, the active client is the one on the device holding the `active` signing key, a handoff between the person's own devices follows the synchronous handoff above, and a silent active device's signing authority moves only through `REC-REQ` and the live-device objection window.
 
 ## Lost Device
 
@@ -170,9 +174,10 @@ Deltas are fixed where CONTINUE remains eligible: `Delta level = 0`, recovering 
 8. Recovery rewards do not increase relationship depth.
 9. `REC-REQ` MUST carry a `bch_id` the assisting Bond independently holds and verifies against that BondChain's genesis before out-of-band code confirmation; `counterpart_hint` alone MUST NOT authorize a request.
 10. A `DEVICE-REVOKE` reached through `REC-REQ` MUST NOT finalize against an `active` `old_device_pk` before the live-device objection window elapses without objection.
-11. Exactly one authenticated client of a Bond is active at a time; other authenticated clients MAY remain signed in as inactive and cannot act for the Bond.
-12. A credential alone yields an inactive session; activation requires the active client's confirmation, or an unanswered request followed by an unobjected live-device objection window.
+11. At most one authenticated client of a Bond is active at a time; other authenticated clients MAY remain signed in as inactive and cannot act for the Bond.
+12. While a Bond has an active client, authentication alone yields an inactive session; activation requires the active client's confirmation and a completed sync. Authentication yields the active session only when the Bond has no active session.
 13. Apparent co-location on one device never activates a client without the active client's confirmation.
 14. Host-supplied authentication material establishes a session and MUST NOT act as the long-lived session credential.
+15. A silent active client is never overridden: no objection window, second factor, or other authentication method activates another client, and client activation has no recovery route outside `REC-REQ`.
 
 <!-- © 2026 aiaiaiai · aiaiaiai.org -->
