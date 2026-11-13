@@ -62,6 +62,7 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 ## Operations and Delivery
 
 - [Devices and Recovery](15-devices-and-recovery.md) — device states, revocation, rekeying, REC-REQ, and CONTINUE.
+- [Telegram-to-Browser Client Activation UX](15-telegram-browser-session-handoff.md) — moving the active client from the Telegram Mini App to a browser: confirmation on the active client, sync before the switch, Core-owned states, and terminal outcomes.
 - [Security and Platform Notes](16-security-and-platform-notes.md) — threat model, iOS implementation guidance, and post-quantum migration.
 - [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md) — fixed invariants, draft parameters, unresolved decisions, creator commerce/map contracts, and autonomous AI authority profile.
 - [0x1 Core and Client Architecture](18-core-and-client-architecture.md) — shared Rust product engine, WebAssembly and UniFFI boundaries, peer Web/iOS clients, MapLibre, and GPU fallback contracts.
