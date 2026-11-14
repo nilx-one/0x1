@@ -41,7 +41,7 @@ After authorized travel has started, opening Web or another client projects the 
 | CLI adapter | Text presentation of exactly the same Core commands and projections; scripted acceptance harness with deterministic time and transport |
 | Web/Discord/native | Render authorized read projections; send their own permitted commands; visualize Core-provided virtual routes |
 | aiaiaiai Identity Service | Authenticate Telegram-linked provider identity and bind it to the right Bond; never infer Bond identity from group title or Telegram display name |
-| prism-hub, when cross-product routing is needed | Deliver scoped messages between product services without owning the route, avatar state, relationship history, or service identity |
+| Cross-product routing adapter (Prism), when needed | Deliver scoped messages between product services without owning the route, avatar state, relationship history, or service identity |
 
 A Telegram *channel* and its linked discussion supergroup are not interchangeable with a supergroup forum topic. Initial topic binding targets an enabled forum supergroup identified by Telegram's `chat_id` plus `message_thread_id`; support for channel discussions is a separate, explicit mapping contract.
 
