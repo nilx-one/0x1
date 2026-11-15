@@ -150,6 +150,18 @@ The Protocol Laws remain normative. Running the Core on a client, server, or dev
 
 Web and native iOS are first-class peer clients over the same Core. Messenger Mini Apps host the Web client. React, SwiftUI, MapLibre, storage, and transport remain adapters rather than independent sources of product truth.
 
+### Text-first Telegram client (`nilx-one/bot`)
+
+[`nilx-one/bot`](https://github.com/nilx-one/bot) is the fourth 0x1 product client and its first standalone **text client**. A Telegram conversation is a product interface in its own right, not a launcher for a Web Mini App. New shared product behavior should be specified and verified first as typed Core commands, deterministic transitions, errors and text projections; map and GPU interfaces then visualize the same Core state instead of implementing independent gameplay rules.
+
+The text client is a Rust/Teloxide transport adapter. **[aiaiaiai Identity Service (AIS)](https://github.com/aiaiaiai-org/4x-ais)** owns verified identity and Telegram provider linkage. **[0x1 Core](https://github.com/nilx-one/core)** owns active product sessions, permissions, Bond/Avaia state, inventory, organizations, subscriptions, progression and eligible world navigation. The bot must neither write directly to product storage nor invent a movement result, a visit, consent or a BondChain.
+
+**Current status — isolated test bootstrap, not production gameplay:** private-chat commands (`/start`, `/open`, `/help` and a conditional `/login` entry) are text-only; the AIS login callback, authorized Core Gateway, full gameplay, group commands and production polling/cutover are not complete. The bot uses a separate test token and fails closed when its dependencies are absent. Refer to the [bot README](https://github.com/nilx-one/bot#readme) for verified features and limits; [Core #123](https://github.com/nilx-one/core/issues/123) and [Core #124](https://github.com/nilx-one/core/issues/124) track text-client capability parity.
+
+**Planned contextual Telegram topics:** an organization administrator may bind a verified supergroup forum topic (Telegram `chat_id` + `message_thread_id`) to an existing, eligible canonical world destination. For example, the topic “Майдан” in “Організація aiaiaiai” can become an entry point for a Bond to *request* an Avaia trip to that destination. The topic title does not create a world point, authorization, physical presence or travel completion. A group request remains pending until the active Core client explicitly approves it; no bot response or unobserved offline movement proves arrival. An authorized journey can later be rendered consistently in the Web map. Transport segments and offline Avaia travel require separate approved contracts.
+
+**Session boundary (current contract):** the text bot and Telegram Mini App in [`nilx-one/web`](https://github.com/nilx-one/web) are currently specified as **separate Core product clients**. They may recognize the same AIS-linked Telegram person, but each has its own product session. Switching between them requires the confirmed Single Active Client handoff; sharing a Telegram account is not automatic session activation. A unified logical Telegram client/session is not implemented or authorized by the current normative contract. See [Devices and Recovery](documents/15-devices-and-recovery.md) and the [text-first product direction](documents/product-direction/text-first-telegram-topics.md).
+
 ### Local engine (`matr.ix`)
 
 `matr.ix` is the local engine used by the current human-controlled Bond profile. It ranks, suggests, negotiates within pre-authorized bounds, and sometimes stays silent. It may reason about interaction history without gaining the right to create a human commitment.
