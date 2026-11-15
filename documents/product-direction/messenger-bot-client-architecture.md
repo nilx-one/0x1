@@ -7,7 +7,7 @@
 
 ## Decision and boundaries
 
-The Telegram client is **one user-facing 0x1 product client with two cooperating surfaces**: the native chat bot and the embedded Web Mini App visible inside that same Telegram conversation. The chat bot transport runtime belongs in `nilx-one/bot` rather than the Web/Identity process. The **Telegram Mini App** remains built and rendered from the shared Web application in `nilx-one/web/apps/telegram-mini-app`, with its SDK adapter in `packages/host-telegram`. The bot opens that WebView; it does not copy React or the Mini App assets. This ownership separation does **not** create two independent product sessions or a new product engine.
+The Telegram **text client** in `nilx-one/bot` is the fourth independent 0x1 product client and the first playable text-first one. A player can use Core functionality directly in chat without opening Web. The **Telegram Mini App** remains a separate Web presentation at `nilx-one/web/apps/telegram-mini-app`, with its SDK adapter in `packages/host-telegram`; there is no duplicate React build. The two clients can share an AIS identity, but **must not share a product session or silently transfer activation**. Each client uses Core's own session authorization and confirmed Single Active Client handoff.
 
 | Owner | Responsibility | Must not own |
 | --- | --- | --- |
@@ -23,7 +23,7 @@ The Telegram client is **one user-facing 0x1 product client with two cooperating
 
 1. Inbound Telegram transport evidence proves only the sender of a Telegram update. `chat_id`, `username`, group title, forwarded message or raw callback data cannot establish a Bond. The linked account is resolved through verified AIS provider binding and the Core product identity mapping.
 2. A linked provider account is **not** the same thing as an active 0x1 product session. A bot command must be checked for its permitted read/action scope by Core. Writes require Core's active-client authorization and do not steal activation from Web, Discord or another device.
-3. **Owner product decision:** Telegram bot chat and Telegram Mini App represent **one logical Telegram product client**, not two competing active clients. Entering the Mini App from `/open` should not request a second game-session handoff. [Text-first Telegram proposal #87](https://github.com/nilx-one/0x1/pull/87) details this intended shared session, but its **normative Single Active Client revision and Core implementation must precede authorization of bot gameplay writes**. Independent verified bot updates and fresh signed Mini App `initData` must resolve to the same AIS-linked Bond and Core-controlled logical session. Never share browser cookies, bearer tokens, signing keys or trust `chat_id` as authentication, and never treat an AIS link as activation approval.
+3. **Owner product decision:** Telegram text chat is a separate Core-controlled product client from Telegram Web Mini App. Both may authenticate the same AIS-linked identity, but they have **different product sessions**, and a change of active client must obey explicit confirmed handoff. [Text-first contract #87](https://github.com/nilx-one/0x1/pull/87) records this decision. Verified bot updates and fresh Mini App signed `initData` are separate provider evidence paths, not interchangeable product sessions. Never share browser cookies, bearer tokens, signing keys or trust `chat_id` as authentication; a linked AIS identity is not activation approval.
 4. The existing [Telegram-to-browser activation](../15-telegram-browser-session-handoff.md) and [device recovery](../15-devices-and-recovery.md) rules retain precedence. A bot notification may point to a protected approval view but cannot approve an activation on behalf of the client.
 5. A message or edit acknowledgement is delivery evidence, **not** BondChain reciprocity or completion. Only the owning typed Interaction contract and the second Bond's required action can complete an interaction. AI output, chat acknowledgement and transport retries add no consent.
 
@@ -84,8 +84,8 @@ The existing Telegram code is Rust/Teloxide 0.17. Keep that implementation famil
 
 ## Delivery sequence (one independently reviewable PR per change)
 
-1. **Contract first:** this document and existing PR #87 are reconciled for logical-client/session semantics; name exact Gateway endpoints and authorization requirements before creating write handlers.
-2. **New repository bootstrap:** in the already-created `nilx-one/bot` (current default `main`), add MPL-2.0 NOTICE, `AGENTS.md`, Rust package, a single Telegram adapter, deterministic tests, Full CI and deploy preflight. Initially **no production Telegram token, webhook or poller**; a separate test token is permitted for isolated integration testing.
+1. **Contract first:** this document and PR #87 agree that bot text and Mini App/Web are separate Core product clients; name exact Gateway endpoints and authorization requirements before creating write handlers.
+2. **New repository bootstrap:** in the already-created `nilx-one/bot` (current default `main`), add MPL-2.0 NOTICE, `AGENTS.md`, Rust package, a single Telegram adapter, deterministic text replies, Full CI and deploy preflight. This is an independent text client, **not** a Web Mini App launcher. Initially **no production Telegram token, webhook or poller**; a separate test token is permitted for isolated integration testing.
 3. **Core-owned Gateway:** expose an authenticated, least-privilege product API for provider lookup by verified AIS subject, session-state projection, command execution, presentation-slot persistence and admin delivery claims. Do not expose raw provider credentials, internal role storage or arbitrary repository methods. Apply idempotency and rate limits at server authority.
 4. **Read-only Telegram shadow:** implement `/open` and authorized read projections in bot. Compare responses and message-slot behavior with current Web runtime using a separate test bot token and fixtures; do not use the production token concurrently.
 5. **Behavior migration:** move existing Telegram commands, admin callbacks, private-chat slot handling, location/travel commands and deliveries incrementally, preserving callback replay guards, admin checks, unlink confirmation, and delivery receipts. Core remains the authority for every write.
@@ -101,11 +101,11 @@ The existing Telegram code is Rust/Teloxide 0.17. Keep that implementation famil
 * `/unlink` keeps expiry, confirmation and sole-access guards; admin role and location changes remain server-validated.
 * Duplicate updates/callbacks cannot create repeat actions or repeat admin approvals; retry and provider delivery failures are observable.
 * No message delivery, bot response or model-generated text is mislabeled as BondChain reciprocal completion.
-* Mini App and existing browser/Discord builds are unaffected; Full CI green on exact heads, deploy validation only when deployable, live cutover and later cleanup independently authorized.
+* The text client has its own Core-controlled product session and respects cross-client activation/handoff; the Mini App and existing browser/Discord builds are unaffected. Full CI green on exact heads, deploy validation only when deployable, live cutover and later cleanup independently authorized.
 
 ## Explicit non-goals
 
-No new product-session type, new Bond/BondChain primitive, runtime deployment, AIS issuer migration, WhatsApp/Viber provider activation, live DB migration, secret rotation or production bot cutover is authorized by this design. One logical Telegram client is product intent, not an already-shipped Core authorization bypass.
+No new Bond/BondChain primitive, runtime deployment, AIS issuer migration, WhatsApp/Viber provider activation, live DB migration, secret rotation or production bot cutover is authorized by this design. Independent Telegram text sessions must be supported by Core before gameplay writes; no implicit browser Mini App session reuse or active-client bypass is authorized.
 
 ---
 
