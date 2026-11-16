@@ -81,6 +81,10 @@ Offline Avaia is a possible **later** Exclusive capability, not part of the init
 
 ## Special bought as an inventory item
 
+**Updated pickup rule:** A TEST-bot-paid item produces a persistent, non-dismissible pickup notice in 0x1. The player explicitly dispatches xPing; Avaia may walk when Core confirms a strictly under-300-metre in-world distance and a walkable route; Bond or Avaia may also collect by arriving at a Market point. No automatic courier dispatch on login. The pickup notice and the optional in-flight activation notice have distinct lifecycles. The detailed contract and development acceptance gates are in [Paid Special pickup](special-paid-pickup.md).
+
+
+
 A Special order fixes its calendar term (1, 3, 6 or 12 months) and the purchasing
 Bond. The first channel is the development Market bot and Mini App. Identity
 checks the wallet and existing Special under the debit lock. Special already
