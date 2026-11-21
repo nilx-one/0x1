@@ -144,7 +144,7 @@ Three proofs have different meanings:
 For the current human-controlled cryptographic Bond profile, a commitment
 requiring `sk_bond` MUST be signed using the Bond's authorized **active
 signing device** under explicit human authorization. A Telegram bot process,
-Telegram Serverless handler, product backend, 4x-ais, Prism Hub, service
+Telegram Serverless handler, product backend, 4x-ais, Prism routing infrastructure, service
 token, or `sk_ack` MUST NOT hold, reconstruct, or impersonate that human
 signing authority. Keys and authorization codes MUST NOT be sent through
 Telegram chat, callback data, cross-product relay payloads, or browser URLs.
