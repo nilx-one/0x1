@@ -120,6 +120,72 @@ Transport delivery, storage, silence, model inference, apparent emotion, autonom
 
 The reciprocal action proves participation in the interaction. It does not imply consent to semantic claims that the owning contract does not explicitly authorize.
 
+## Signer and Host Independence
+
+The actor in a candidate Interaction is the **Bond subject**, not the
+application, device, interface, service, or transport that originated the
+request. An originating host (Telegram text bot, embedded Mini App, Web,
+Discord, native iOS, or a serverless runtime) MUST NOT become a third
+participant or substitute its own service identity for either Bond.
+
+Three proofs have different meanings:
+
+1. **Authentication** identifies the person or service in its own scope.
+   AIS sign-in, a product token, a Telegram sender, verified `initData`, and
+   an active product session are not Bond commitment signatures.
+2. **Authorization** checks whether this actor and active client may request
+   this operation under the owning contract. It cannot create the actor's
+   signing authority or the counterparty's consent.
+3. **Commitment evidence** binds the exact Interaction action and its
+   signable, canonical terms to an authority valid for the participating
+   Bond, with the relevant identity/key binding and epoch. The owning
+   interaction and key contracts decide which evidence is required.
+
+For the current human-controlled cryptographic Bond profile, a commitment
+requiring `sk_bond` MUST be signed using the Bond's authorized **active
+signing device** under explicit human authorization. A Telegram bot process,
+Telegram Serverless handler, product backend, 4x-ais, Prism Hub, service
+token, or `sk_ack` MUST NOT hold, reconstruct, or impersonate that human
+signing authority. Keys and authorization codes MUST NOT be sent through
+Telegram chat, callback data, cross-product relay payloads, or browser URLs.
+A signer key is not itself a Bond: the verifier MUST establish its binding
+to the exact Bond subject and permitted key epoch for this action.
+
+A **text-only** bot without access to the authorized signing device MAY
+prepare and transport an *unsigned pending candidate* or request approval
+from the already active signing client. Its button press and provider
+authentication MUST NOT be reclassified as a cryptographic Bond signature.
+The owning contract MUST bind the approval to the exact operation,
+participants, action, canonical payload digest, freshness/replay context,
+and applicable session/device authority; a changed offer or participant
+requires new authorization. An unavailable or inactive signing device
+means `signature_required` or another explicit contract-owned refusal,
+never an automatic server-side signature or silent client activation.
+
+The current Stage 1 credential/provider-backed identity described in
+[Identity](04-identity.md) does not by itself furnish a native
+`sk_bond` signature. Stage 1 actions MAY be authorized and persisted
+under their **separate application-domain contracts**, but MUST NOT be
+labelled as cryptographically signed `bond.chain` commitments without the
+signing authority and records required by the owning interaction contract.
+No later key bootstrap may retroactively manufacture that missing
+signature or rewrite a terminal history.
+
+For a Business Bond, the counterparty is the **BBond**, not its service
+deployment. Its commitment requires the human-representative authority
+defined by [Business Bonds and Presence](13-business-bonds-and-presence.md).
+A product token or market service receipt can provide delivery or
+settlement evidence; it does not automatically become a representative's
+Bond signature. A delegated signing profile requires its own explicit
+scope, key custody, revocation, and owning-contract authorization before
+it may act.
+
+Even two valid participant signatures do not automatically establish or
+complete a BondChain. The owning interaction contract defines the
+reciprocal action, required result evidence, and terminal outcome. Product
+hashes, read receipts, settlement receipts, and transport acknowledgements
+have distinct meanings; none alone is a general-purpose completion proof.
+
 ## Lifecycle
 
 Every interaction contract MUST define which actions may open its candidate state, which reciprocal action establishes bilateral truth, and which outcomes are terminal.
