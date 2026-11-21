@@ -144,8 +144,8 @@ Three proofs have different meanings:
 For the current human-controlled cryptographic Bond profile, a commitment
 requiring `sk_bond` MUST be signed using the Bond's authorized **active
 signing device** under explicit human authorization. A Telegram bot process,
-Telegram Serverless handler, product backend, 4x-ais, Prism routing infrastructure, service
-token, or `sk_ack` MUST NOT hold, reconstruct, or impersonate that human
+Telegram Serverless handler, product backend, 4x-ais, the Prism relay,
+a service token, or `sk_ack` MUST NOT hold, reconstruct, or impersonate that human
 signing authority. Keys and authorization codes MUST NOT be sent through
 Telegram chat, callback data, cross-product relay payloads, or browser URLs.
 A signer key is not itself a Bond: the verifier MUST establish its binding
@@ -215,13 +215,13 @@ The verification responsibilities remain distinct:
   verified identity alone is never the Bond's commitment signature. AIS MUST
   NOT custody `sk_bond`, retain pairwise history, or declare a BondChain
   completed. Existing Stage 1 sign-in does not imply Stage 2 signing authority.
-- **Prism transit** checks its own caller and target/operation grants, and
+- **Prism relay** checks its own caller and target/operation grants, and
   relays requests and responses. It MUST verify trusted issuer evidence rather
   than accept a caller-provided `verified: true` flag. The payload MAY be opaque
-  to transit. Delivery, correlation, and service signatures do not establish
+  to the relay. Delivery, correlation, and service signatures do not establish
   a BondChain. In the existing `hub.v1` family design, direct AIS sign-in,
   product-token issuance, discovery and JWKS form the bootstrap exception;
-  ordinary cross-service queries to AIS are routed through transit.
+  ordinary cross-service queries to AIS are routed through the relay.
 - **Each participating Core** verifies the signable records, key/subject
   binding, authorized representative and key epoch where required, record
   ancestry, contract-specific reciprocal actions, result evidence and
@@ -329,7 +329,7 @@ customer pre-authorize completion on independently verifiable entitlement
 grant and settlement receipts. That contract must define the exact receipt
 predicate, terms, expiry, replay behavior, failure and dispute handling; it
 MUST NOT fabricate a `RECEIVE` action or infer satisfaction from payment
-alone. See [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md#creator-purchase-and-fulfillment).
+alone. See [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md#automatic-digital-purchase-completion-unresolved).
 
 ## AI-Capable Work Example
 
