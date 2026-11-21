@@ -120,6 +120,133 @@ Transport delivery, storage, silence, model inference, apparent emotion, autonom
 
 The reciprocal action proves participation in the interaction. It does not imply consent to semantic claims that the owning contract does not explicitly authorize.
 
+## Signer and Host Independence
+
+The actor in a candidate Interaction is the **Bond subject**, not the
+application, device, interface, service, or transport that originated the
+request. An originating host (Telegram text bot, embedded Mini App, Web,
+Discord, native iOS, or a serverless runtime) MUST NOT become a third
+participant or substitute its own service identity for either Bond.
+
+Three proofs have different meanings:
+
+1. **Authentication** identifies the person or service in its own scope.
+   AIS sign-in, a product token, a Telegram sender, verified `initData`, and
+   an active product session are not Bond commitment signatures.
+2. **Authorization** checks whether this actor and active client may request
+   this operation under the owning contract. It cannot create the actor's
+   signing authority or the counterparty's consent.
+3. **Commitment evidence** binds the exact Interaction action and its
+   signable, canonical terms to an authority valid for the participating
+   Bond, with the relevant identity/key binding and epoch. The owning
+   interaction and key contracts decide which evidence is required.
+
+For the current human-controlled cryptographic Bond profile, a commitment
+requiring `sk_bond` MUST be signed using the Bond's authorized **active
+signing device** under explicit human authorization. A Telegram bot process,
+Telegram Serverless handler, product backend, 4x-ais, Prism routing infrastructure, service
+token, or `sk_ack` MUST NOT hold, reconstruct, or impersonate that human
+signing authority. Keys and authorization codes MUST NOT be sent through
+Telegram chat, callback data, cross-product relay payloads, or browser URLs.
+A signer key is not itself a Bond: the verifier MUST establish its binding
+to the exact Bond subject and permitted key epoch for this action.
+
+A **text-only** bot without access to the authorized signing device MAY
+prepare and transport an *unsigned pending candidate* or request approval
+from the already active signing client. Its button press and provider
+authentication MUST NOT be reclassified as a cryptographic Bond signature.
+The owning contract MUST bind the approval to the exact operation,
+participants, action, canonical payload digest, freshness/replay context,
+and applicable session/device authority; a changed offer or participant
+requires new authorization. An unavailable or inactive signing device
+means `signature_required` or another explicit contract-owned refusal,
+never an automatic server-side signature or silent client activation.
+
+The current Stage 1 credential/provider-backed identity described in
+[Identity](04-identity.md) does not by itself furnish a native
+`sk_bond` signature. Stage 1 actions MAY be authorized and persisted
+under their **separate application-domain contracts**, but MUST NOT be
+labelled as cryptographically signed `bond.chain` commitments without the
+signing authority and records required by the owning interaction contract.
+No later key bootstrap may retroactively manufacture that missing
+signature or rewrite a terminal history.
+
+For a Business Bond, the counterparty is the **BBond**, not its service
+deployment. Its commitment requires the human-representative authority
+defined by [Business Bonds and Presence](13-business-bonds-and-presence.md).
+A product token or market service receipt can provide delivery or
+settlement evidence; it does not automatically become a representative's
+Bond signature. A delegated signing profile requires its own explicit
+scope, key custody, revocation, and owning-contract authorization before
+it may act.
+
+Even two valid participant signatures do not automatically establish or
+complete a BondChain. The owning interaction contract defines the
+reciprocal action, required result evidence, and terminal outcome. Product
+hashes, read receipts, settlement receipts, and transport acknowledgements
+have distinct meanings; none alone is a general-purpose completion proof.
+
+## Completion Without a Closing Authority
+
+**Completion is a verified consequence of the interaction history, not an
+additional commitment or a privilege granted to one service or Bond.**
+The owning interaction contract MUST define its establishment predicate,
+required reciprocal actions, result evidence, and terminal predicates.
+A participant's Core evaluates those predicates against the same authorized,
+append-only, hash-linked records. If both participants hold the same valid
+terminal history, they MUST derive the same terminal outcome and record head.
+Until the required history has reached each participant, their local views
+MAY differ in delivery status without making either party an arbiter.
+
+A separate `chain.close` permission, third-party closing signature, central
+finalization service, or extra `sk_bond` signature MUST NOT be invented merely
+to assert a terminal state. Conversely, the lack of a new closing signature
+MUST NOT bypass a `RECEIVE`, `READ`, settlement, acceptance, or other action
+that the owning contract actually requires. A final action or terminal record
+still needs its own authorized evidence wherever that contract demands it.
+A successful transport acknowledgement or a computed hash does not
+automatically satisfy an unfulfilled predicate.
+
+The verification responsibilities remain distinct:
+
+- **4x-ais** owns ecosystem identity and authorization evidence. Subject
+  linking and a *future explicitly specified* Bond-key/delegation attestation
+  MAY supply a bounded proof of who was entitled to act. An AIS token or
+  verified identity alone is never the Bond's commitment signature. AIS MUST
+  NOT custody `sk_bond`, retain pairwise history, or declare a BondChain
+  completed. Existing Stage 1 sign-in does not imply Stage 2 signing authority.
+- **Prism transit** checks its own caller and target/operation grants, and
+  relays requests and responses. It MUST verify trusted issuer evidence rather
+  than accept a caller-provided `verified: true` flag. The payload MAY be opaque
+  to transit. Delivery, correlation, and service signatures do not establish
+  a BondChain. In the existing `hub.v1` family design, direct AIS sign-in,
+  product-token issuance, discovery and JWKS form the bootstrap exception;
+  ordinary cross-service queries to AIS are routed through transit.
+- **Each participating Core** verifies the signable records, key/subject
+  binding, authorized representative and key epoch where required, record
+  ancestry, contract-specific reciprocal actions, result evidence and
+  terminal predicates. AIS attestations are input evidence, not a global
+  relationship decision. Deterministic evaluation cannot produce another
+  participant's missing authorization.
+- **Owning product services** remain authoritative only for their domain
+  results (for example, a settled debit or granted entitlement). Their
+  receipts MAY be checked as result evidence, but neither they nor a
+  marketplace SKU hash constitute a generic completion certificate.
+
+A Bond MAY authorize *bounded future execution* in its initial signed
+action. When an interaction-specific contract expressly allows it, a
+matching result proof MAY satisfy the completion predicate without prompting
+the same Bond for another signature. The prior authorization MUST bind
+the participants, operation and offer/content digest, accepted terms,
+validity, permitted outcome, and applicable revocation/replay rules.
+It does not authorize any different outcome or manufacture an implied
+human `RECEIVE` acknowledgement.
+
+This is a protocol-wide rule about *how* completion is evaluated. It does
+not activate a particular automatic-receipt purchase contract or prescribe
+production record encoding, signing APIs, clock rules or cryptographic
+formats; those remain owned by their specific contracts and open questions.
+
 ## Lifecycle
 
 Every interaction contract MUST define which actions may open its candidate state, which reciprocal action establishes bilateral truth, and which outcomes are terminal.
@@ -195,6 +322,15 @@ A second purchase is a new BondChain even when the customer, business, products,
 
 The current business contract remains human-representative-authorized. AI participation in a purchase MUST NOT be inferred merely from the generic Bond ontology.
 
+The example above requires the customer's authorized `RECEIVE` as its final
+action; verified `FULFILL` alone MUST NOT silently close that contract.
+A future *different, explicit* digital-delivery purchase contract MAY let the
+customer pre-authorize completion on independently verifiable entitlement
+grant and settlement receipts. That contract must define the exact receipt
+predicate, terms, expiry, replay behavior, failure and dispute handling; it
+MUST NOT fabricate a `RECEIVE` action or infer satisfaction from payment
+alone. See [Protocol Constants and Open Questions](17-protocol-constants-and-open-questions.md#creator-purchase-and-fulfillment).
+
 ## AI-Capable Work Example
 
 A future AI-capable work interaction may contain several actions while remaining one BondChain:
@@ -250,6 +386,10 @@ Eligible completed BondChains may contribute to relationship-level derived state
 13. `bond.chain` is the append-only record encoding of one BondChain, not the permanent relationship itself.
 14. Business interactions use the same BondChain primitive; business authority remains a separate contract.
 15. Model inference, personality, memory, presence, or UI state cannot manufacture reciprocity or relationship truth.
+16. Completion is deterministically derived from the owning contract's fully authorized evidence; no universal closing authority or third signature exists.
+17. AIS identity and authority attestations do not substitute for a participant's signature or a missing reciprocal action.
+18. Transit verification and delivery are not BondChain establishment or completion evidence by themselves.
+19. Contract-specific bounded pre-authorization may make later execution automatic, but cannot erase an action still required by an existing contract.
 
 ## Related Documents
 

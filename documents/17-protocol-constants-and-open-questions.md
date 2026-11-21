@@ -215,6 +215,51 @@ The contract MUST distinguish settlement evidence from delivery evidence and MUS
 
 This is implementation-blocking for creator sales.
 
+### Automatic Digital Purchase Completion (Unresolved)
+
+The [BondChain Interaction Model](04-bondchain-interaction-model.md#completion-without-a-closing-authority)
+permits the owning interaction contract to define completion from already
+authorized actions and verifiable results **without a third signature**.
+This does not change the current example requiring `RECEIVE` and does not
+activate automatic completion for Special, Exclusive or any other SKU.
+
+Before any digital-purchase interaction between a customer Bond and a seller
+BBond or creator can use this route, its versioned contract MUST specify:
+
+- what exact terms the buyer authorizes in advance (seller Bond, operation,
+  product/SKU and immutable offer hash, asset/currency, price/quantity, expiry,
+  and the authorized automatic-completion predicate);
+- how the buyer's Bond signature and the business representative's distinct
+  delegated/authorized signature are bound to their subjects and key epochs;
+- the trusted origin, signed integrity, and idempotency of settlement and
+  entitlement/asset-delivery evidence, separately from offer or order hashes;
+- which participant action establishes reciprocity and which independent,
+  validated evidence satisfies every terminal predicate; a product service's
+  signed transport receipt MUST NOT silently stand in for a BBond signature;
+- how current authority is established and revoked without making AIS a
+  signatory or terminal-state arbiter, including how historical authorized
+  records remain verifiable;
+- timeout, duplicate delivery, dispute, refusal, cancellation, refund and
+  failed/partial fulfillment outcomes, including whether a later dispute is
+  a separate interaction rather than a rewrite of a terminal one;
+- exact canonical signable record and result-proof encoding across Core
+  runtimes, plus offline verification and fast-forward-only synchronization.
+
+A `RECEIVE` action MUST NOT be synthesized when the applicable contract
+requires an actual customer acknowledgement. To avoid that action, the
+owning contract must explicitly adopt a *different* terminal predicate
+supported by the customer's prior bounded authorization.
+
+4x-ais remains the existing ecosystem identity and authorization authority.
+A proposed Bond-key/representative attestation profile is not implemented
+by merely declaring this design. The existing `hub.v1` relay authenticates
+products and routes trusted operations; neither it nor AIS may persist or
+arbitrate private BondChain relationship history.
+
+This open work blocks **automatic BondChain completion for digital
+purchases**, not independently authorized order placement, domain-level
+settlement or entitlement issuance under their existing product contracts.
+
 ### Donation Contract
 
 What exact pairwise interaction contract owns voluntary donation?
