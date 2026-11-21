@@ -116,7 +116,7 @@ proof and a contract-owned result receipt. None may be substituted for the
 others. AIS may attest identity/authority under an explicitly implemented
 profile but must not custody `sk_bond`, synthesize a counterparty action or
 own private BondChain state. Normal cross-service family operations follow
-Prism transit; direct AIS bootstrap for login, token issuance, discovery and
+the Prism relay; direct AIS bootstrap for login, token issuance, discovery and
 JWKS remains separate as described by the existing family transport contract.
 
 A portable Core running in a Telegram bot, WebAssembly, or native mobile
