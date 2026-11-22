@@ -66,28 +66,26 @@ The AIS identity migration still has staged dependencies. Until the signed
 `nilx-one → 0x1` continuity and legacy Bond data preservation are accepted,
 the new client must not silently replace a live identity, inventory or
 BondChain owner. Product session activation follows Core's Single Active Client
-contract. The Telegram bot is an **independent fourth 0x1 client** with its own
-Core-controlled product session, separate from the Web Mini App. Both may use
-the same verified AIS identity but may never share browser cookies or silently
-share activation. The Single Active Client handoff applies between them.
+contract. Telegram bot chat is the fourth product **presentation**, and
+the first text-first one. Chat and embedded Mini App are two surfaces of
+one logical Telegram client **only when Core proves the same Bond, host
+and device-specific session binding**. No shared browser cookies, tokens,
+signing keys or implicit active-client handoff are permitted. Safari,
+Discord and another Telegram device remain separate clients.
 
-## Independent Telegram text client
+## Telegram text-first surface
 
-**Product decision (confirmed by Bot PR #1 review, 2026-11-15):**
-`nilx-one/bot` is the fourth 0x1 product client and the first text client.
-The Telegram conversation itself is a usable game surface, not a launcher
-for Web or Telegram Mini App. The Mini App remains in `nilx-one/web`
-as a separate visual/Web client, with its own session and UI. Opening it
-is an explicit client switch rather than implicit authorization.
-
-Both clients may resolve the same human identity through AIS, but **AIS
-identity does not equal a Core product session**. The text client owns no
-identity or game database; Core validates all read and write authority,
-maintains a distinct product session for each client and enforces
-Single Active Client between Telegram text and Telegram Web/other clients.
-Only explicit, confirmed handoff may transfer active play. A Telegram
-provider link, chat ID, forwarded text or Mini App signed initData cannot
-transfer the text client's signing authority or create a BondChain.
+**Revised owner direction ([bot issue #2](https://github.com/nilx-one/bot/issues/2),
+2026-11-16):** `nilx-one/bot` runs a usable text-first client in chat,
+not just a Web launcher. Embedded Telegram Mini App remains a Web-rendered
+surface under `nilx-one/web`. Explicit `/open` requests its display, not
+a new active session. AIS-linked Telegram sender data and Mini App signed
+`initData` are **separate** provider proofs and cannot establish device
+continuity, consent or Core product authority alone. Core MUST validate
+fresh one-use session-bound continuity before joining surfaces, otherwise
+the request fails closed; a different host/device requires confirmed
+Single Active Client handoff and sync. Delivery acknowledgements are not
+BondChain completion.
 
 Until a Core-backed Gateway can authorize an operation, the text client
 shows an unavailable text response. It MUST NOT redirect the player

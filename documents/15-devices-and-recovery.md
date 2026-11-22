@@ -24,6 +24,35 @@ The single-active rule also governs client sessions. A client session is either 
 
 A client is presented to the person by device and host, for example `iPhone Air · Safari`, `iPhone Air · Telegram`, or `iPad · Discord`.
 
+### Telegram chat and embedded Mini App: one logical client
+
+Telegram bot chat and its embedded Telegram Mini App are **two presentation
+surfaces of one logical Telegram product client** only when Core verifies that
+both are bound to the same Bond, Telegram host and **device-specific**
+product-session context. Changing between those already authorized surfaces
+does not create another active client, activation request or session epoch.
+Core owns this decision and the active/inactive state; neither provider
+adapter nor UI may establish it.
+
+A trusted Telegram Bot API update proves a Telegram **sender**, not a device,
+Bond or active session. Mini App signed `initData` verifies a provider launch,
+not device continuity, Bond ownership or active session. Before allowing a
+second surface to act under an existing logical session, Core MUST validate a
+fresh, short-lived, single-use continuity proof bound to that logical session,
+the authenticated AIS provider subject, and the **same device and host**.
+A username, `chat_id`, forwarded message, callback data, bare URL, existing
+login, or copied cookie alone MUST NOT qualify. Credentials and capability
+grants remain specific to each surface; neither chat nor WebView may reuse
+the other's bearer token, browser cookie or signing material.
+
+If Core cannot establish device/Bond/session continuity, the surface MUST
+remain unauthorized, show a typed failure, and never silently create,
+attach to, or activate another client. A different physical Telegram device,
+Safari or Discord remains a separate client and follows the **confirmed
+Single Active Client activation plus sync** defined below. This document
+does not claim that the required Core device-continuity evidence/API is
+implemented; it is a release-blocking dependency.
+
 Activation passes to another client only through one of these routes:
 
 1. **Confirmation on the active client, then sync.** The requesting client sends an activation request that names its device and host. The active client shows that request with an explicit accept and decline. Accept starts a sync: the active client uploads its state and the requester receives it. The requester becomes active and the previous client inactive, still signed in, only when that sync completes. Decline, cancellation, expiry, or an interrupted sync changes nothing.

@@ -20,6 +20,33 @@ A Bond active in the Telegram Mini App opens 0x1 in a browser. The browser signs
 - **Activation always syncs.** A switch between two signed-in clients always carries a sync and happens only when that sync completes.
 - **No recovery route.** Client activation has no recovery of its own. Recovery exists only through a BondChain (`bch`), as `REC-REQ` in [Devices and Recovery](15-devices-and-recovery.md) defines.
 
+## Telegram chat ↔ embedded Mini App (same logical host)
+
+Telegram bot chat and the Telegram Mini App are different transports and UIs
+of **one logical client** when Core has verified their common Bond, device,
+Telegram host and product-session continuity under
+[Devices and Recovery](15-devices-and-recovery.md#telegram-chat-and-embedded-mini-app-one-logical-client).
+Changing between two already bound Telegram surfaces does not move active
+client authority, create a second session, or increment the session epoch.
+
+An explicit `/open` requests a Telegram WebView. It MUST NOT issue a second
+active client. The WebView must independently validate signed Telegram
+`initData` and present a fresh single-use Core-issued session-bound proof;
+Core verifies its audience, linked AIS subject, device and session binding,
+and consumed state before granting any active or inactive capability. No
+browser cookie, token, authorization code, signing key, or activation decision
+travels in a bot message or URL. Retried `/open`, duplicate callback,
+expired/replayed proof and cross-account attempts MUST fail closed without
+minting new authority or duplicating an action.
+
+The Bot API sender does not identify a physical device. When Core cannot
+prove continuity, a WebView opened from chat MUST remain unauthorized and
+must not guess that it belongs to the already active device. A genuinely
+different Telegram device or the standalone Safari browser follows the
+**separate-client** confirmation and sync flow below. The required device
+proof and integration are not currently deployed; a bare `/open` is not
+evidence of an accepted shared-session transition.
+
 ## UX: Telegram -> browser
 
 1. **Sign-in.** The browser authenticates the Bond through the aiaiaiai Identity Service. A remembered `pub_dress` alone is not authentication. Because Telegram is active, the browser session is inactive: `active_elsewhere`. It shows the recognized Bond, both client labels, and a single primary action: **«Перенести гру сюди»**.
@@ -77,7 +104,7 @@ A request is open while it is `pending`, `approved`, or `syncing`. It ends in ex
 - At most one request per Bond is open. A request from another inactive client supersedes it. The same client asking again while its request is open receives that same request. Replayed and double-tapped decisions return the same terminal result.
 - Browser refresh resumes the open request only through the requesting client's own session; a guessed request ID is insufficient.
 - If the Bond has no active client because the active client signed out or its session ended, an inactive session cannot request activation and shows `sign_in_required`. The next sign-in becomes active without a request.
-- Telegram Mini App and Telegram bot are different surfaces. A bot notification is a delivery channel, not proof that the Mini App session is active, and never a way to decide. If the Telegram account is not linked or delivery fails, the request still waits in the active client and expires normally. Bot messages are never sent to arbitrary IDs.
+- Telegram Mini App and Telegram bot are different surfaces of one Core-verified logical client, not interchangeable authentication evidence. A bot notification is a delivery channel, not proof that the logical session is active, and never a way to decide. If the Telegram account is not linked or delivery fails, the request still waits in the active client and expires normally. Bot messages are never sent to arbitrary IDs.
 
 ## Required observable states
 
@@ -120,6 +147,13 @@ No state makes a client active before its sync completes, so there is no "active
 9. A password, email, or other sign-in while a client is active yields an inactive session; with no active session it yields the active one. No step asks for a second factor.
 10. The steps and percentage shown by both clients equal Core's values, and the payload is deleted at every terminal state.
 11. Motion-reduced UI and screen-reader messages convey the same states without relying on visual effects.
+
+## Shared Telegram-surface acceptance
+
+1. An already Core-bound Telegram chat / Mini App on the same verified device and host preserves one logical product session and session epoch; no second active-client row is created.
+2. Repeated `/open` and replayed proof cannot create new authority, duplicate writes, or authorize a different Bond.
+3. An unbound chat ID, stale `initData`, or unverifiable physical-device binding cannot reuse the active Telegram session; failure is explicit and leaves prior authority unchanged.
+4. Safari/Discord or another device requires the normal confirmed activation and completed sync. One Telegram sender on multiple devices is not evidence that those devices are the same client.
 
 ## Delivery sequencing
 
