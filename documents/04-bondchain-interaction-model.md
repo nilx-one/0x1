@@ -280,13 +280,12 @@ invitation. Subsequent attendance or participation is a distinct fact.
   signing view identifies the resolved recipient. The resulting Interaction
   fixes the two stable Bond references. A retry MUST reuse those references;
   a new owner of the same address cannot inherit an existing invitation.
-- `priv_id` is an optional opaque actor correlation reference for an
-  authorized service call. It is issued by 0x1 for an explicit audience,
-  such as `prism-hub`, independently of the public address. Each side
-  supplies its own reference through its authenticated product context if
-  the operation needs it. The relay MUST NOT use it as a general lookup
-  key, forward it to a different audience, or put it in URLs, durable
-  routing metadata, public profiles, or signed BondChain records.
+- Each participant has one immutable private identifier, `priv_id` (the
+  identifier previously called `BondId`). The two private identifiers bind
+  the participants in authorized Interaction records. Prism routes the
+  request by service, operation, and correlation metadata. Any private
+  payload it carries remains opaque and is excluded from durable routing
+  metadata, logs, and public URLs.
 - Prism authorizes the product-to-service route using AIS-issued credentials
   and target/operation grants. Where identity evidence is needed, the
   recipient validates a scope- and audience-bound proof for the exact
