@@ -31,17 +31,22 @@ External references:
 
 ## `priv_id`
 
-Every Bond gets one private identifier at registration. `priv_id` is the
-name of the stable identifier previously called `BondId`. Existing values
-carry over unchanged. Public address changes, provider or client changes,
-and signing key rotation leave the identifier bound to the same Bond.
+Every Bond registered with the aiaiaiai Identity Service gets one private
+identifier, `priv_id`, at registration. It is the stable identifier
+previously called `BondId`. AIS is authoritative for that value. Public
+address changes, provider or client changes, and signing key rotation
+leave the identifier bound to the same Bond.
 
-`priv_id` identifies the Bond inside Core and authorized protocol records.
-Public profiles, public URLs, logs, and Prism routing metadata exclude it.
-Prism uses its own request correlation for transport. Signing keys and the
-authority evidence required by each operation establish who may act.
-A recipient of an AIS token uses the issuer's client-scoped subject for
-identity linking under that client's contract.
+Authorized aiaiaiai products use the same `priv_id` to resolve the Bond's
+current `pub_dress`, `localization`, `location`, and other authorized
+attributes through `4x-ais`. The issuer's client-scoped OIDC subject
+establishes the product's person binding. For legacy records, an existing
+authorized binding must be resolved before connecting a stored product
+record to the AIS identity.
+
+Public profiles, public URLs, logs, and Prism routing metadata exclude
+`priv_id`. Signing keys and the authority evidence required by each
+operation establish who may act.
 
 ## `pub_dress`
 
