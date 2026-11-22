@@ -29,6 +29,25 @@ External references:
 - [Ethereum accounts](https://ethereum.org/developers/docs/accounts/) — Ethereum account addresses are 20-byte values rendered as 40 hexadecimal characters plus the `0x` prefix.
 - [Sui cryptography](https://sdk.mystenlabs.com/sui/cryptography) — Mysten Labs tooling derives and handles Sui addresses as `0x`-prefixed address values.
 
+## `priv_id`
+
+Every Bond registered with the aiaiaiai Identity Service gets one private
+identifier, `priv_id`, at registration. It is the stable identifier
+previously called `BondId`. AIS is authoritative for that value. Public
+address changes, provider or client changes, and signing key rotation
+leave the identifier bound to the same Bond.
+
+Authorized aiaiaiai products use the same `priv_id` to resolve the Bond's
+current `pub_dress`, `localization`, `location`, and other authorized
+attributes through `4x-ais`. The issuer's client-scoped OIDC subject
+establishes the product's person binding. For legacy records, an existing
+authorized binding must be resolved before connecting a stored product
+record to the AIS identity.
+
+Public profiles, public URLs, logs, and Prism routing metadata exclude
+`priv_id`. Signing keys and the authority evidence required by each
+operation establish who may act.
+
 ## `pub_dress`
 
 A `pub_dress` is a human-readable public handle bound to a Bond identity.

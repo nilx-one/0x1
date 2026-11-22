@@ -266,6 +266,57 @@ An interaction contract MAY require additional causally dependent actions before
 
 Once a BondChain reaches a terminal state, later semantic activity belongs to another BondChain. A new BondChain MAY reference an earlier one without extending it.
 
+## Invitation Through Prism
+
+A human-to-human invitation has one intent: asking a specific other Bond to
+accept a specific invitation. Accepting establishes and completes this
+invitation. Subsequent attendance or participation is a distinct fact.
+
+### Addresses and routing
+
+- A client MAY use the recipient's current `pub_dress` to address the intent.
+  The originating 0x1 service MUST resolve it through the authoritative
+  current address binding before asking the active device to sign. The
+  signing view identifies the resolved recipient. The resulting Interaction
+  fixes the two stable Bond references. A retry MUST reuse those references;
+  a new owner of the same address cannot inherit an existing invitation.
+- Each participant has one immutable private identifier, `priv_id` (the
+  identifier previously called `BondId`). The two private identifiers bind
+  the participants in authorized Interaction records. Prism routes the
+  request by service, operation, and correlation metadata. Any private
+  payload it carries remains opaque and is excluded from durable routing
+  metadata, logs, and public URLs.
+- Prism authorizes the product-to-service route using AIS-issued credentials
+  and target/operation grants. Where identity evidence is needed, the
+  recipient validates a scope- and audience-bound proof for the exact
+  operation. An AIS pairwise subject issued to one client stays in that
+  scope. A routing reference or provider receipt conveys no participant
+  authority.
+
+### Required actions
+
+| Action | Authorized signer | Outcome |
+| --- | --- | --- |
+| `INIT` | Initiating Bond's active signing device using `sk_bond` | Creates an invitation candidate |
+| `ACCEPT` | Intended recipient's active signing device using `sk_bond` | Establishes and completes the invitation |
+| Refuse | Intended recipient under the interaction's action authorization | Ends the candidate without adding relationship evidence |
+| Cancel | Initiator under the interaction's action authorization | Ends the candidate without adding relationship evidence |
+| Expire | Computed from the invitation's bound deadline | Ends the candidate without adding relationship evidence |
+
+A client without available signing authority can prepare or present an
+unsigned candidate. Both signed actions bind the protocol and interaction
+type, candidate ID, ordered participant references, action, exact terms
+digest, expiry and signer epoch. `ACCEPT` also binds the accepted signed
+`INIT` through its predecessor hash. Replacing the terms or recipient
+requires a new signed `INIT`.
+
+Each participant's Core validates both signed actions and ancestry before
+deriving completion. An identical replay yields the same result and head.
+A changed action under a reused operation ID, an expired acceptance or a
+competing update after a terminal outcome MUST be rejected. Only the
+interaction owner can persist delivery retries. Prism can acknowledge
+delivery, even when the signed reciprocal action has yet to arrive.
+
 ## Message Example
 
 A sent message alone is unilateral activity.

@@ -441,6 +441,11 @@ Every fixture verified context has exactly these members:
 }
 ```
 
+The fixture fields `bond_id`, `bond_0_id`, `bond_1_id`, and
+`actor_bond_id` carry the protocol's private Bond identifier, now named
+[`priv_id`](04-identity.md#priv_id). The v0 fixture field names and
+`bond_` encoding remain the compatibility format.
+
 `generated_bch_id` is non-null only for `fixture.open`. Phase 0 fixture commands consume no entropy and no production cryptographic verification, so both corresponding arrays are empty. A fixture authorization has exactly `bond_id` and `scope`; the only scopes are `fixture.initiate` for `bond_0_id` and `fixture.reciprocate` for `bond_1_id`.
 
 The command objects are closed:
