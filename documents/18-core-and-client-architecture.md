@@ -100,6 +100,40 @@ Clients MAY use the Core for local validation, optimistic projection, offline pr
 
 Gamification is subordinate to protocol truth. A reward may derive from an eligible completed interaction, but a reward, animation, score, streak, or local prediction cannot substitute for consent or create a BondChain.
 
+### BondChain Completion and External Trust
+
+Core owns the deterministic evaluation of contract-specific establishment,
+reciprocity, evidence and terminal predicates. Every participant may replay
+and independently verify the same `bond.chain` history. No Core instance,
+signing device, registry, 4x-ais process or Prism relay is granted a
+universal `close` capability over another Bond's history. A terminal
+outcome is a consequence of verified authorized records, not a fresh
+signature or a command from a central closer.
+
+The verified context entering Core MUST distinguish an authenticated AIS
+principal, a product or relay grant, a Bond-signature/representative-authority
+proof and a contract-owned result receipt. None may be substituted for the
+others. AIS may attest identity/authority under an explicitly implemented
+profile but must not custody `sk_bond`, synthesize a counterparty action or
+own private BondChain state. Normal cross-service family operations follow
+the Prism relay; direct AIS bootstrap for login, token issuance, discovery and
+JWKS remains separate as described by the existing family transport contract.
+
+A portable Core running in a Telegram bot, WebAssembly, or native mobile
+client may prepare candidates and verify received facts. Only the authorized
+signing device may perform the human-gated signature, and only each fact's
+owning domain may commit its durable effects. A product service's order,
+settlement or entitlement receipt is evidence to validate, not a substitute
+for the two Bonds' contract-defined participation. Missing evidence,
+incorrect authority, conflicting history or an unavailable verifier is an
+explicit incomplete/refused outcome, never local completion.
+
+An owning interaction MAY provide a narrowly pre-authorized automatic
+completion predicate, but implementing it for a specific product requires
+its separately versioned contract and cross-runtime verification. The
+current `ORDER -> PAY -> ACCEPT -> FULFILL -> RECEIVE` purchase example
+continues to require `RECEIVE`.
+
 ### Platform Boundary
 
 0x1 Core owns what happened and how authorized facts change product state. Platform layers own how a person sees, enters, stores, and transports that state.
