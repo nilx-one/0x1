@@ -31,6 +31,7 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 - [City Exploration and Avaia Participation](product-direction/city-exploration-and-avaia.md) — non-normative direction for city discovery, virtual participation, Avaia's bounded activity, and truthful pairwise interactions.
 - [Text-first Clients and Telegram Topics](product-direction/text-first-telegram-topics.md) — Core-first text capability parity, Core-verified shared logical Telegram client for chat/Mini App, selection-only navigation and active-client-authorized topic requests.
 - [Carrying Inventory, Containers, and Item Loss](product-direction/inventory-carrying-and-loss.md) — non-normative 2D inventory grids, backpack and bag bounds, pocket/wallet geometry, and distance-based loss risk.
+- [Bond Trade Listings](product-direction/bond-trade-listings.md) — shared seller listings, newest-first public trade inventory, and the Telegram city-group announcement flow.
 - [Special and Exclusive Subscriptions](product-direction/special-exclusive-subscriptions.md) — proposed paid entitlements, future rarity v2, and server-authority boundaries.
 - [xPing Courier and Map Activities](product-direction/xping-courier.md) — seeded Kyiv destinations, flight presentation, concurrent activity status, and deferred commerce.
 - [xPing Flight Loot](product-direction/xping-flight-loot.md) — proposed five-lane collectibles, rarity, Exclusive gift-balloon odds, and pending activation boundaries.
