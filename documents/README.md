@@ -34,6 +34,7 @@ The two-digit filename prefix encodes dependency tier. Begin at `00` and proceed
 - [Special and Exclusive Subscriptions](product-direction/special-exclusive-subscriptions.md) — proposed paid entitlements, future rarity v2, and server-authority boundaries.
 - [xPing Courier and Map Activities](product-direction/xping-courier.md) — seeded Kyiv destinations, flight presentation, concurrent activity status, and deferred commerce.
 - [xPing Flight Loot](product-direction/xping-flight-loot.md) — proposed five-lane collectibles, rarity, Exclusive gift-balloon odds, and pending activation boundaries.
+- [To-do mechanics](product-direction/to-do-mechanics.md) — solo xPing flight, functional casings, vinyl collecting, and situational city quests.
 - [Experience Orb Rarity](product-direction/rarity-coefficient.md) — the orb's own chance and experience rules over five-tier rarity, per-landmark rarity from a versioned Core registry, and orb rarity capped by its landmark.
 - [Visitor-place Rarity](product-direction/place-rarity.md) — separate reviewed rarity for parks, nature and public recreation places, reusing canonical archive subjects without minting a new destination or affecting orb XP.
 - [Avaia Local-first Intelligence and Distributed Runtime](product-direction/avaia-distributed-intelligence.md) — non-normative proposal for messenger-first world surfaces, small event-driven intelligences, voluntary shared device compute, and policy-gated remote fallback, where compute never confers authority.
